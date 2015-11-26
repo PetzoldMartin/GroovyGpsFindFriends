@@ -4,6 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/FindMEClient.iml" filepath="$PROJECT_DIR$/FindMEClient.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/osmdroid-android-1.04/osmdroid-android-1.04.iml" filepath="$PROJECT_DIR$/osmdroid-android-1.04/osmdroid-android-1.04.iml" />
     </modules>
   </component>
 </project>
