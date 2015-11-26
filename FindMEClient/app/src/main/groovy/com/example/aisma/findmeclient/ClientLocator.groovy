@@ -7,12 +7,7 @@ import android.location.LocationManager
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity;
 
-class Vector{
-    def x,y
-    Vector(){
 
-    }
-}
 
 class ClientLocator {
     LocationManager locationManagerI
@@ -34,30 +29,3 @@ class ClientLocator {
     }
 }
 
-class MyLocationListener implements LocationListener {
-    def la, lo
-
-    String toString() {
-        "@($la, $lo)"
-    }
-
-    @Override
-    public void onLocationChanged(Location loc) {
-        la = loc.getLatitude()
-        lo = loc.getLongitude()
-        println(this.toString())
-    }
-
-    @Override
-    public void onProviderDisabled(String provider) {
-        println("Gps Disabled")
-    }
-
-    @Override
-    public void onProviderEnabled(String provider) {
-        println("Gps Enabled")
-    }
-
-    @Override
-    public void onStatusChanged(String provider, int status, Bundle extras) {}
-}
