@@ -1,6 +1,5 @@
 package de.fh.zwickau.scriptsprachen.findme.server
 
-@Grab(group = 'org.glassfish.jersey.containers', module='jersey-container-grizzly2-http', version = '2.22.1')
 import javax.ws.rs.*
 import javax.ws.rs.core.*
 
