@@ -20,5 +20,7 @@
 	<classpathentry kind="lib" path="lib/grizzly-http-2.3.23.jar"/>
 	<classpathentry kind="lib" path="lib/grizzly-http-server-2.3.23.jar"/>
 	<classpathentry kind="lib" path="lib/hk2-locator-2.4.0-b34.jar"/>
+	<classpathentry kind="lib" path="lib/bean-validator-2.4.0-b34.jar"/>
+	<classpathentry exported="true" kind="con" path="GROOVY_DSL_SUPPORT"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
