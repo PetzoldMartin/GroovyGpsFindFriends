@@ -11,43 +11,47 @@ GrizzlyHttpServerFactory.createHttpServer("http://localhost:8080".toURI(), new R
 @Path('/')
 class Auth {
 	
-	static ArrayList<String> usernames = new ArrayList<>()
-	static HashMap<Integer, Boolean> isLoggedIn = new HashMap<>()
+	private static final String SECRET = "geheim"
+	
+	static HashSet<String> eMailAddresses = new HashSet<>()
+	static HashMap<String, String> names = new HashMap<>()
+	static HashMap<String, Boolean> isLoggedIn = new HashMap<>()
 	
 	@GET
-	@Path('/register')
-	def get(@QueryParam('username') String username, @QueryParam('secret') String secret) {
-		if (!"geheim".equals(secret))
-			return "INVALID SECRET"
+	@Path('/auth/register')
+	def register(@QueryParam('email') String email, @QueryParam('name') String name, @QueryParam('secret') String secret) {
+		if (!SECRET.equals(secret))
+			return "Invalid secret"
 		else {
-			if (usernames.contains(username))
-				return "Username already taken"
+			if (eMailAddresses.contains(email))
+				return "E-Mail already taken"
 			else {
-				usernames.add(username)
-				isLoggedIn.put(usernames.size, false)
-				return usernames.size
+				eMailAddresses.add(email)
+				names.put(email, name)
+				isLoggedIn.put(email, false)
+				return "Register successful"
 			}
 		}
 	}
 	
 	@GET
-	@Path('/login')
-	def login(@QueryParam('id') int id) {
-		if (id < 0 || id >= usernames.size)
-			return "Invalid ID"
+	@Path('/auth/login')
+	def login(@QueryParam('email') String email) {
+		if (!eMailAddresses.contains(email))
+			return "E-Mail is unknown"
 		else {
-			isLoggedIn.put(id, true)
+			isLoggedIn.put(email, true)
 			return "Login successful"
 		}
 	}
 	
 	@GET
-	@Path('/logout')
-	def logout(@QueryParam('id') int id) {
-		if (id < 0 || id >= usernames.size)
-			return "Invalid ID"
+	@Path('/auth/logout')
+	def logout(@QueryParam('email') String email) {
+		if (!eMailAddresses.contains(email))
+			return "E-Mail is unknown"
 		else {
-			isLoggedIn.put(id, false)
+			isLoggedIn.put(email, false)
 			return "Logout successful"
 		}
 	}
