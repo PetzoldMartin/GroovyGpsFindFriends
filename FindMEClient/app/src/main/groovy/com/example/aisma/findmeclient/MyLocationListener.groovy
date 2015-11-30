@@ -1,4 +1,8 @@
-package com.example.aisma.findmeclient;
+package com.example.aisma.findmeclient
+
+import android.location.Location
+import android.location.LocationListener
+import android.os.Bundle;
 
 class MyLocationListener implements LocationListener {
     def la, lo

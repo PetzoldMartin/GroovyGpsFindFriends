@@ -15,6 +15,12 @@ import android.os.Bundle
 import org.osmdroid.views.overlay.ItemizedIconOverlay
 import org.osmdroid.views.overlay.OverlayItem;
 
+import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.servlet.ServletContextHandler;
+import org.eclipse.jetty.servlet.ServletHolder;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+
 public class MainActivity extends AppCompatActivity {
     def ILocator
     def mMapView;
@@ -65,6 +71,30 @@ public class MainActivity extends AppCompatActivity {
 
         // Add the overlay to the MapView
         mMapView.getOverlays().add(itemizedIconOverlay);
+
+    }
+
+    @OnClick(R.id.jetty)
+    public void startJetty() {
+        ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
+        context.setContextPath("/");
+        Server jettyServer = new Server(8080);
+        jettyServer.setHandler(context);
+        ServletHolder jerseyServlet = context.addServlet(org.glassfish.jersey.servlet.ServletContainer.class, "/*");
+        jerseyServlet.setInitOrder(0);
+        jerseyServlet.setInitParameter("jersey.config.server.provider.classnames", Rest.class.getCanonicalName());
+        jettyServer.start();
+        jettyServer.join();
+    }
+
+    @Path('/')
+    private class Rest {
+
+        @GET
+        @Path('/test/get')
+        def get() {
+            return "Works"
+        }
 
     }
 

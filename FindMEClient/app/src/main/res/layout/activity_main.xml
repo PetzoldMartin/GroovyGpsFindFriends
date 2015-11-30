@@ -27,4 +27,11 @@
 
         android:layout_centerHorizontal="true" />
 
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Start Jetty"
+        android:id="@+id/jetty"
+        android:layout_weight="0.33" />
+
 </LinearLayout>
