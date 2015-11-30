@@ -1,7 +1,6 @@
 apply plugin: 'com.android.application'
 apply plugin: 'groovyx.grooid.groovy-android'
 
-
 android {
     signingConfigs {
         config {
@@ -36,7 +35,14 @@ android {
     }
 }
 
+repositories {
+    flatDir {
+        dirs 'library'
+    }
+}
+
 dependencies {
+    compile(name:'osmbonuspack_v5.5', ext:'aar')
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile 'junit:junit:4.12'
     compile 'com.android.support:appcompat-v7:23.1.0'

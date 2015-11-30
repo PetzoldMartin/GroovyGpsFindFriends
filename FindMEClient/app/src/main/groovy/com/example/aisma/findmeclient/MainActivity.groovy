@@ -4,8 +4,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle
 import android.widget.Toast
 import com.arasthel.swissknife.SwissKnife
-import com.arasthel.swissknife.annotations.OnClick;
-
+import com.arasthel.swissknife.annotations.OnClick
+import org.osmdroid.bonuspack.overlays.Marker;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapController;
@@ -56,6 +56,9 @@ public class MainActivity extends AppCompatActivity {
             return;
         def gPt = new GeoPoint(ILocator.getLocation().x ,ILocator.getLocation().y);
         mMapController.setCenter(gPt);
+
+        def Marker = new Marker(mMapView)
+
         // Create an ArrayList with overlays to display objects on map
         def overlayItemArray = new ArrayList<OverlayItem>();
 
