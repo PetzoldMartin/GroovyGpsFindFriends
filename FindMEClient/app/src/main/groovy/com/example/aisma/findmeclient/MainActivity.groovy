@@ -4,8 +4,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle
 import android.widget.Toast
 import com.arasthel.swissknife.SwissKnife
-import com.arasthel.swissknife.annotations.OnClick;
-
+import com.arasthel.swissknife.annotations.OnClick
+import org.glassfish.jersey.server.ResourceConfig
+import org.glassfish.jersey.servlet.ServletContainer;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapController;
@@ -76,15 +77,27 @@ public class MainActivity extends AppCompatActivity {
 
     @OnClick(R.id.jetty)
     public void startJetty() {
+        ResourceConfig resourceConfig = new ResourceConfig();
+        resourceConfig.packages(Rest.class.getPackage().getName());
+        ServletContainer servletContainer = new ServletContainer(resourceConfig);
+        ServletHolder sh = new ServletHolder(servletContainer);
+        Server server = new Server(8080);
         ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
         context.setContextPath("/");
-        Server jettyServer = new Server(8080);
-        jettyServer.setHandler(context);
-        ServletHolder jerseyServlet = context.addServlet(org.glassfish.jersey.servlet.ServletContainer.class, "/*");
-        jerseyServlet.setInitOrder(0);
-        jerseyServlet.setInitParameter("jersey.config.server.provider.classnames", Rest.class.getCanonicalName());
-        jettyServer.start();
-        jettyServer.join();
+        context.addServlet(sh, "/*");
+        server.setHandler(context);
+        server.start();
+        server.join();
+
+//        ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
+//        context.setContextPath("/");
+//        Server jettyServer = new Server(8080);
+//        jettyServer.setHandler(context);
+//        ServletHolder jerseyServlet = context.addServlet(org.glassfish.jersey.servlet.ServletContainer.class, "/*");
+//        jerseyServlet.setInitOrder(0);
+//        jerseyServlet.setInitParameter("jersey.config.server.provider.classnames", Rest.class.getCanonicalName());
+//        jettyServer.start();
+//        jettyServer.join();
     }
 
     @Path('/')

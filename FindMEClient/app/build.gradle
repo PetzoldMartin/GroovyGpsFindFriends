@@ -11,6 +11,7 @@ android {
     }
     packagingOptions {
         exclude 'META-INF/services/org.codehaus.groovy.transform.ASTTransformation'
+        exclude 'META-INF/services/org.glassfish.jersey.internal.spi.ForcedAutoDiscoverable'
     }
     compileSdkVersion 23
     buildToolsVersion "23.0.2"
@@ -45,13 +46,25 @@ dependencies {
     compile 'org.osmdroid:osmdroid-android:5.0.1@aar'
     compile 'com.android.support:multidex:1.0.0'
     compile files('library/spock-core-1.0-groovy-2.4.jar')
-    compile files('library/javax.inject-1.jar')
+    compile files('library/org.osgi.core-4.3.0.jar')
+    compile files('library/javax.inject-2.4.0-b31.jar')
+    compile files('library/javax.servlet-api-3.1.0.jar')
+    compile files('library/activation-1.1.1.jar')
     compile files('library/javax.ws.rs-api-2.0.1.jar')
+    compile files('library/javax.annotation-api-1.2.jar')
+    compile files('library/validation-api-1.1.0.Final.jar')
     compile files('library/jersey-container-jetty-http-2.22.1.jar')
+    compile files('library/jersey-container-jetty-servlet-2.22.1.jar')
     compile files('library/jersey-container-servlet-2.22.1.jar')
     compile files('library/jersey-container-servlet-core-2.22.1.jar')
     compile files('library/jersey-server-2.22.1.jar')
-    compile files('library/jersey-common-2.22.1.jar')
+    compile files('library/jersey-media-jaxb-2.22.1.jar')
+    compile files('library/jersey-guava-2.22.1.jar')
+    compile files('library/jersey-client-2.22.1.jar')
+    compile files('library/hk2-api-2.4.0-b31.jar')
+    compile files('library/hk2-locator-2.4.0-b31.jar')
+    compile files('library/hk2-utils-2.4.0-b31.jar')
+    compile files('library/osgi-resource-locator-1.0.1.jar')
     compile files('library/jetty-lite-7.2.0-repackaged-for-android.jar')
     androidTestCompile fileTree(include: ['*.jar'], dir: 'libs')
     androidTestCompile 'junit:junit:4.12'
