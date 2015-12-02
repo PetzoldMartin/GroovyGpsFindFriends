@@ -16,6 +16,8 @@ android {
         exclude 'META-INF/license.txt'
         exclude 'META-INF/NOTICE'
         exclude 'META-INF/notice.txt'
+        exclude 'org/glassfish/jersey/internal/build.properties'
+        exclude 'org/glassfish/jersey/internal/localization.properties'
     }
     compileSdkVersion 23
     buildToolsVersion "23.0.2"

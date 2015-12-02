@@ -8,9 +8,6 @@ import android.widget.Toast
 import com.arasthel.swissknife.SwissKnife
 import com.arasthel.swissknife.annotations.OnBackground
 import com.arasthel.swissknife.annotations.OnClick
-import org.glassfish.jersey.server.ResourceConfig
-import org.glassfish.jersey.server.ServerProperties
-import org.glassfish.jersey.servlet.ServletContainer
 import org.osmdroid.bonuspack.overlays.Marker;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.util.GeoPoint;
@@ -23,14 +20,11 @@ import org.osmdroid.views.overlay.OverlayItem;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
 
-import org.eclipse.jetty.server.Server;
-import org.eclipse.jetty.servlet.ServletContextHandler;
-import org.eclipse.jetty.servlet.ServletHolder
-import resources.JettyButtonListener
-
 import java.net.InetSocketAddress
 
-import javax.servlet.Servlet
+import org.glassfish.grizzly.http.server.HttpServer
+import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory
+import org.glassfish.jersey.server.ResourceConfig
 
 public class MainActivity extends AppCompatActivity {
     def ILocator
@@ -57,8 +51,6 @@ public class MainActivity extends AppCompatActivity {
         mMapController.setCenter(gPt);
 
         ILocator = new ClientLocator(this);
-//        Button startJettyButton = findViewById(R.id.jetty);
-//        startJettyButton.setOnClickListener(new JettyButtonListener());
     }
 
     @OnClick(R.id.test)
@@ -96,22 +88,11 @@ public class MainActivity extends AppCompatActivity {
 
     @OnBackground
     public void startServer() {
-        java.net.InetSocketAddress addresse = new java.net.InetSocketAddress("localhost", 8088);
-        Server server = new Server(addresse);
-        ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
-        context.setContextPath("/");
-        ResourceConfig config = new ResourceConfig().register(resources.Rest.class);
-        ServletContainer container = new ServletContainer(config);
-        ServletHolder holder = new ServletHolder((Servlet) container);
-        holder.setInitOrder(0);
-        holder.setInitParameter(ServerProperties.PROVIDER_CLASSNAMES, resources.Rest.class.getCanonicalName());
+        final ResourceConfig rc = new ResourceConfig();
+        rc.register(resources.Rest.class)
+        final HttpServer server = GrizzlyHttpServerFactory.createHttpServer("localhost:8080".toURI(), rc)
 
-        context.addServlet(holder, "/*");
-        server.setHandler(context);
-
-        server.start();
-        server.join();
-
+//        java.net.InetSocketAddress addresse = new java.net.InetSocketAddress("localhost", 8088);
 //        ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
 //        context.setContextPath("/");
 //        Server jettyServer = new Server(addresse);

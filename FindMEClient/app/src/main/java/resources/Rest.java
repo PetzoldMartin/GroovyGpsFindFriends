@@ -10,7 +10,6 @@ public class Rest {
 
     @GET
     @Path("/works")
-    @Produces(MediaType.TEXT_PLAIN)
     public String get() {
         return "Works";
     }
