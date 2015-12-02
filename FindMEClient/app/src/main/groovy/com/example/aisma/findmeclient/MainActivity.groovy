@@ -8,9 +8,6 @@ import android.widget.Toast
 import com.arasthel.swissknife.SwissKnife
 import com.arasthel.swissknife.annotations.OnBackground
 import com.arasthel.swissknife.annotations.OnClick
-import org.glassfish.jersey.server.ResourceConfig
-import org.glassfish.jersey.server.ServerProperties
-import org.glassfish.jersey.servlet.ServletContainer
 import org.osmdroid.bonuspack.overlays.Marker;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.util.GeoPoint;
@@ -26,11 +23,9 @@ import org.springframework.web.client.RestTemplate;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder
-import resources.JettyButtonListener
+import com.sun.jersey.spi.container.servlet.ServletContainer;
 
 import java.net.InetSocketAddress
-
-import javax.servlet.Servlet
 
 public class MainActivity extends AppCompatActivity {
     def ILocator
@@ -94,23 +89,36 @@ public class MainActivity extends AppCompatActivity {
         startServer()
     }
 
+    private final static String LOG_TAG = "Jetty";
+
     @OnBackground
     public void startServer() {
         java.net.InetSocketAddress addresse = new java.net.InetSocketAddress("localhost", 8088);
-        Server server = new Server(addresse);
-        ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
-        context.setContextPath("/");
-        ResourceConfig config = new ResourceConfig().register(resources.Rest.class);
-        ServletContainer container = new ServletContainer(config);
-        ServletHolder holder = new ServletHolder((Servlet) container);
-        holder.setInitOrder(0);
-        holder.setInitParameter(ServerProperties.PROVIDER_CLASSNAMES, resources.Rest.class.getCanonicalName());
+        System.setProperty("java.net.preferIPv4Stack", "true");
+        System.setProperty("java.net.preferIPv6Addresses", "false");
 
-        context.addServlet(holder, "/*");
-        server.setHandler(context);
+        Server webServer = new Server(addresse);
 
-        server.start();
-        server.join();
+        ServletHolder servletHolder = new ServletHolder(ServletContainer.class);
+        //DO NOT USE CAUSE IT WON'T WORK ON ANDROID servletHolder.setInitParameter("com.sun.jersey.config.property.packages", "com.famenu.server.resources");
+
+        servletHolder.setInitParameter("com.sun.jersey.config.property.resourceConfigClass", "com.sun.jersey.api.core.ClassNamesResourceConfig");
+        servletHolder.setInitParameter("com.sun.jersey.config.property.classnames", "resources.Rest");
+
+        ServletContextHandler servletContextHandler = new ServletContextHandler(webServer, "/", true, false);
+        servletContextHandler.addServlet(servletHolder, "/hello");
+
+        webServer.setHandler(servletContextHandler);
+
+
+        try {
+            webServer.start();
+            Log.d(LOG_TAG, "started Web server");
+
+        }
+        catch (Exception e) {
+            Log.d(LOG_TAG, "unexpected exception starting Web server: " + e);
+        }
 
 //        ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
 //        context.setContextPath("/");

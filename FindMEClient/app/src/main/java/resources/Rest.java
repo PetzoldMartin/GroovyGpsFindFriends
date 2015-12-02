@@ -9,8 +9,7 @@ import javax.ws.rs.core.MediaType;
 public class Rest {
 
     @GET
-    @Path("/works")
-    @Produces(MediaType.TEXT_PLAIN)
+    @Produces("text/plain")
     public String get() {
         return "Works";
     }
