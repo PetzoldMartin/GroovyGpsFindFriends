@@ -7,7 +7,9 @@ import android.widget.Toast
 import com.arasthel.swissknife.SwissKnife
 import com.arasthel.swissknife.annotations.OnBackground
 import com.arasthel.swissknife.annotations.OnClick
+import org.glassfish.jersey.server.ResourceConfig
 import org.glassfish.jersey.server.ServerProperties
+import org.glassfish.jersey.servlet.ServletContainer
 import org.osmdroid.bonuspack.overlays.Marker;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.util.GeoPoint;
@@ -23,6 +25,9 @@ import org.springframework.web.client.RestTemplate;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder
+import java.net.InetSocketAddress
+
+import javax.servlet.Servlet
 
 public class MainActivity extends AppCompatActivity {
     def ILocator
@@ -82,41 +87,42 @@ public class MainActivity extends AppCompatActivity {
 
     @OnClick(R.id.jetty)
     public void startJetty() {
-//        ResourceConfig resourceConfig = new ResourceConfig();
-//        resourceConfig.packages(Rest.class.getPackage().getName());
-//        ServletContainer servletContainer = new ServletContainer(resourceConfig);
-//        ServletHolder sh = new ServletHolder(servletContainer);
-//        Server server = new Server(8080);
-//        ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
-//        context.setContextPath("/");
-//        context.addServlet(sh, "/*");
-//        server.setHandler(context);
-//        server.start();
-//        server.join();
+        startServer()
 
+
+    }
+
+    @OnBackground
+    public void startServer() {
+        java.net.InetSocketAddress addresse = new java.net.InetSocketAddress("localhost", 8088);
+        Server server = new Server(addresse);
         ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
         context.setContextPath("/");
-        Server jettyServer = new Server(8080);
-        jettyServer.setHandler(context);
-        ServletHolder jerseyServlet = context.addServlet(org.glassfish.jersey.servlet.ServletContainer.class, "/*");
-        jerseyServlet.setInitOrder(1);
-        jerseyServlet.setInitParameter(ServerProperties.PROVIDER_PACKAGES, "resources");
-        jettyServer.start();
-        jettyServer.join();
+        ResourceConfig config = new ResourceConfig().register(rest2.Rest.class);
+        ServletContainer container = new ServletContainer(config);
+        ServletHolder holder = new ServletHolder((Servlet) container);
+        holder.setInitOrder(0);
+        holder.setInitParameter(ServerProperties.PROVIDER_CLASSNAMES, rest2.Rest.class.getCanonicalName());
+
+        context.addServlet(holder, "/*");
+        server.setHandler(context);
+
+        server.start();
+        server.join();
     }
 
     @OnClick(R.id.restClient)
     public void restResponse() {
         restRequest()
     }
+
     @OnBackground
     public void restRequest() {
-                final String url = "http://rest-service.guides.spring.io/greeting";
-                RestTemplate restTemplate = new RestTemplate();
-                restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
-                String response = restTemplate.getForEntity(url, Object).getClass();
-                response.
-        }
-
+        final String url = "http://rest-service.guides.spring.io/greeting";
+        RestTemplate restTemplate = new RestTemplate();
+        restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
+        String response = restTemplate.getForEntity(url, Object).getClass();
+        println response
+    }
 
 }
