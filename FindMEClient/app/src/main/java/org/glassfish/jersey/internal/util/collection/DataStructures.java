@@ -158,9 +158,8 @@ public final class DataStructures {
      * @return the map.
      */
     public static <K, V> ConcurrentMap<K, V> createConcurrentMap() {
-        return JdkVersion.getJdkVersion().isUnsafeSupported()
-                ? new ConcurrentHashMapV8<K, V>()
-                : new ConcurrentHashMap<K, V>();
+        return
+                 new ConcurrentHashMap<K, V>();
     }
 
     /**
@@ -178,9 +177,7 @@ public final class DataStructures {
      */
     public static <K, V> ConcurrentMap<K, V> createConcurrentMap(
             final Map<? extends K, ? extends V> map) {
-        return JdkVersion.getJdkVersion().isUnsafeSupported()
-                ? new ConcurrentHashMapV8<K, V>(map)
-                : new ConcurrentHashMap<K, V>(map);
+        return  new ConcurrentHashMap<K, V>(map);
     }
 
     /**
@@ -202,9 +199,7 @@ public final class DataStructures {
      */
     public static <K, V> ConcurrentMap<K, V> createConcurrentMap(
             final int initialCapacity) {
-        return JdkVersion.getJdkVersion().isUnsafeSupported()
-                ? new ConcurrentHashMapV8<K, V>(initialCapacity)
-                : new ConcurrentHashMap<K, V>(initialCapacity);
+        return  new ConcurrentHashMap<K, V>(initialCapacity);
     }
 
     /**
@@ -235,8 +230,6 @@ public final class DataStructures {
     public static <K, V> ConcurrentMap<K, V> createConcurrentMap(
             final int initialCapacity, final float loadFactor,
             final int concurrencyLevel) {
-        return JdkVersion.getJdkVersion().isUnsafeSupported()
-                ? new ConcurrentHashMapV8<K, V>(initialCapacity, loadFactor, concurrencyLevel)
-                : new ConcurrentHashMap<K, V>(initialCapacity, loadFactor, concurrencyLevel);
+        return  new ConcurrentHashMap<K, V>(initialCapacity, loadFactor, concurrencyLevel);
     }
 }
