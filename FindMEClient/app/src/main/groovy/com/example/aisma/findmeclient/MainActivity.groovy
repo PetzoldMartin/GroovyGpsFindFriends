@@ -1,8 +1,11 @@
-package com.example.aisma.findmeclient;
+package com.example.aisma.findmeclient
 
+import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity
+import android.util.Log
 import android.widget.Toast
 import com.arasthel.swissknife.SwissKnife
+import com.arasthel.swissknife.annotations.OnBackground
 import com.arasthel.swissknife.annotations.OnClick
 import org.glassfish.jersey.server.ServerProperties
 import org.osmdroid.bonuspack.overlays.Marker;
@@ -13,6 +16,9 @@ import org.osmdroid.views.MapView
 import android.os.Bundle
 import org.osmdroid.views.overlay.ItemizedIconOverlay
 import org.osmdroid.views.overlay.OverlayItem;
+
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.web.client.RestTemplate;
 
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.ServletContextHandler;
@@ -39,19 +45,19 @@ public class MainActivity extends AppCompatActivity {
         mMapView.setBuiltInZoomControls(true);
         mMapController = (MapController) mMapView.getController();
         mMapController.setZoom(13);
-        def gPt = new GeoPoint(0,0);
+        def gPt = new GeoPoint(0, 0);
         mMapController.setCenter(gPt);
 
-        ILocator=new ClientLocator(this);
+        ILocator = new ClientLocator(this);
 
     }
 
     @OnClick(R.id.test)
     public void onClick() {
         Toast.makeText(this, ILocator.toString(), Toast.LENGTH_SHORT).show()
-            if (ILocator.getLocation().x == null)
+        if (ILocator.getLocation().x == null)
             return;
-        def gPt = new GeoPoint(ILocator.getLocation().x ,ILocator.getLocation().y);
+        def gPt = new GeoPoint(ILocator.getLocation().x, ILocator.getLocation().y);
         mMapController.setCenter(gPt);
 
         def Marker = new Marker(mMapView)
@@ -61,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
 
         // Create som init objects
         OverlayItem centerMe = new OverlayItem("Ich bin Hier", "Zweite Zeile",
-                new GeoPoint(ILocator.getLocation().x,ILocator.getLocation().y));
+                new GeoPoint(ILocator.getLocation().x, ILocator.getLocation().y));
 
         // Add the init objects to the ArrayList overlayItemArray
         overlayItemArray.add(centerMe);
@@ -99,5 +105,18 @@ public class MainActivity extends AppCompatActivity {
         jettyServer.join();
     }
 
-}
+    @OnClick(R.id.restClient)
+    public void restResponse() {
+        restRequest()
+    }
+    @OnBackground
+    public void restRequest() {
+                final String url = "http://rest-service.guides.spring.io/greeting";
+                RestTemplate restTemplate = new RestTemplate();
+                restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
+                String response = restTemplate.getForEntity(url, Object).getClass();
+                response.
+        }
 
+
+}

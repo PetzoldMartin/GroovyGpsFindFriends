@@ -11,6 +11,11 @@ android {
     packagingOptions {
         exclude 'META-INF/services/org.codehaus.groovy.transform.ASTTransformation'
         exclude 'META-INF/services/org.glassfish.jersey.internal.spi.ForcedAutoDiscoverable'
+        exclude 'META-INF/ASL2.0'
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/license.txt'
+        exclude 'META-INF/NOTICE'
+        exclude 'META-INF/notice.txt'
     }
     compileSdkVersion 23
     buildToolsVersion "23.0.2"
@@ -71,6 +76,10 @@ dependencies {
     compile files('library/hk2-utils-2.4.0-b31.jar')
     compile files('library/osgi-resource-locator-1.0.1.jar')
     compile files('library/jetty-lite-7.2.0-repackaged-for-android.jar')
+  //  compile 'com.squareup.retrofit:retrofit:2.0.0-beta2'
+    compile 'org.springframework.android:spring-android-rest-template:1.0.1.RELEASE'
+    compile 'com.fasterxml.jackson.core:jackson-databind:2.3.2'
+
 	compile 'com.android.support:multidex:1.0.1'
     androidTestCompile fileTree(include: ['*.jar'], dir: 'libs')
     androidTestCompile fileTree(include: ['*.jar'], dir: 'library')
