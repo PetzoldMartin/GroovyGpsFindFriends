@@ -3,6 +3,7 @@ package com.example.aisma.findmeclient
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
+import android.widget.Button
 import android.widget.Toast
 import com.arasthel.swissknife.SwissKnife
 import com.arasthel.swissknife.annotations.OnBackground
@@ -25,6 +26,8 @@ import org.springframework.web.client.RestTemplate;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder
+import resources.JettyButtonListener
+
 import java.net.InetSocketAddress
 
 import javax.servlet.Servlet
@@ -54,7 +57,8 @@ public class MainActivity extends AppCompatActivity {
         mMapController.setCenter(gPt);
 
         ILocator = new ClientLocator(this);
-
+//        Button startJettyButton = findViewById(R.id.jetty);
+//        startJettyButton.setOnClickListener(new JettyButtonListener());
     }
 
     @OnClick(R.id.test)
@@ -88,8 +92,6 @@ public class MainActivity extends AppCompatActivity {
     @OnClick(R.id.jetty)
     public void startJetty() {
         startServer()
-
-
     }
 
     @OnBackground
@@ -98,17 +100,27 @@ public class MainActivity extends AppCompatActivity {
         Server server = new Server(addresse);
         ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
         context.setContextPath("/");
-        ResourceConfig config = new ResourceConfig().register(rest2.Rest.class);
+        ResourceConfig config = new ResourceConfig().register(resources.Rest.class);
         ServletContainer container = new ServletContainer(config);
         ServletHolder holder = new ServletHolder((Servlet) container);
         holder.setInitOrder(0);
-        holder.setInitParameter(ServerProperties.PROVIDER_CLASSNAMES, rest2.Rest.class.getCanonicalName());
+        holder.setInitParameter(ServerProperties.PROVIDER_CLASSNAMES, resources.Rest.class.getCanonicalName());
 
         context.addServlet(holder, "/*");
         server.setHandler(context);
 
         server.start();
         server.join();
+
+//        ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
+//        context.setContextPath("/");
+//        Server jettyServer = new Server(addresse);
+//        jettyServer.setHandler(context);
+//        ServletHolder jerseyServlet = context.addServlet(org.glassfish.jersey.servlet.ServletContainer.class, "/*");
+//        jerseyServlet.setInitOrder(1);
+//        jerseyServlet.setInitParameter(ServerProperties.PROVIDER_CLASSNAMES, resources.Rest.class.getCanonicalName());
+//        jettyServer.start();
+//        jettyServer.join();
     }
 
     @OnClick(R.id.restClient)
