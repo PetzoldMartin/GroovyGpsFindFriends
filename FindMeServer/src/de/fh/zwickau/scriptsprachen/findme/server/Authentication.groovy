@@ -6,19 +6,20 @@ import javax.ws.rs.core.*
 import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory
 import org.glassfish.jersey.server.ResourceConfig
 
-GrizzlyHttpServerFactory.createHttpServer("http://localhost:8080".toURI(), new ResourceConfig(Auth.class))
 
-@Path('/')
+@Path('/auth')
 class Auth {
 	
 	private static final String SECRET = "geheim"
 	
-	static HashSet<String> eMailAddresses = new HashSet<>()
-	static HashMap<String, String> names = new HashMap<>()
-	static HashMap<String, Boolean> isLoggedIn = new HashMap<>()
+	static HashSet<String> eMailAddresses = []
+	static HashMap<String, String> names = [:]
+	static HashMap<String, Boolean> isLoggedIn = [:]
+	
+	
 	
 	@GET
-	@Path('/auth/register')
+	@Path('/register')
 	def register(@QueryParam('email') String email, @QueryParam('name') String name, @QueryParam('secret') String secret) {
 		if (!SECRET.equals(secret))
 			return "Invalid secret"
@@ -35,8 +36,9 @@ class Auth {
 	}
 	
 	@GET
-	@Path('/auth/login')
-	def login(@QueryParam('email') String email) {
+	@Path('/login')
+	def login(@Context org.glassfish.grizzly.http.server.Request req, @QueryParam('email') String email) {
+		Mediator.checkIP(req, email)
 		if (!eMailAddresses.contains(email))
 			return "E-Mail is unknown"
 		else {
@@ -46,7 +48,7 @@ class Auth {
 	}
 	
 	@GET
-	@Path('/auth/logout')
+	@Path('/logout')
 	def logout(@QueryParam('email') String email) {
 		if (!eMailAddresses.contains(email))
 			return "E-Mail is unknown"
