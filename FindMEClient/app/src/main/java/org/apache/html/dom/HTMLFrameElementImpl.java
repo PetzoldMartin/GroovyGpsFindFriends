@@ -25,7 +25,7 @@ import org.w3c.dom.html.HTMLFrameElement;
  * @see org.w3c.dom.html.HTMLFrameElement
  * @see org.apache.xerces.dom.ElementImpl
  */
-public class HTMLFrameElementImpl
+public abstract class HTMLFrameElementImpl
     extends HTMLElementImpl
     implements HTMLFrameElement
 {

@@ -25,7 +25,7 @@ import org.w3c.dom.html.HTMLObjectElement;
  * @see org.w3c.dom.html.HTMLObjectElement
  * @see org.apache.xerces.dom.ElementImpl
  */
-public class HTMLObjectElementImpl
+public abstract class HTMLObjectElementImpl
     extends HTMLElementImpl
     implements HTMLObjectElement, HTMLFormControl
 {
