@@ -31,6 +31,8 @@ public class MainActivity extends AppCompatActivity {
     def ILocator
     def mMapView;
     def mMapController;
+    RESTRequests restRequests;
+    RESTServer restServer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,8 +54,8 @@ public class MainActivity extends AppCompatActivity {
         mMapController.setCenter(gPt);
 
         ILocator = new ClientLocator(this);
-//        Button startJettyButton = findViewById(R.id.jetty);
-//        startJettyButton.setOnClickListener(new JettyButtonListener());
+        restRequests = new RESTRequests()
+        restServer = new RESTServer()
     }
 
     @OnClick(R.id.test)
@@ -89,46 +91,42 @@ public class MainActivity extends AppCompatActivity {
         startServer()
     }
 
-    private final static String LOG_TAG = "Jetty";
+//    private final static String LOG_TAG = "Jetty";
+
+//    @OnBackground
+//    public void startServer() {
+//        restServer.startServer();
+//        java.net.InetSocketAddress addresse = new java.net.InetSocketAddress("localhost", 8088);
+//        System.setProperty("java.net.preferIPv4Stack", "true");
+//        System.setProperty("java.net.preferIPv6Addresses", "false");
+//
+//        Server webServer = new Server(addresse);
+//
+//        ServletHolder servletHolder = new ServletHolder(ServletContainer.class);
+//        //DO NOT USE CAUSE IT WON'T WORK ON ANDROID servletHolder.setInitParameter("com.sun.jersey.config.property.packages", "com.famenu.server.resources");
+//
+//        servletHolder.setInitParameter("com.sun.jersey.config.property.resourceConfigClass", "com.sun.jersey.api.core.ClassNamesResourceConfig");
+//        servletHolder.setInitParameter("com.sun.jersey.config.property.classnames", "resources.Rest");
+//
+//        ServletContextHandler servletContextHandler = new ServletContextHandler(webServer, "/", true, false);
+//        servletContextHandler.addServlet(servletHolder, "/hello");
+//
+//        webServer.setHandler(servletContextHandler);
+//
+//
+//        try {
+//            webServer.start();
+//            Log.d(LOG_TAG, "started Web server");
+//
+//        }
+//        catch (Exception e) {
+//            Log.d(LOG_TAG, "unexpected exception starting Web server: " + e);
+//        }
+//    }
 
     @OnBackground
-    public void startServer() {
-        java.net.InetSocketAddress addresse = new java.net.InetSocketAddress("localhost", 8088);
-        System.setProperty("java.net.preferIPv4Stack", "true");
-        System.setProperty("java.net.preferIPv6Addresses", "false");
-
-        Server webServer = new Server(addresse);
-
-        ServletHolder servletHolder = new ServletHolder(ServletContainer.class);
-        //DO NOT USE CAUSE IT WON'T WORK ON ANDROID servletHolder.setInitParameter("com.sun.jersey.config.property.packages", "com.famenu.server.resources");
-
-        servletHolder.setInitParameter("com.sun.jersey.config.property.resourceConfigClass", "com.sun.jersey.api.core.ClassNamesResourceConfig");
-        servletHolder.setInitParameter("com.sun.jersey.config.property.classnames", "resources.Rest");
-
-        ServletContextHandler servletContextHandler = new ServletContextHandler(webServer, "/", true, false);
-        servletContextHandler.addServlet(servletHolder, "/hello");
-
-        webServer.setHandler(servletContextHandler);
-
-
-        try {
-            webServer.start();
-            Log.d(LOG_TAG, "started Web server");
-
-        }
-        catch (Exception e) {
-            Log.d(LOG_TAG, "unexpected exception starting Web server: " + e);
-        }
-
-//        ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
-//        context.setContextPath("/");
-//        Server jettyServer = new Server(addresse);
-//        jettyServer.setHandler(context);
-//        ServletHolder jerseyServlet = context.addServlet(org.glassfish.jersey.servlet.ServletContainer.class, "/*");
-//        jerseyServlet.setInitOrder(1);
-//        jerseyServlet.setInitParameter(ServerProperties.PROVIDER_CLASSNAMES, resources.Rest.class.getCanonicalName());
-//        jettyServer.start();
-//        jettyServer.join();
+    private void startServer() {
+        restServer.startServer()
     }
 
     @OnClick(R.id.restClient)
@@ -141,7 +139,7 @@ public class MainActivity extends AppCompatActivity {
         final String url = "http://rest-service.guides.spring.io/greeting";
         RestTemplate restTemplate = new RestTemplate();
         restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
-        String response = restTemplate.getForEntity(url, Object).getClass();
+        String response = (String) restTemplate.getForEntity(url, Object).getClass();
         println response
     }
 
