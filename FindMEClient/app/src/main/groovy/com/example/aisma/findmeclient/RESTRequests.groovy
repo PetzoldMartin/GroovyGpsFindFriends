@@ -12,8 +12,8 @@ public class RESTRequests {
         final String url = "http://rest-service.guides.spring.io/greeting"
         RestTemplate restTemplate = new RestTemplate()
         restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter())
-        ResponseEntity response = restTemplate.getForEntity(url, Object).getClass()
-        println response.toString()
+        String response = restTemplate.getForObject(url, Object).toString();
+        println response
     }
 
 

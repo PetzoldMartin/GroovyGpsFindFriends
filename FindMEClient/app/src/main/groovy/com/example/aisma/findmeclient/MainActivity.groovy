@@ -139,7 +139,7 @@ public class MainActivity extends AppCompatActivity {
         final String url = "http://rest-service.guides.spring.io/greeting";
         RestTemplate restTemplate = new RestTemplate();
         restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
-        String response = (String) restTemplate.getForEntity(url, Object).getClass();
+        String response = restTemplate.getForObject(url, Object).toString();
         println response
     }
 
