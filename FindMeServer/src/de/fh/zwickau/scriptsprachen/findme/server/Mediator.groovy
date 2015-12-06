@@ -18,7 +18,7 @@ class Mediator {
 		if(Auth.isLoggedIn.get(targetEmail)) {
 			return ipMap.get(targetEmail).toString()
 		} else {
-			return "$targetEmail is not online"
+			return targetEmail + " is not online"
 		}
 	}
 
