@@ -94,7 +94,8 @@ public class MainActivity extends AppCompatActivity {
     @OnClick(R.id.restClient)
     public void restResponse() {
         //restRequests.testRestRequest()
-        restRequests.getAllUsers("testemail")
+        //restRequests.getAllUsers("testemail")
+        restRequests.getIpForEmail("testemail", "onlinemail")
     }
 
 }

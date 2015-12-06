@@ -22,10 +22,23 @@ public class RESTRequests {
     @OnBackground
     public void getAllUsers(String email) {
         final String url = SERVER_IP + "/medi/getOnlineUsers?email={email}"
-        RestTemplate restTemplate = new RestTemplate()
-        restTemplate.getMessageConverters().add(new StringHttpMessageConverter())
+        RestTemplate restTemplate = getRestTemplate()
         String response = restTemplate.getForObject(url, String.class, email)
         println response
+    }
+
+    @OnBackground
+    public void getIpForEmail(String ownEmail, String targetEmail) {
+        final String url = SERVER_IP + "/medi/getIP?email={ownEmail}&targetEmail={targetEmail}"
+        RestTemplate restTemplate = getRestTemplate()
+        String response = restTemplate.getForObject(url, String.class, ownEmail, targetEmail)
+        println response
+    }
+
+    private RestTemplate getRestTemplate() {
+        RestTemplate restTemplate = new RestTemplate()
+        restTemplate.getMessageConverters().add(new StringHttpMessageConverter())
+        return restTemplate
     }
 
 }
