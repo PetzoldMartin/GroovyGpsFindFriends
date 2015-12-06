@@ -81,6 +81,18 @@ public class RESTRequests {
         }
     }
 
+    @OnBackground
+    public void getLocation(String targetIpWithPort) {
+        final String url = "http://" + targetIpWithPort + "/locator/getLocation"
+        RestTemplate restTemplate = getRestTemplate()
+        try {
+            String response = restTemplate.getForObject(url, String.class)
+            println response
+        } catch (Exception ex) {
+            Log.d("RESTClient", "Exception while REST request: " + ex.toString())
+        }
+    }
+
     private RestTemplate getRestTemplate() {
         RestTemplate restTemplate = new RestTemplate()
         restTemplate.getMessageConverters().add(new StringHttpMessageConverter())

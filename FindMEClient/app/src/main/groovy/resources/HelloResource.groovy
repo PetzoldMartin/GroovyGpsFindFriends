@@ -9,6 +9,7 @@ import javax.ws.rs.core.MediaType;
 public class HelloResource {
 
     @GET
+    @Path("/test")
     @Produces("text/plain")
     public String get() {
         return "Works";

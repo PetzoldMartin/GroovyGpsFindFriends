@@ -28,7 +28,7 @@ import com.sun.jersey.spi.container.servlet.ServletContainer;
 import java.net.InetSocketAddress
 
 public class MainActivity extends AppCompatActivity {
-    def ILocator
+    def static ILocator
     def mMapView;
     def mMapController;
     RESTRequests restRequests;
@@ -88,17 +88,22 @@ public class MainActivity extends AppCompatActivity {
 
     @OnClick(R.id.jetty)
     public void startJetty() {
-        restServer.startServer()
+        restServer.startServer(ILocator)
     }
 
     @OnClick(R.id.restClient)
     public void restResponse() {
         //restRequests.testRestRequest()
         //restRequests.getAllUsers("testemail")
-        restRequests.register("myemail", "Tobias")
-        restRequests.login("myemail")
-        restRequests.getIpForEmail("testemail", "myemail")
-        restRequests.logout("myemail")
+        //restRequests.register("myemail", "Tobias")
+        //restRequests.login("myemail")
+        //restRequests.getIpForEmail("testemail", "myemail")
+        //restRequests.logout("myemail")
+        restRequests.getLocation("localhost:8080")
+    }
+
+    public static ClientLocator getLocator() {
+        return this.ILocator
     }
 
 }
