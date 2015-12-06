@@ -88,59 +88,12 @@ public class MainActivity extends AppCompatActivity {
 
     @OnClick(R.id.jetty)
     public void startJetty() {
-        startServer()
-    }
-
-//    private final static String LOG_TAG = "Jetty";
-
-//    @OnBackground
-//    public void startServer() {
-//        restServer.startServer();
-//        java.net.InetSocketAddress addresse = new java.net.InetSocketAddress("localhost", 8088);
-//        System.setProperty("java.net.preferIPv4Stack", "true");
-//        System.setProperty("java.net.preferIPv6Addresses", "false");
-//
-//        Server webServer = new Server(addresse);
-//
-//        ServletHolder servletHolder = new ServletHolder(ServletContainer.class);
-//        //DO NOT USE CAUSE IT WON'T WORK ON ANDROID servletHolder.setInitParameter("com.sun.jersey.config.property.packages", "com.famenu.server.resources");
-//
-//        servletHolder.setInitParameter("com.sun.jersey.config.property.resourceConfigClass", "com.sun.jersey.api.core.ClassNamesResourceConfig");
-//        servletHolder.setInitParameter("com.sun.jersey.config.property.classnames", "resources.Rest");
-//
-//        ServletContextHandler servletContextHandler = new ServletContextHandler(webServer, "/", true, false);
-//        servletContextHandler.addServlet(servletHolder, "/hello");
-//
-//        webServer.setHandler(servletContextHandler);
-//
-//
-//        try {
-//            webServer.start();
-//            Log.d(LOG_TAG, "started Web server");
-//
-//        }
-//        catch (Exception e) {
-//            Log.d(LOG_TAG, "unexpected exception starting Web server: " + e);
-//        }
-//    }
-
-    @OnBackground
-    private void startServer() {
         restServer.startServer()
     }
 
     @OnClick(R.id.restClient)
     public void restResponse() {
-        restRequest()
-    }
-
-    @OnBackground
-    public void restRequest() {
-        final String url = "http://rest-service.guides.spring.io/greeting";
-        RestTemplate restTemplate = new RestTemplate();
-        restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
-        String response = restTemplate.getForObject(url, Object).toString();
-        println response
+        restRequests.testRestRequest()
     }
 
 }

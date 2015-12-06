@@ -6,7 +6,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 @Path("/")
-public class Rest {
+public class HelloResource {
 
     @GET
     @Produces("text/plain")

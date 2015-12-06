@@ -9,13 +9,16 @@ public class RESTRequests {
 
     @OnBackground
     public void testRestRequest() {
-        final String url = "http://rest-service.guides.spring.io/greeting"
-        RestTemplate restTemplate = new RestTemplate()
-        restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter())
+        final String url = "http://rest-service.guides.spring.io/greeting";
+        RestTemplate restTemplate = new RestTemplate();
+        restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
         String response = restTemplate.getForObject(url, Object).toString();
         println response
     }
 
-
+    @OnBackground
+    public void getAllUsers() {
+        final String url = "http://10.0.2.2:8080/medi/getOnlineUsers"
+    }
 
 }

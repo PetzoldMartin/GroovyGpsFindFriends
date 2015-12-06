@@ -1,6 +1,7 @@
 package com.example.aisma.findmeclient
 
 import android.util.Log
+import com.arasthel.swissknife.annotations.OnBackground
 import com.sun.jersey.spi.container.servlet.ServletContainer
 import org.eclipse.jetty.server.Server
 import org.eclipse.jetty.servlet.ServletContextHandler
@@ -10,6 +11,7 @@ public class RESTServer {
 
     private final static String LOG_TAG = "Jetty"
 
+    @OnBackground
     public void startServer() {
         java.net.InetSocketAddress addresse = new java.net.InetSocketAddress("localhost", 8088)
         System.setProperty("java.net.preferIPv4Stack", "true")
@@ -21,7 +23,7 @@ public class RESTServer {
         ServletHolder servletHolder = new ServletHolder(ServletContainer.class)
 
         servletHolder.setInitParameter("com.sun.jersey.config.property.resourceConfigClass", "com.sun.jersey.api.core.ClassNamesResourceConfig")
-        servletHolder.setInitParameter("com.sun.jersey.config.property.classnames", "resources.Rest")
+        servletHolder.setInitParameter("com.sun.jersey.config.property.classnames", "resources.HelloResource")
 
         ServletContextHandler servletContextHandler = new ServletContextHandler(webServer, "/", true, false)
         servletContextHandler.addServlet(servletHolder, "/hello")

@@ -9,7 +9,7 @@ final ResourceConfig rc = new ResourceConfig();
 
 rc.register(Auth.class)
 rc.register(Mediator.class)
-final HttpServer server =GrizzlyHttpServerFactory.createHttpServer("http://141.32.20.48:8080".toURI(), rc)
+final HttpServer server =GrizzlyHttpServerFactory.createHttpServer("http://localhost:8080".toURI(), rc)
 
 String email="testemail"
 String name="testname"
