@@ -93,7 +93,8 @@ public class MainActivity extends AppCompatActivity {
 
     @OnClick(R.id.restClient)
     public void restResponse() {
-        restRequests.testRestRequest()
+        //restRequests.testRestRequest()
+        restRequests.getAllUsers("testemail")
     }
 
 }
