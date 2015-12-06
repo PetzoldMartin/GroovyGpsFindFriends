@@ -95,7 +95,10 @@ public class MainActivity extends AppCompatActivity {
     public void restResponse() {
         //restRequests.testRestRequest()
         //restRequests.getAllUsers("testemail")
-        restRequests.getIpForEmail("testemail", "onlinemail")
+        restRequests.register("myemail", "Tobias")
+        restRequests.login("myemail")
+        restRequests.getIpForEmail("testemail", "myemail")
+        restRequests.logout("myemail")
     }
 
 }

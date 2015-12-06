@@ -17,7 +17,6 @@ public class RESTServer {
         System.setProperty("java.net.preferIPv4Stack", "true")
         System.setProperty("java.net.preferIPv6Addresses", "false")
 
-
         Server webServer = new Server(addresse)
 
         ServletHolder servletHolder = new ServletHolder(ServletContainer.class)
@@ -30,14 +29,12 @@ public class RESTServer {
 
         webServer.setHandler(servletContextHandler)
 
-
         try {
             webServer.start()
-            Log.d(LOG_TAG, "started Web server")
-
+            Log.d(LOG_TAG, "Started Web server")
         }
-        catch (Exception e) {
-            Log.d(LOG_TAG, "unexpected exception starting Web server: " + e)
+        catch (Exception ex) {
+            Log.d(LOG_TAG, "Unexpected exception while starting Web server: " + ex)
         }
     }
 
