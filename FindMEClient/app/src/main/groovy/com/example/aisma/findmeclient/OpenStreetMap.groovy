@@ -1,8 +1,11 @@
 package com.example.aisma.findmeclient
 
 import android.content.Context
+import android.os.Looper
 import android.support.v4.content.ContextCompat
 import android.widget.Toast
+import com.arasthel.swissknife.annotations.OnBackground
+import com.arasthel.swissknife.annotations.OnUIThread
 import org.osmdroid.bonuspack.overlays.Marker
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory
 import org.osmdroid.util.GeoPoint
@@ -21,30 +24,71 @@ class OpenStreetMap {
         this.mMapView = mMapView
         this.ILocator = ILocator
 
+        //initial settings
         mMapView.setTileSource(TileSourceFactory.DEFAULT_TILE_SOURCE)
         mMapView.setBuiltInZoomControls(true)
         mMapController = (MapController) mMapView.getController()
         mMapController.setZoom(13)
         def gPt = new GeoPoint(0, 0)
         mMapController.setCenter(gPt)
+
+        setOwnLocationToCenter()
     }
 
-    void test(){
-        Toast.makeText(mContext, ILocator.toString(), Toast.LENGTH_SHORT).show()
-        if (ILocator.getLocation().x == null)
-            return
+    @OnBackground
+    void setOwnLocationToCenter() {
+        // wait for listener to get data
+        while (ILocator.getLocation().x == null) {
+            sleep(1000)
+        }
         def gPt = new GeoPoint(ILocator.getLocation().x, ILocator.getLocation().y)
         mMapController.setCenter(gPt)
+        createSelf(gPt)
+        //TODO: Autozoom so i can see all friends at start
+        // create test friend
+        createNode(ILocator.getLocation().x + 0.1, ILocator.getLocation().y)
 
+        refreshMap()
+
+        // prepare for Toast in non UI thread
+        Looper.prepare()
+        Toast.makeText(mContext, "Ausgangspunkt " + ILocator.toString() + " gesetzt!", Toast.LENGTH_SHORT).show()
+    }
+
+    /**
+     * Do this everytime on the UI thread because views can only get handled there
+     */
+    @OnUIThread
+    void refreshMap() {
+        mMapView.invalidate()
+    }
+
+    /**
+     * Testfriend
+     * TODO: add dynamic data for title, snippet and subdescription
+     */
+    void createNode(GeoPoint geoPoint, boolean self = false) {
         Marker nodeMarker = new Marker(mMapView)
-        nodeMarker.setPosition(new GeoPoint(ILocator.getLocation().x, ILocator.getLocation().y))
+        nodeMarker.setPosition(geoPoint)
         def nodeIcon = ContextCompat.getDrawable(mContext, R.drawable.marker_cluster)
-        nodeMarker.setIcon(nodeIcon)
+        if (!self)
+            nodeMarker.setIcon(nodeIcon)
         nodeMarker.setTitle("Max Mueller")
         nodeMarker.setSnippet("Snippettext")
         nodeMarker.setSubDescription("SubDescription Text")
         mMapView.getOverlays().add(nodeMarker)
-        mMapView.invalidate()
+    }
+
+    /**
+     * @Overload
+     */
+    void createNode(double lat, double loc) {
+        def geoPoint = new GeoPoint(lat, loc)
+        createNode(geoPoint)
+    }
+
+    void createSelf(GeoPoint geoPoint) {
+        createNode(geoPoint, true)
     }
 }
 
