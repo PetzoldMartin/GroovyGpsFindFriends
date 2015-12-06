@@ -3,10 +3,6 @@ package de.fh.zwickau.scriptsprachen.findme.server
 import javax.ws.rs.*
 import javax.ws.rs.core.*
 
-import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory
-import org.glassfish.jersey.server.ResourceConfig
-
-
 @Path('/auth')
 class Auth {
 	
@@ -15,8 +11,6 @@ class Auth {
 	static HashSet<String> eMailAddresses = []
 	static HashMap<String, String> names = [:]
 	static HashMap<String, Boolean> isLoggedIn = [:]
-	
-	
 	
 	@GET
 	@Path('/register')

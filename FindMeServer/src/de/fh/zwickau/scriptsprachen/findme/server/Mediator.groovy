@@ -5,7 +5,6 @@ import java.util.HashSet;
 import javax.ws.rs.*
 import javax.ws.rs.core.*
 
-
 @Path('/medi')
 class Mediator {
 
@@ -27,7 +26,6 @@ class Mediator {
 	def getOnlineUsers(@Context org.glassfish.grizzly.http.server.Request req,@QueryParam('email') String email) {
 		checkIP(req, email)
 		if(Auth.isLoggedIn.get(email)) {
-			//println Auth.isLoggedIn.findAll{key, value -> value==true}.keySet().findAll{it!=email}.toString()
 			return  Auth.isLoggedIn.findAll{key, value -> value==true}.keySet().findAll{it!=email}.toString()
 		} else {
 			return "Cannot Respose you are not logged in"
@@ -43,4 +41,5 @@ class Mediator {
 			println "No email id used for $req.getRemoteAddr()"
 		}
 	}
+	
 }
