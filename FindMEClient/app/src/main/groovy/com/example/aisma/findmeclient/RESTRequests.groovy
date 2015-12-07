@@ -51,25 +51,29 @@ public class RESTRequests {
         RestTemplate restTemplate = getRestTemplate()
         try {
             String response = restTemplate.getForObject(url, String.class, email, name)
-            println response
             if (response.contains("Register successful"))
-                activity.showMapScreen()
+                activity.showRegisterSuccessful(email)
             else
-                activity.showErrorMessage(response)
+                activity.showErrorMessage("E-Mail-Adresse wird bereits verwendet")
         } catch (Exception ex) {
             Log.d("RESTClient", "Exception while REST request: " + ex.toString())
+            activity.showErrorMessage("Server ist nicht erreichbar")
         }
     }
 
     @OnBackground
-    public void login(String email) {
+    public void login(String email, RegisterActivity activity) {
         final String url = SERVER_IP + "/auth/login?email={email}"
         RestTemplate restTemplate = getRestTemplate()
         try {
             String response = restTemplate.getForObject(url, String.class, email)
-            println response
+            if (response.contains("Login successful"))
+                activity.showMapScreen(email)
+            else
+                activity.showErrorMessage("E-Mail-Adresse ist nicht registriert")
         } catch (Exception ex) {
             Log.d("RESTClient", "Exception while REST request: " + ex.toString())
+            activity.showErrorMessage("Server ist nicht erreichbar")
         }
     }
 

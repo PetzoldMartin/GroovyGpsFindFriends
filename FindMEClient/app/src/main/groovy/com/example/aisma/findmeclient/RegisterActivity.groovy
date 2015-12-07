@@ -1,5 +1,6 @@
 package com.example.aisma.findmeclient
 
+import android.app.ProgressDialog
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
@@ -15,6 +16,7 @@ public class RegisterActivity extends AppCompatActivity {
     RESTRequests restRequests
     EditText nameTextfield
     EditText emailTextfield
+    ProgressDialog progDialog
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,6 +32,12 @@ public class RegisterActivity extends AppCompatActivity {
         restRequests = new RESTRequests()
         nameTextfield = findViewById(R.id.textfield_name)
         emailTextfield = findViewById(R.id.textfield_email)
+
+        String email = StorageManager.getInstance().getLoginData(this)
+        if (email != null) {
+            showProgress("Login")
+            restRequests.login(email, this)
+        }
     }
 
     @OnClick(R.id.button_register)
@@ -38,10 +46,12 @@ public class RegisterActivity extends AppCompatActivity {
         String email = emailTextfield.getText()
         name = name.trim()
         email = email.trim()
-        if (checkValidInput(name, email))
+        if (checkValidInput(name, email)) {
+            showProgress("Registrieren")
             restRequests.register(email, name, this)
+        }
         else
-            Toast.makeText(this, "Bitte gültige E-Mail-Adresse und Name angeben", Toast.LENGTH_LONG).show()
+            Toast.makeText(this, "E-Mail-Adresse oder Name ungültig", Toast.LENGTH_LONG).show()
     }
 
     private boolean checkValidInput(String name, String email) {
@@ -62,14 +72,29 @@ public class RegisterActivity extends AppCompatActivity {
 
     @OnUIThread
     public void showErrorMessage(String errorMessage) {
-        // TODO
+        progDialog.dismiss()
+        Toast.makeText(this, errorMessage, Toast.LENGTH_LONG).show()
     }
 
     @OnUIThread
-    public void showMapScreen() {
+    public void showRegisterSuccessful(String email) {
         Toast.makeText(this, "Registrierung erfolgreich", Toast.LENGTH_LONG).show()
+        StorageManager.getInstance().storeLoginData(email, this)
+        showProgress("Login")
+        restRequests.login(email, this)
+    }
+
+    @OnUIThread
+    public void showMapScreen(String email) {
+        Toast.makeText(this, "Login erfolgreich", Toast.LENGTH_LONG).show()
         Intent intent = new Intent(this, MainActivity.class)
         startActivity(intent)
+        finish()
+    }
+
+    private void showProgress(String title) {
+        progDialog = ProgressDialog.show(this, title, "Bitte warten")
+        progDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER)
     }
 
 }
