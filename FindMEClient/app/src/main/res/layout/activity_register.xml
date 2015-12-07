@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="86dp"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Registrierung"
+        android:id="@+id/register_heading"
+        android:textSize="60dp"
+        android:textAlignment="center" />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="textPersonName"
+        android:ems="10"
+        android:id="@+id/textfield_name"
+        android:layout_gravity="center_horizontal"
+        android:hint="Name" />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="textEmailAddress"
+        android:ems="10"
+        android:id="@+id/textfield_email"
+        android:layout_gravity="center_horizontal"
+        android:hint="E-Mail-Adresse" />
+
+    <Button
+        android:layout_width="204dp"
+        android:layout_height="wrap_content"
+        android:text="Registrieren"
+        android:id="@+id/button_register"
+        android:layout_gravity="center_horizontal" />
+
+</LinearLayout>

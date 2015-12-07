@@ -46,12 +46,16 @@ public class RESTRequests {
     }
 
     @OnBackground
-    public void register(String email, String name) {
+    public void register(String email, String name, RegisterActivity activity) {
         final String url = SERVER_IP + "/auth/register?email={email}&name={name}&secret=" + SECRET
         RestTemplate restTemplate = getRestTemplate()
         try {
             String response = restTemplate.getForObject(url, String.class, email, name)
             println response
+            if (response.contains("Register successful"))
+                activity.showMapScreen()
+            else
+                activity.showErrorMessage(response)
         } catch (Exception ex) {
             Log.d("RESTClient", "Exception while REST request: " + ex.toString())
         }

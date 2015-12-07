@@ -21,9 +21,7 @@ public class LocatorResource {
     @Path("/getLocation")
     @Produces("text/plain")
     public String getLocation() {
-        Vector v = locator.getLocation()
-        String location = v.x + " " + v.y
-        return location
+        return locator.getLocation().toString()
     }
 
 }
