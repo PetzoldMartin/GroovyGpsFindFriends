@@ -24,6 +24,7 @@
 	<classpathentry kind="lib" path="lib/bean-validator-2.4.0-b34.jar"/>
 	<classpathentry kind="lib" path="lib/javax.servlet-api-3.1.0.jar"/>
 	<classpathentry kind="lib" path="lib/grizzly-http-servlet-2.3.23.jar"/>
+	<classpathentry kind="lib" path="lib/jersey-media-multipart-2.22.1.jar"/>
 	<classpathentry exported="true" kind="con" path="GROOVY_DSL_SUPPORT"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

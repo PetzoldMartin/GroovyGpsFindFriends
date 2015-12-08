@@ -4,14 +4,13 @@ import org.glassfish.grizzly.http.server.HttpServer
 import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory
 import org.glassfish.jersey.server.ResourceConfig
 
-import de.fh.zwickau.scriptsprachen.findme.server.resource.*;
+import de.fh.zwickau.scriptsprachen.findme.server.resource.*
 
 class Globals {
 	public static final String SERVER_IP = "http://localhost:8080"
 }
 
 final ResourceConfig rc = new ResourceConfig();
-
 rc.register(Auth.class)
 rc.register(Mediator.class)
 rc.register(Admin.class)

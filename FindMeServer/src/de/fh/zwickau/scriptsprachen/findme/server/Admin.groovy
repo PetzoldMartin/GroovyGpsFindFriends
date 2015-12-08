@@ -1,56 +1,74 @@
 package de.fh.zwickau.scriptsprachen.findme.server
 
-import javax.ws.rs.*
-import javax.ws.rs.core.*
-
-import javax.servlet.http.*
-import javax.inject.Inject
-import javax.inject.Provider
+import javax.ws.rs.Path
+import javax.ws.rs.GET
+import javax.ws.rs.POST
+import javax.ws.rs.core.Context
+import javax.ws.rs.Produces
+import javax.ws.rs.Consumes
+import javax.ws.rs.QueryParam
+import javax.ws.rs.FormParam
 import org.glassfish.grizzly.http.server.Session
+import org.glassfish.grizzly.http.server.Request
+import org.glassfish.grizzly.http.server.Response
 
 @Path('/admin')
-class Admin {
-	
-	private static final String HTML_LIST_BEGIN =
-		"<html>" +
-		"<head>" +
-		"<link rel=\"stylesheet\" href=\"" + (Globals.SERVER_IP + "/admin/style.css") + "\">" +
-		"</head>" +
-		"<body>" +
-		"<h1>FindMe-Nutzerliste</h1>" +
-		"<table>" +
-		"<tr>" +
-		"<th>E-Mail-Adresse</th>" +
-		"<th>Status</th>" +
-		"</tr>";
-	private static final String HTML_LIST_END =
-		"</table>" +
-		"</body>" +
-		"</html>";
+class Admin implements HTML {
 		
+	private static final String ADMIN_USERNAME = "admin"
+	private static final String ADMIN_PASSWORD = "admin"
+	private static final String IS_LOGGED_IN = "isLoggedIn"
+	
 	@GET
 	@Path('/login')
-	@Produces("text/plain")
-	def login(@Context org.glassfish.grizzly.http.server.Request req) {
-		org.glassfish.grizzly.http.server.Session session = null;
-		try {
-			session = req.getSession(true)
-		} catch (Exception ex) {
-			ex.printStackTrace()
-			return
+	@Produces("text/html")
+	def login(@Context Request req, @QueryParam('error') String error) {
+		StringBuilder b = new StringBuilder()
+		b.append(HTML_LOGIN_BEGIN)
+		if (error != null && !error.equals("")) {
+			String errorMessage = "";
+			if (error.equals("notLoggedIn"))
+				errorMessage = "Login erforderlich"
+			else if (error.equals("invalid"))
+				errorMessage = "Ungueltige Zugangsdaten"
+			b.append("<h4>" + errorMessage + "</h4>")
 		}
-		Object isLoggedIn = session.getAttribute("isLoggedIn")
-		if (isLoggedIn == null) {
-			isLoggedIn = new Boolean(true)
-			session.setAttribute("isLoggedIn", isLoggedIn)
+		b.append(HTML_LOGIN_END)
+		return b.toString()
+	}
+	
+	@POST
+	@Path('/performLogin')
+	@Produces("text/html")
+	def performLogin(@Context Request req, @FormParam('username') String username, @FormParam('password') String password) {
+		Response res = req.getResponse()
+		if (!ADMIN_USERNAME.equals(username) || !ADMIN_PASSWORD.equals(password)) {
+			res.sendRedirect(Globals.SERVER_IP + "/admin/login?error=invalid")
 		}
-		return "Test"
+		else {
+			Session session = req.getSession(true)
+			Object isLoggedIn = session.getAttribute(IS_LOGGED_IN)
+			if (isLoggedIn == null) {
+				isLoggedIn = new Boolean(true)
+				session.setAttribute(IS_LOGGED_IN, isLoggedIn)
+			}
+			res.sendRedirect(Globals.SERVER_IP + "/admin/showUsers")
+		}
 	}
 		
 	@GET
 	@Path('/showUsers')
 	@Produces("text/html")
-	def showUsers() {
+	def showUsers(@Context Request req) {
+		// Check session
+		Session session = req.getSession(true)
+		Object isLoggedIn = session.getAttribute(IS_LOGGED_IN)
+		if (isLoggedIn == null || isLoggedIn == false) {
+			Response res = req.getResponse()
+			res.sendRedirect(Globals.SERVER_IP + "/admin/login?error=notLoggedIn")
+			return
+		}
+		
 		StringBuilder b = new StringBuilder()
 		b.append(HTML_LIST_BEGIN)
 		for (String email : Auth.eMailAddresses) {
@@ -73,6 +91,18 @@ class Admin {
 		StringBuilder cssBuilder = new StringBuilder()
 		lines.each {s -> cssBuilder.append(s)}
 		return cssBuilder.toString()
+	}
+	
+	@GET
+	@Path('/logout')
+	@Produces("text/html")
+	def logout(@Context Request req) {
+		Response res = req.getResponse()
+		Session session = req.getSession(true)
+		Object isLoggedIn = session.getAttribute(IS_LOGGED_IN)
+		isLoggedIn = new Boolean(false)
+		session.setAttribute(IS_LOGGED_IN, isLoggedIn)
+		res.sendRedirect(Globals.SERVER_IP + "/admin/login")
 	}
 
 }
