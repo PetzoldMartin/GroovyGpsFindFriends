@@ -19,9 +19,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.sidebar_container);
-        LayoutInflater inflater = getLayoutInflater();
-        View v = inflater.inflate(R.layout.activity_main, null);
-        ((FrameLayout)findViewById(R.id.content_frame)).addView(v);
+        this.setLayoutInlay(R.layout.activity_main);
         // This must be called for injection of views and callbacks to take place
         SwissKnife.inject(this);
         // This must be called for saved state restoring
@@ -33,6 +31,8 @@ public class MainActivity extends AppCompatActivity {
         openStreetMap = new OpenStreetMap(this, (MapView) findViewById(R.id.mapview), ILocator)
         restRequests = new RESTRequests()
         restServer = new RESTServer()
+
+        getSupportActionBar().show();
     }
 
     @OnClick(R.id.jetty)
@@ -55,4 +55,9 @@ public class MainActivity extends AppCompatActivity {
         return this.ILocator
     }
 
+    private void setLayoutInlay(id){
+        LayoutInflater inflater = getLayoutInflater();
+        View v = inflater.inflate(id, null);
+        ((FrameLayout)findViewById(R.id.content_frame)).addView(v);
+    }
 }
