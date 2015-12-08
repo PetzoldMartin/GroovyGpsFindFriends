@@ -28,13 +28,13 @@ public class RegisterActivity extends AppCompatActivity {
         SwissKnife.restoreState(this, savedInstanceState);
         // This mus be called for automatic parsing of intent extras
         SwissKnife.loadExtras(this)
-        //for testing
-        Intent intent = new Intent(this, MainActivity.class)
-        startActivity(intent)
-        //
+
         restRequests = new RESTRequests()
         nameTextfield = findViewById(R.id.textfield_name)
         emailTextfield = findViewById(R.id.textfield_email)
+
+        // For debug purposes
+        nameTextfield.setText("debug")
 
         String email = StorageManager.getInstance().getLoginData(this)
         if (email != null) {
@@ -49,6 +49,13 @@ public class RegisterActivity extends AppCompatActivity {
         String email = emailTextfield.getText()
         name = name.trim()
         email = email.trim()
+
+        if ("debug".equals(name)) {
+            // Skip connection to server for test purposes
+            Intent intent = new Intent(this, MainActivity.class)
+            startActivity(intent)
+        }
+
         if (checkValidInput(name, email)) {
             showProgress("Registrieren")
             restRequests.register(email, name, this)
