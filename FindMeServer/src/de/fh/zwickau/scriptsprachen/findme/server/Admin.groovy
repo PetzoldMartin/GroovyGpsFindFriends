@@ -4,6 +4,9 @@ import javax.ws.rs.*
 import javax.ws.rs.core.*
 
 import javax.servlet.http.*
+import javax.inject.Inject
+import javax.inject.Provider
+import org.glassfish.grizzly.http.server.Session
 
 @Path('/admin')
 class Admin {
@@ -24,12 +27,18 @@ class Admin {
 		"</table>" +
 		"</body>" +
 		"</html>";
-	
+		
 	@GET
 	@Path('/login')
 	@Produces("text/plain")
-	def login(@Context HttpServletRequest req) {
-		HttpSession session = req.getSession(true)
+	def login(@Context org.glassfish.grizzly.http.server.Request req) {
+		org.glassfish.grizzly.http.server.Session session = null;
+		try {
+			session = req.getSession(true)
+		} catch (Exception ex) {
+			ex.printStackTrace()
+			return
+		}
 		Object isLoggedIn = session.getAttribute("isLoggedIn")
 		if (isLoggedIn == null) {
 			isLoggedIn = new Boolean(true)
