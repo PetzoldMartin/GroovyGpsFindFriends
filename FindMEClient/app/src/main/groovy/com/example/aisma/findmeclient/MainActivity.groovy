@@ -1,6 +1,9 @@
 package com.example.aisma.findmeclient
 
 import android.support.v7.app.AppCompatActivity
+import android.view.LayoutInflater
+import android.view.View
+import android.widget.FrameLayout
 import com.arasthel.swissknife.SwissKnife
 import com.arasthel.swissknife.annotations.OnClick
 import org.osmdroid.views.MapView
@@ -15,7 +18,10 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.sidebar_container);
+        LayoutInflater inflater = getLayoutInflater();
+        View v = inflater.inflate(R.layout.activity_main, null);
+        ((FrameLayout)findViewById(R.id.content_frame)).addView(v);
         // This must be called for injection of views and callbacks to take place
         SwissKnife.inject(this);
         // This must be called for saved state restoring
