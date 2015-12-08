@@ -29,11 +29,6 @@ public class MainActivity extends AppCompatActivity {
         restServer = new RESTServer()
     }
 
-    @OnClick(R.id.test)
-    public void onClick() {
-        openStreetMap.test()
-    }
-
     @OnClick(R.id.jetty)
     public void startJetty() {
         restServer.startServer(ILocator)
