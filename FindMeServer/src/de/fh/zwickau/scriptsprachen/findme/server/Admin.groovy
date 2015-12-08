@@ -3,6 +3,8 @@ package de.fh.zwickau.scriptsprachen.findme.server
 import javax.ws.rs.*
 import javax.ws.rs.core.*
 
+import javax.servlet.http.*
+
 @Path('/admin')
 class Admin {
 	
@@ -23,6 +25,19 @@ class Admin {
 		"</body>" +
 		"</html>";
 	
+	@GET
+	@Path('/login')
+	@Produces("text/plain")
+	def login(@Context HttpServletRequest req) {
+		HttpSession session = req.getSession(true)
+		Object isLoggedIn = session.getAttribute("isLoggedIn")
+		if (isLoggedIn == null) {
+			isLoggedIn = new Boolean(true)
+			session.setAttribute("isLoggedIn", isLoggedIn)
+		}
+		return "Test"
+	}
+		
 	@GET
 	@Path('/showUsers')
 	@Produces("text/html")
