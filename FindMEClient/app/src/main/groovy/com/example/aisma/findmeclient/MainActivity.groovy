@@ -75,8 +75,7 @@ public class MainActivity extends AppCompatActivity {
         switch (item) {
             case "Map":
                 this.setLayoutInlay(R.layout.activity_main);
-                //übergangslösung an phillip wir brauchen eine reinit methode für die Streetmap die ihren Zustand wieder herstellt
-                openStreetMap = new OpenStreetMap(this, (MapView) findViewById(R.id.mapview), ILocator)
+                openStreetMap.initialize()
                 break
             case "Friendslist":
                 this.setLayoutInlay(R.layout.friends_list);

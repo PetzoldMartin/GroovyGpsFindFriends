@@ -19,11 +19,16 @@ class OpenStreetMap {
     def mMapController
     def ILocator
 
+    def centerPoint, zoomLevel
+
     OpenStreetMap(Context mContext, MapView mMapView, ClientLocator ILocator) {
         this.mContext = mContext
         this.mMapView = mMapView
         this.ILocator = ILocator
+        initialize()
+    }
 
+    public void initialize(){
         //initial settings
         mMapView.setTileSource(TileSourceFactory.DEFAULT_TILE_SOURCE)
         mMapView.setBuiltInZoomControls(true)
