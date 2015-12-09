@@ -10,6 +10,8 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import android.widget.ExpandableListView
+import android.widget.ExpandableListView.OnChildClickListener
 import android.widget.FrameLayout
 import android.widget.ListView
 import android.widget.TextView
@@ -30,6 +32,11 @@ public class MainActivity extends AppCompatActivity {
     private ActionBarDrawerToggle mDrawerToggle;
     private DrawerLayout mDrawerLayout;
     private String mActivityTitle;
+    ExpandableListAdapter listAdapter;
+    ExpandableListView expListView;
+    List<String> listDataHeader;
+    HashMap<String, List<String>> listDataChild;
+    ArrayList<String> friendArray;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,8 +59,8 @@ public class MainActivity extends AppCompatActivity {
         getSupportActionBar().show();
 
 
-        mDrawerList = (ListView)findViewById(R.id.navList);
-        mDrawerLayout = (DrawerLayout)findViewById(R.id.drawer_layout);
+        mDrawerList = (ListView) findViewById(R.id.navList);
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mActivityTitle = getTitle().toString();
         addDrawerItems()
         setupDrawer()
@@ -62,18 +69,20 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @OnItemClick(R.id.navList)
-    public void changeInlay(int position,AdapterView<?> parent,View view){
-        String item = ((TextView)view).getText().toString();
-        Toast.makeText(baseContext, "Time for an upgrade!"+item, Toast.LENGTH_SHORT).show();
-        switch (item){
+    public void changeInlay(int position, AdapterView<?> parent, View view) {
+        String item = ((TextView) view).getText().toString();
+        Toast.makeText(baseContext, "Time for an upgrade!" + item, Toast.LENGTH_SHORT).show();
+        switch (item) {
             case "Map":
                 this.setLayoutInlay(R.layout.activity_main);
+                //übergangslösung an phillip wir brauchen eine reinit methode für die Streetmap die ihren Zustand wieder herstellt
+                openStreetMap = new OpenStreetMap(this, (MapView) findViewById(R.id.mapview), ILocator)
                 break
             case "Friendslist":
                 this.setLayoutInlay(R.layout.friends_list);
+                setupFriendsList()
                 break
         }
-
 
 
     }
@@ -98,16 +107,17 @@ public class MainActivity extends AppCompatActivity {
         return this.ILocator
     }
 
-    private void setLayoutInlay(id){
+    private void setLayoutInlay(id) {
         ((FrameLayout) findViewById(R.id.content_frame)).removeAllViews()
 
 
         LayoutInflater inflater = getLayoutInflater();
         View v = inflater.inflate(id, null);
-        ((FrameLayout)findViewById(R.id.content_frame)).addView(v);
+        ((FrameLayout) findViewById(R.id.content_frame)).addView(v);
     }
+
     private void addDrawerItems() {
-        String[] InlayArray = ["Map","Friendslist"];
+        String[] InlayArray = ["Map", "Friendslist"];
         mAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, InlayArray);
         mDrawerList.setAdapter(mAdapter);
     }
@@ -157,4 +167,64 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    void setupFriendsList() {
+        expListView = (ExpandableListView) findViewById(R.id.Friend_list);
+
+        // preparing list data
+        prepareListData(friendArray);
+
+        listAdapter = new ExpandableListAdapter(this, listDataHeader, listDataChild);
+
+        // setting list adapter
+        expListView.setAdapter(listAdapter);
+        expListView.expandGroup(0)
+    }
+
+    private void prepareListData(ArrayList<String> friendArray) {
+        initExpandeblelistListeners();
+        listDataHeader = new ArrayList<String>();
+        listDataChild = new HashMap<String, List<String>>();
+        List<String> friendsList
+        // Adding child data
+        listDataHeader.add("Friendslist");
+        if(friendArray!=null) {
+            friendsList = friendArray;
+        }else{
+            friendsList= new ArrayList<String>()
+            friendsList.add("Friend 1");
+            friendsList.add("Friend Smurf");
+            friendsList.add("Friend Now");
+            friendsList.add("Friend Canyons");
+            friendsList.add("Friend Report");
+        }
+
+
+
+        listDataChild.put(listDataHeader.get(0), friendsList); // Header, Child data
+    }
+
+    private void setFriendslist(ArrayList<String> new_fList) {
+        friendArray = new_fList
+    }
+
+    private void initExpandeblelistListeners(){
+        // Listview on child click listener
+        expListView.setOnChildClickListener(new OnChildClickListener() {
+
+            @Override
+            public boolean onChildClick(ExpandableListView parent, View v,
+                                        int groupPosition, int childPosition, long id) {
+                // TODO Auto-generated method stub
+                Toast.makeText(
+                        getApplicationContext(),
+                        listDataHeader.get(groupPosition)
+                                + " : "
+                                + listDataChild.get(
+                                listDataHeader.get(groupPosition)).get(
+                                childPosition), Toast.LENGTH_SHORT)
+                        .show();
+                return false;
+            }
+        });
+    }
 }
