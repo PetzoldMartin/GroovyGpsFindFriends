@@ -20,6 +20,7 @@ import com.arasthel.swissknife.annotations.OnItemClick
 import de.fh.zwickau.scriptsprachen.findme.client.util.Core
 import de.fh.zwickau.scriptsprachen.findme.client.ui.ExpandableListAdapter
 import de.fh.zwickau.scriptsprachen.findme.client.ui.OpenStreetMap
+import de.fh.zwickau.scriptsprachen.findme.client.ui.Progress
 import de.fh.zwickau.scriptsprachen.findme.client.R
 import de.fh.zwickau.scriptsprachen.findme.client.rest.RESTRequests
 import de.fh.zwickau.scriptsprachen.findme.client.rest.RESTServer
@@ -67,7 +68,9 @@ public class MainActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
 
+        Progress.showProgress("Aktualisiere Freundesliste", this)
         Core.getConnector().getFriends(true)
+        Progress.dismissProgress()
     }
 
     @Override

@@ -64,6 +64,7 @@ class Connector implements IConnector {
                 restRequestDone = false
             }
         }
+        println friends.values()
         return friends.values().asList()
     }
 
@@ -73,6 +74,7 @@ class Connector implements IConnector {
             response = response.replace("[", "").replace("]", "")
             String[] emailAddresses = response.split(",")
             for (String email : emailAddresses) {
+                email = email.trim()
                 Friend f = friends[email]
                 if (f == null)
                     f = new Friend()

@@ -9,4 +9,9 @@ class Friend {
     def lastKnownIp
     Vector lastKnownLocation
 
+    @Override
+    public String toString() {
+        return "name: " + name + ", email: " + email + ", last known IP: " + lastKnownIp + ", last known location: " + lastKnownLocation
+    }
+
 }

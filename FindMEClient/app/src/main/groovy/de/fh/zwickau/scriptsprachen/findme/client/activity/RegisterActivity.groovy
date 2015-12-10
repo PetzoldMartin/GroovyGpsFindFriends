@@ -10,6 +10,7 @@ import com.arasthel.swissknife.SwissKnife
 import com.arasthel.swissknife.annotations.OnClick
 import com.arasthel.swissknife.annotations.OnUIThread
 import de.fh.zwickau.scriptsprachen.findme.client.R
+import de.fh.zwickau.scriptsprachen.findme.client.ui.Progress
 import de.fh.zwickau.scriptsprachen.findme.client.util.StorageManager
 import de.fh.zwickau.scriptsprachen.findme.client.rest.RESTRequests
 
@@ -40,7 +41,7 @@ public class RegisterActivity extends AppCompatActivity {
 
         String email = StorageManager.getInstance().getLoginData(this)
         if (email != null) {
-            showProgress("Login")
+            Progress.showProgress("Login", this)
             restRequests.login(email, this)
         }
     }
@@ -59,7 +60,7 @@ public class RegisterActivity extends AppCompatActivity {
         }
 
         if (checkValidInput(name, email)) {
-            showProgress("Registrieren")
+            Progress.showProgress("Registrieren", this)
             restRequests.register(email, name, this)
         }
         else
@@ -70,7 +71,7 @@ public class RegisterActivity extends AppCompatActivity {
     public void onLoginClicked() {
         String email = emailTextfield.getText()
         if (checkValidInput(email)) {
-            showProgress("Login")
+            Progress.showProgress("Login", this)
             restRequests.login(email, this)
         }
     }
@@ -99,14 +100,14 @@ public class RegisterActivity extends AppCompatActivity {
 
     @OnUIThread
     public void showErrorMessage(String errorMessage) {
-        progDialog.dismiss()
+        Progress.dismissProgress()
         Toast.makeText(this, errorMessage, Toast.LENGTH_LONG).show()
     }
 
     @OnUIThread
     public void showRegisterSuccessful(String email) {
         Toast.makeText(this, "Registrierung erfolgreich", Toast.LENGTH_LONG).show()
-        showProgress("Login")
+        Progress.showProgress("Login", this)
         restRequests.login(email, this)
     }
 
@@ -117,11 +118,6 @@ public class RegisterActivity extends AppCompatActivity {
         Intent intent = new Intent(this, MainActivity.class)
         startActivity(intent)
         finish()
-    }
-
-    private void showProgress(String title) {
-        progDialog = ProgressDialog.show(this, title, "Bitte warten")
-        progDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER)
     }
 
 }
