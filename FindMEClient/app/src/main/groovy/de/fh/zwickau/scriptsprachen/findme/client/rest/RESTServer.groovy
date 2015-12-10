@@ -23,14 +23,14 @@ public class RESTServer {
         ServletHolder servletHolder = new ServletHolder(ServletContainer.class)
 
         servletHolder.setInitParameter("com.sun.jersey.config.property.resourceConfigClass", "com.sun.jersey.api.core.ClassNamesResourceConfig")
-        servletHolder.setInitParameter("com.sun.jersey.config.property.classnames", "HelloResource")
+        servletHolder.setInitParameter("com.sun.jersey.config.property.classnames", "de.fh.zwickau.scriptsprachen.findme.client.rest.resources.HelloResource")
 
         ServletContextHandler servletContextHandler = new ServletContextHandler(webServer, "/", true, false)
         servletContextHandler.addServlet(servletHolder, "/hello/*")
 
         ServletHolder locatorHolder = new ServletHolder(ServletContainer.class)
         locatorHolder.setInitParameter("com.sun.jersey.config.property.resourceConfigClass", "com.sun.jersey.api.core.ClassNamesResourceConfig")
-        locatorHolder.setInitParameter("com.sun.jersey.config.property.classnames", "LocatorResource")
+        locatorHolder.setInitParameter("com.sun.jersey.config.property.classnames", "de.fh.zwickau.scriptsprachen.findme.client.rest.resources.LocatorResource")
         servletContextHandler.addServlet(locatorHolder, "/locator/*")
 
         webServer.setHandler(servletContextHandler)

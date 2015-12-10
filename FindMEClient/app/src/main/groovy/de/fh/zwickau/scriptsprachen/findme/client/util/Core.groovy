@@ -18,12 +18,11 @@ final class Core {
 
     public static void init(Activity activity) {
         locator = new ClientLocator(activity.getApplicationContext())
+        connector = Connector.getInstance(activity)
         restServer.startServer()
     }
 
     public static synchronized IConnector getConnector() {
-        if (connector == null)
-            connector = Connector.getInstance()
         return connector
     }
 

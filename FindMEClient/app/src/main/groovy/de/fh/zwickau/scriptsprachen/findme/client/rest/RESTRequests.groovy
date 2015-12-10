@@ -2,6 +2,7 @@ package de.fh.zwickau.scriptsprachen.findme.client.rest
 
 import android.util.Log
 import com.arasthel.swissknife.annotations.OnBackground
+import de.fh.zwickau.scriptsprachen.findme.client.util.Connector
 import de.fh.zwickau.scriptsprachen.findme.client.util.Core
 import de.fh.zwickau.scriptsprachen.findme.client.activity.RegisterActivity
 import org.springframework.http.converter.StringHttpMessageConverter
@@ -22,24 +23,30 @@ public class RESTRequests {
     }
 
     @OnBackground
-    public void getAllUsers(String email) {
+    public void getAllUsers(String email, Connector connector) {
         final String url = Core.SERVER_IP + "/medi/getOnlineUsers?email={email}"
         RestTemplate restTemplate = getRestTemplate()
         try {
             String response = restTemplate.getForObject(url, String.class, email)
-            println response
+            if (response.contains("Cannot Respose you are not logged in"))
+                connector.restRequestFailed(response)
+            else
+                connector.restRequestDone(response)
         } catch (Exception ex) {
             Log.d("RESTClient", "Exception while REST request: " + ex.toString())
         }
     }
 
     @OnBackground
-    public void getIpForEmail(String ownEmail, String targetEmail) {
+    public void getIpForEmail(String ownEmail, String targetEmail, Connector connector) {
         final String url = Core.SERVER_IP + "/medi/getIP?email={ownEmail}&targetEmail={targetEmail}"
         RestTemplate restTemplate = getRestTemplate()
         try {
             String response = restTemplate.getForObject(url, String.class, ownEmail, targetEmail)
-            println response
+            if (response.contains(" is not online"))
+                connector.restRequestFailed(response)
+            else
+                connector.restRequestDone(response)
         } catch (Exception ex) {
             Log.d("RESTClient", "Exception while REST request: " + ex.toString())
         }
@@ -90,12 +97,15 @@ public class RESTRequests {
     }
 
     @OnBackground
-    public void getLocation(String targetIpWithPort) {
+    public void getLocation(String targetIpWithPort, Connector connector) {
         final String url = "http://" + targetIpWithPort + "/locator/getLocation"
         RestTemplate restTemplate = getRestTemplate()
         try {
             String response = restTemplate.getForObject(url, String.class)
-            println response
+            if (response.contains("null"))
+                connector.restRequestFailed("Could not get IP for " + targetIpWithPort)
+            else
+                connector.restRequestDone(response)
         } catch (Exception ex) {
             Log.d("RESTClient", "Exception while REST request: " + ex.toString())
         }

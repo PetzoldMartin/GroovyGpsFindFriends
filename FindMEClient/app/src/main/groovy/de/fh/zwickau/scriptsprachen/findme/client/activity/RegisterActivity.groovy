@@ -66,8 +66,17 @@ public class RegisterActivity extends AppCompatActivity {
             Toast.makeText(this, "E-Mail-Adresse oder Name ungültig", Toast.LENGTH_LONG).show()
     }
 
-    private boolean checkValidInput(String name, String email) {
-        if ("".equals(name) || "".equals(email))
+    @OnClick(R.id.button_login)
+    public void onLoginClicked() {
+        String email = emailTextfield.getText()
+        if (checkValidInput(email)) {
+            showProgress("Login")
+            restRequests.login(email, this)
+        }
+    }
+
+    private boolean checkValidInput(String email) {
+        if ("".equals(email))
             return false
         int atIndex = -1
         int dotIndex = -1
@@ -82,6 +91,12 @@ public class RegisterActivity extends AppCompatActivity {
         return true
     }
 
+    private boolean checkValidInput(String name, String email) {
+        if ("".equals(name))
+            return false
+        return checkValidInput(email)
+    }
+
     @OnUIThread
     public void showErrorMessage(String errorMessage) {
         progDialog.dismiss()
@@ -91,7 +106,6 @@ public class RegisterActivity extends AppCompatActivity {
     @OnUIThread
     public void showRegisterSuccessful(String email) {
         Toast.makeText(this, "Registrierung erfolgreich", Toast.LENGTH_LONG).show()
-        StorageManager.getInstance().storeLoginData(email, this)
         showProgress("Login")
         restRequests.login(email, this)
     }
@@ -99,6 +113,7 @@ public class RegisterActivity extends AppCompatActivity {
     @OnUIThread
     public void showMapScreen(String email) {
         Toast.makeText(this, "Login erfolgreich", Toast.LENGTH_LONG).show()
+        StorageManager.getInstance().storeLoginData(email, this)
         Intent intent = new Intent(this, MainActivity.class)
         startActivity(intent)
         finish()

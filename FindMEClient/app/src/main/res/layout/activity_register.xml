@@ -30,11 +30,25 @@
         android:layout_gravity="center_horizontal"
         android:hint="E-Mail-Adresse" />
 
-    <Button
-        android:layout_width="204dp"
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Registrieren"
-        android:id="@+id/button_register"
-        android:layout_gravity="center_horizontal" />
+        android:weightSum="1">
+
+        <Button
+            android:layout_width="173dp"
+            android:layout_height="wrap_content"
+            android:text="Registrieren"
+            android:id="@+id/button_register"
+            android:layout_weight="0.5" />
+
+        <Button
+            android:layout_width="173dp"
+            android:layout_height="wrap_content"
+            android:text="Login"
+            android:id="@+id/button_login"
+            android:layout_weight="0.5" />
+    </LinearLayout>
 
 </LinearLayout>

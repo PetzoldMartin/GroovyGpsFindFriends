@@ -66,6 +66,8 @@ public class MainActivity extends AppCompatActivity {
         setupDrawer()
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
+
+        Core.getConnector().getFriends(true)
     }
 
     @Override

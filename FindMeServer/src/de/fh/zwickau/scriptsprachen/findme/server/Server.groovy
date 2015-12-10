@@ -6,6 +6,7 @@ import org.glassfish.jersey.server.ResourceConfig
 import org.glassfish.grizzly.http.server.CLStaticHttpHandler
 
 import de.fh.zwickau.scriptsprachen.findme.server.resources.*
+import de.fh.zwickau.scriptsprachen.findme.server.test.LocatorResource
 
 class Globals {
 	public static final String SERVER_IP = "http://localhost:8080"
@@ -15,6 +16,7 @@ final ResourceConfig rc = new ResourceConfig();
 rc.register(Auth.class)
 rc.register(Mediator.class)
 rc.register(Admin.class)
+rc.register(LocatorResource.class)
 rc.register(Admin2.class)
 rc.register(RequestFilter.class)
 final HttpServer server = GrizzlyHttpServerFactory.createHttpServer(Globals.SERVER_IP.toURI(), rc)
