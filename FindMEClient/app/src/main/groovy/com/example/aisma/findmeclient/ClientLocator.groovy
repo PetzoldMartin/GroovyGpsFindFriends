@@ -7,9 +7,8 @@ import android.location.LocationManager
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity;
 
-
-
 class ClientLocator {
+
     LocationManager locationManagerI
     MyLocationListener mlocListenerI
     Context mContext;
@@ -27,5 +26,6 @@ class ClientLocator {
     String toString() {
         "$mlocListenerI"
     }
+
 }
 
