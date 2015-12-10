@@ -14,6 +14,8 @@ final ResourceConfig rc = new ResourceConfig();
 rc.register(Auth.class)
 rc.register(Mediator.class)
 rc.register(Admin.class)
+rc.register(RequestFilter.class)
+
 final HttpServer server =GrizzlyHttpServerFactory.createHttpServer(Globals.SERVER_IP.toURI(), rc)
 
 String email="testemail"

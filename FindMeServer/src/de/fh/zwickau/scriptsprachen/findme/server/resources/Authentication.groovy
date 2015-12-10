@@ -1,4 +1,4 @@
-package de.fh.zwickau.scriptsprachen.findme.server
+package de.fh.zwickau.scriptsprachen.findme.server.resources
 
 import javax.ws.rs.*
 import javax.ws.rs.core.*

@@ -1,9 +1,11 @@
-package de.fh.zwickau.scriptsprachen.findme.server
+package de.fh.zwickau.scriptsprachen.findme.server.resources
 
 import java.util.HashSet;
 
 import javax.ws.rs.*
 import javax.ws.rs.core.*
+
+import de.fh.zwickau.scriptsprachen.findme.server.resources.Auth
 
 @Path('/medi')
 class Mediator {

@@ -1,14 +1,13 @@
-package de.fh.zwickau.scriptsprachen.findme.server
+package de.fh.zwickau.scriptsprachen.findme.server.resources
 
-import javax.ws.rs.Path
-import javax.ws.rs.GET
-import javax.ws.rs.POST
-import javax.ws.rs.core.Context
-import javax.ws.rs.Produces
-import javax.ws.rs.Consumes
-import javax.ws.rs.QueryParam
-import javax.ws.rs.FormParam
+import javax.ws.rs.*
+import javax.ws.rs.core.*
+
 import org.glassfish.grizzly.http.server.Session
+
+import de.fh.zwickau.scriptsprachen.findme.server.Globals;
+import de.fh.zwickau.scriptsprachen.findme.server.HTML;
+
 import org.glassfish.grizzly.http.server.Request
 import org.glassfish.grizzly.http.server.Response
 
