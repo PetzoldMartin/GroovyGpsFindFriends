@@ -47,10 +47,8 @@ class Admin implements HTML {
 		else {
 			Session session = req.getSession(true)
 			Object isLoggedIn = session.getAttribute(IS_LOGGED_IN)
-			if (isLoggedIn == null) {
-				isLoggedIn = new Boolean(true)
-				session.setAttribute(IS_LOGGED_IN, isLoggedIn)
-			}
+			isLoggedIn = new Boolean(true)
+			session.setAttribute(IS_LOGGED_IN, isLoggedIn)
 			res.sendRedirect(Globals.SERVER_IP + "/admin/showUsers")
 		}
 	}
@@ -89,7 +87,7 @@ class Admin implements HTML {
 		List<String> lines = fis.readLines()
 		StringBuilder cssBuilder = new StringBuilder()
 		lines.each {s -> cssBuilder.append(s)}
-		return cssBuilder.toString()
+		cssBuilder.toString()
 	}
 	
 	@GET
