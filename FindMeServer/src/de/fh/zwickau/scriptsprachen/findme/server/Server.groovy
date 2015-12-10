@@ -8,7 +8,7 @@ import org.glassfish.grizzly.http.server.CLStaticHttpHandler
 import de.fh.zwickau.scriptsprachen.findme.server.resources.*
 
 class Globals {
-	public static final String SERVER_IP = "http://141.32.23.209:8080"
+	public static final String SERVER_IP = "http://localhost:8080"
 }
 
 final ResourceConfig rc = new ResourceConfig();
@@ -25,9 +25,10 @@ String name="testname"
 Auth.eMailAddresses.add(email)
 Auth.names.put(email, name)
 Auth.isLoggedIn.put(email, true)
+Mediator.ipMap.put(email, "10.0.2.2:8080")
 
-email="onlinemail"
-name="online"
-Auth.eMailAddresses.add(email)
-Auth.names.put(email, name)
-Auth.isLoggedIn.put(email, true)
+//email="onlinemail"
+//name="online"
+//Auth.eMailAddresses.add(email)
+//Auth.names.put(email, name)
+//Auth.isLoggedIn.put(email, true)

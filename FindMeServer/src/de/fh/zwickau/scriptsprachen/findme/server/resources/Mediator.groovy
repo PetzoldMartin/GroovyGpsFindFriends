@@ -40,7 +40,7 @@ class Mediator {
 				int remotePort = req.getRemotePort();
 			ipMap[email]=remoteAddr + ":" + remotePort
 		} else {
-			println "No email id used for $req.getRemoteAddr()"
+			println "No email id used for " + req.getRemoteAddr()
 		}
 	}
 	
