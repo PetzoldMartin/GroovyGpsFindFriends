@@ -1,6 +1,6 @@
-package resources
+package de.fh.zwickau.scriptsprachen.findme.client.rest.resources
 
-import com.example.aisma.findmeclient.Core;
+import de.fh.zwickau.scriptsprachen.findme.client.util.Core;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;

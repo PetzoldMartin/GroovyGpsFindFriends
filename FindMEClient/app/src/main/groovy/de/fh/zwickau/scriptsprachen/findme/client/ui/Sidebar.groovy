@@ -1,4 +1,4 @@
-package com.example.aisma.findmeclient
+package de.fh.zwickau.scriptsprachen.findme.client.ui
 
 import android.support.v4.app.ActionBarDrawerToggle
 import android.support.v4.widget.DrawerLayout

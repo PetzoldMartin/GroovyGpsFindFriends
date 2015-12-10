@@ -1,6 +1,8 @@
-package com.example.aisma.findmeclient
+package de.fh.zwickau.scriptsprachen.findme.client.util
 
 import android.app.Activity
+import de.fh.zwickau.scriptsprachen.findme.client.location.ClientLocator
+import de.fh.zwickau.scriptsprachen.findme.client.rest.RESTServer
 
 final class Core {
 
@@ -8,7 +10,6 @@ final class Core {
 
     private static IConnector connector = null
     private static ClientLocator locator = null
-    private static Activity activity = null
     private static final RESTServer restServer = new RESTServer()
 
     private Core() {
@@ -16,9 +17,8 @@ final class Core {
     }
 
     public static void init(Activity activity) {
-        this.activity = activity
         locator = new ClientLocator(activity.getApplicationContext())
-        restServer.startServer(locator)
+        restServer.startServer()
     }
 
     public static synchronized IConnector getConnector() {
@@ -32,7 +32,7 @@ final class Core {
     }
 
     public static synchronized void stopServer() {
-        // TODO
+        restServer.stopServer()
     }
 
 }

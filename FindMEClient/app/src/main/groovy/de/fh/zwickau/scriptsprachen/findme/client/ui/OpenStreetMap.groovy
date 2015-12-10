@@ -1,4 +1,4 @@
-package com.example.aisma.findmeclient
+package de.fh.zwickau.scriptsprachen.findme.client.ui
 
 import android.content.Context
 import android.os.Looper
@@ -6,6 +6,8 @@ import android.support.v4.content.ContextCompat
 import android.widget.Toast
 import com.arasthel.swissknife.annotations.OnBackground
 import com.arasthel.swissknife.annotations.OnUIThread
+import de.fh.zwickau.scriptsprachen.findme.client.R
+import de.fh.zwickau.scriptsprachen.findme.client.location.ClientLocator
 import org.osmdroid.bonuspack.overlays.Marker
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory
 import org.osmdroid.util.GeoPoint

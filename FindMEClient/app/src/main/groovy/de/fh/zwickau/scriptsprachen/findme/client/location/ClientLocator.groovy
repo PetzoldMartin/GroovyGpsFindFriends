@@ -1,17 +1,14 @@
-package com.example.aisma.findmeclient
+package de.fh.zwickau.scriptsprachen.findme.client.location
 
 import android.content.Context
-import android.location.Location
-import android.location.LocationListener
 import android.location.LocationManager
-import android.os.Bundle
-import android.support.v7.app.AppCompatActivity;
 
 class ClientLocator {
 
     LocationManager locationManagerI
     MyLocationListener mlocListenerI
     Context mContext;
+
     ClientLocator(Context mContext){
         this.mContext = mContext;
         locationManagerI = (LocationManager) mContext.getSystemService(Context.LOCATION_SERVICE)
@@ -20,11 +17,7 @@ class ClientLocator {
     }
 
     Vector getLocation(){
-       return new Vector(x:mlocListenerI.getLa(),y:mlocListenerI.getLo())
-    }
-
-    String toString() {
-        "$mlocListenerI"
+       return new Vector(x:mlocListenerI.getLa(), y:mlocListenerI.getLo())
     }
 
 }

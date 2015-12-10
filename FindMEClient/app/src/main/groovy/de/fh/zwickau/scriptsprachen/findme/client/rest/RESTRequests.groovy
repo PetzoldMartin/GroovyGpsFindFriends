@@ -1,7 +1,9 @@
-package com.example.aisma.findmeclient
+package de.fh.zwickau.scriptsprachen.findme.client.rest
 
 import android.util.Log
 import com.arasthel.swissknife.annotations.OnBackground
+import de.fh.zwickau.scriptsprachen.findme.client.util.Core
+import de.fh.zwickau.scriptsprachen.findme.client.activity.RegisterActivity
 import org.springframework.http.converter.StringHttpMessageConverter
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter
 import org.springframework.web.client.RestTemplate

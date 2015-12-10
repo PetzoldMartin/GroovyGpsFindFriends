@@ -1,10 +1,11 @@
-package com.example.aisma.findmeclient
+package de.fh.zwickau.scriptsprachen.findme.client.location
 
 import android.location.Location
 import android.location.LocationListener
-import android.os.Bundle;
+import android.os.Bundle
 
 class MyLocationListener implements LocationListener {
+
     def la, lo
 
     String toString() {
@@ -15,19 +16,19 @@ class MyLocationListener implements LocationListener {
     public void onLocationChanged(Location loc) {
         la = loc.getLatitude()
         lo = loc.getLongitude()
-        println(this.toString())
     }
 
     @Override
     public void onProviderDisabled(String provider) {
-        println("Gps Disabled")
+        println("GPS Disabled")
     }
 
     @Override
     public void onProviderEnabled(String provider) {
-        println("Gps Enabled")
+        println("GPS Enabled")
     }
 
     @Override
     public void onStatusChanged(String provider, int status, Bundle extras) {}
+
 }

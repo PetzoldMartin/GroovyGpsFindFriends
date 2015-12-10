@@ -1,4 +1,4 @@
-package com.example.aisma.findmeclient
+package de.fh.zwickau.scriptsprachen.findme.client.activity
 
 import android.app.ProgressDialog
 import android.content.Intent
@@ -9,7 +9,9 @@ import android.widget.Toast
 import com.arasthel.swissknife.SwissKnife
 import com.arasthel.swissknife.annotations.OnClick
 import com.arasthel.swissknife.annotations.OnUIThread
-import org.osmdroid.views.MapView
+import de.fh.zwickau.scriptsprachen.findme.client.R
+import de.fh.zwickau.scriptsprachen.findme.client.util.StorageManager
+import de.fh.zwickau.scriptsprachen.findme.client.rest.RESTRequests
 
 public class RegisterActivity extends AppCompatActivity {
 

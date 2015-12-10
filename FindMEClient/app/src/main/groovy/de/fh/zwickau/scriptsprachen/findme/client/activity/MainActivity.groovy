@@ -1,10 +1,9 @@
-package com.example.aisma.findmeclient
+package de.fh.zwickau.scriptsprachen.findme.client.activity
 
 import android.content.res.Configuration
 import android.support.v4.widget.DrawerLayout
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.Toolbar
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
@@ -17,16 +16,19 @@ import android.widget.ListView
 import android.widget.TextView
 import android.widget.Toast
 import com.arasthel.swissknife.SwissKnife
-import com.arasthel.swissknife.annotations.OnClick
 import com.arasthel.swissknife.annotations.OnItemClick
+import de.fh.zwickau.scriptsprachen.findme.client.util.Core
+import de.fh.zwickau.scriptsprachen.findme.client.ui.ExpandableListAdapter
+import de.fh.zwickau.scriptsprachen.findme.client.ui.OpenStreetMap
+import de.fh.zwickau.scriptsprachen.findme.client.R
+import de.fh.zwickau.scriptsprachen.findme.client.rest.RESTRequests
+import de.fh.zwickau.scriptsprachen.findme.client.rest.RESTServer
 import org.osmdroid.views.MapView
 import android.os.Bundle
 
 public class MainActivity extends AppCompatActivity {
 
     def openStreetMap;
-    RESTRequests restRequests;
-    RESTServer restServer;
     private ListView mDrawerList;
     private ArrayAdapter<String> mAdapter;
     private ActionBarDrawerToggle mDrawerToggle;
@@ -52,8 +54,6 @@ public class MainActivity extends AppCompatActivity {
 
         Core.init(this)
         openStreetMap = new OpenStreetMap(this, (MapView) findViewById(R.id.mapview), Core.getLocator())
-        restRequests = new RESTRequests()
-        restServer = new RESTServer()
         //def toolbar = (Toolbar) findViewById(R.id.toolbar)
         //setSupportActionBar(toolbar)
         getSupportActionBar().show();
@@ -66,6 +66,12 @@ public class MainActivity extends AppCompatActivity {
         setupDrawer()
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onStop()
+        Core.stopServer()
     }
 
     @OnItemClick(R.id.navList)

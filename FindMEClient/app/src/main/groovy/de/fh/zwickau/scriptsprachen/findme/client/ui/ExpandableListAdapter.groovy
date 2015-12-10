@@ -1,8 +1,6 @@
-package com.example.aisma.findmeclient;
+package de.fh.zwickau.scriptsprachen.findme.client.ui
 
-import java.util.HashMap;
-import java.util.List;
-
+import de.fh.zwickau.scriptsprachen.findme.client.R
 import android.content.Context;
 import android.graphics.Typeface;
 import android.view.LayoutInflater;

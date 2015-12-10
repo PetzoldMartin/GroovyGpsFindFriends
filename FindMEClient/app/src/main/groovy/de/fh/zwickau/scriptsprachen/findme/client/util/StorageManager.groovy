@@ -1,4 +1,4 @@
-package com.example.aisma.findmeclient
+package de.fh.zwickau.scriptsprachen.findme.client.util
 
 import android.app.Activity
 import android.content.Context
