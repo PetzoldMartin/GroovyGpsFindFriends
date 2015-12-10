@@ -2,14 +2,12 @@ package com.example.aisma.findmeclient
 
 import android.util.Log
 import com.arasthel.swissknife.annotations.OnBackground
-import org.springframework.http.ResponseEntity
 import org.springframework.http.converter.StringHttpMessageConverter
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter
 import org.springframework.web.client.RestTemplate
 
 public class RESTRequests {
 
-    private static final String SERVER_IP = "http://10.0.2.2:8080"
     private static final String SECRET = "geheim"
 
     @OnBackground
@@ -23,7 +21,7 @@ public class RESTRequests {
 
     @OnBackground
     public void getAllUsers(String email) {
-        final String url = SERVER_IP + "/medi/getOnlineUsers?email={email}"
+        final String url = Core.SERVER_IP + "/medi/getOnlineUsers?email={email}"
         RestTemplate restTemplate = getRestTemplate()
         try {
             String response = restTemplate.getForObject(url, String.class, email)
@@ -35,7 +33,7 @@ public class RESTRequests {
 
     @OnBackground
     public void getIpForEmail(String ownEmail, String targetEmail) {
-        final String url = SERVER_IP + "/medi/getIP?email={ownEmail}&targetEmail={targetEmail}"
+        final String url = Core.SERVER_IP + "/medi/getIP?email={ownEmail}&targetEmail={targetEmail}"
         RestTemplate restTemplate = getRestTemplate()
         try {
             String response = restTemplate.getForObject(url, String.class, ownEmail, targetEmail)
@@ -47,7 +45,7 @@ public class RESTRequests {
 
     @OnBackground
     public void register(String email, String name, RegisterActivity activity) {
-        final String url = SERVER_IP + "/auth/register?email={email}&name={name}&secret=" + SECRET
+        final String url = Core.SERVER_IP + "/auth/register?email={email}&name={name}&secret=" + SECRET
         RestTemplate restTemplate = getRestTemplate()
         try {
             String response = restTemplate.getForObject(url, String.class, email, name)
@@ -63,7 +61,7 @@ public class RESTRequests {
 
     @OnBackground
     public void login(String email, RegisterActivity activity) {
-        final String url = SERVER_IP + "/auth/login?email={email}"
+        final String url = Core.SERVER_IP + "/auth/login?email={email}"
         RestTemplate restTemplate = getRestTemplate()
         try {
             String response = restTemplate.getForObject(url, String.class, email)
@@ -79,7 +77,7 @@ public class RESTRequests {
 
     @OnBackground
     public void logout(String email) {
-        final String url = SERVER_IP + "/auth/logout?email={email}"
+        final String url = Core.SERVER_IP + "/auth/logout?email={email}"
         RestTemplate restTemplate = getRestTemplate()
         try {
             String response = restTemplate.getForObject(url, String.class, email)
