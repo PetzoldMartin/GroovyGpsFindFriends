@@ -23,7 +23,7 @@ public class RequestFilter implements ContainerRequestFilter {
         log.info( "Filtering request path: " + path );
 		
 		def authHash = requestCtx.getHeaderString(HttpHeaders.AUTHORIZATION)
-		log.info("Hash: " + authHash)
+		//log.info("Hash: " + authHash)
         // IMPORTANT!!! First, Acknowledge any pre-flight test from browsers for this case before validating the headers (CORS stuff)
         if ( requestCtx.getRequest().getMethod().equals( "OPTIONS" ) ) {
             requestCtx.abortWith( Response.status( Response.Status.OK ).build() );
