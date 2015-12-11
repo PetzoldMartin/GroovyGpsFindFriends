@@ -33,6 +33,7 @@ public class RESTRequests {
             else
                 connector.restRequestDone(response)
         } catch (Exception ex) {
+            connector.restRequestFailed("Server unavailable")
             Log.d("RESTClient", "Exception while REST request: " + ex.toString())
         }
     }
@@ -48,6 +49,7 @@ public class RESTRequests {
             else
                 connector.restRequestDone(response)
         } catch (Exception ex) {
+            connector.restRequestFailed("Server unavailable")
             Log.d("RESTClient", "Exception while REST request: " + ex.toString())
         }
     }
@@ -107,6 +109,7 @@ public class RESTRequests {
             else
                 connector.restRequestDone(response)
         } catch (Exception ex) {
+            connector.restRequestFailed("Target address unavailable")
             Log.d("RESTClient", "Exception while REST request: " + ex.toString())
         }
     }

@@ -57,6 +57,7 @@ public class RegisterActivity extends AppCompatActivity {
             // Skip connection to server for test purposes
             Intent intent = new Intent(this, MainActivity.class)
             startActivity(intent)
+            finish()
         }
 
         if (checkValidInput(name, email)) {
