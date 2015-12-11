@@ -8,6 +8,7 @@ import com.arasthel.swissknife.annotations.OnBackground
 import com.arasthel.swissknife.annotations.OnUIThread
 import de.fh.zwickau.scriptsprachen.findme.client.R
 import de.fh.zwickau.scriptsprachen.findme.client.location.ClientLocator
+import de.fh.zwickau.scriptsprachen.findme.client.util.Friend
 import org.osmdroid.bonuspack.overlays.Marker
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory
 import org.osmdroid.util.GeoPoint
@@ -20,8 +21,6 @@ class OpenStreetMap {
     def mMapView
     def mMapController
     def ILocator
-
-    def centerPoint, zoomLevel
 
     OpenStreetMap(Context mContext, MapView mMapView, ClientLocator ILocator) {
         this.mContext = mContext
@@ -51,9 +50,6 @@ class OpenStreetMap {
         def gPt = new GeoPoint(ILocator.getLocation().x, ILocator.getLocation().y)
         mMapController.setCenter(gPt)
         createSelf(gPt)
-        //TODO: Autozoom so i can see all friends at start
-        // create test friend
-        createNode(ILocator.getLocation().x + 0.1, ILocator.getLocation().y)
 
         refreshMap()
 
@@ -71,25 +67,30 @@ class OpenStreetMap {
     }
 
     /**
-     * Testfriend
-     * TODO: add dynamic data for title, snippet and subdescription
+     * create Node on Map
      */
-    void createNode(GeoPoint geoPoint, boolean self = false) {
+    Marker createNode(GeoPoint geoPoint, boolean self = false) {
         Marker nodeMarker = new Marker(mMapView)
         nodeMarker.setPosition(geoPoint)
         def nodeIcon = ContextCompat.getDrawable(mContext, R.drawable.marker_cluster)
         if (!self)
             nodeMarker.setIcon(nodeIcon)
-        nodeMarker.setTitle("Max Mueller")
-        nodeMarker.setSnippet("Snippettext")
-        nodeMarker.setSubDescription("SubDescription Text")
         mMapView.getOverlays().add(nodeMarker)
+        nodeMarker
+    }
+
+    @OnBackground
+    public void createFriend(Friend friend){
+        def friendNode = createNode(friend.lastKnownLocation.x,friend.lastKnownLocation.y)
+        friendNode.setTitle(friend.name)
+        friendNode.setSnippet(friend.email)
+        friendNode.setSubDescription(friend.lastKnownIp)
     }
 
     /**
      * @Overload
      */
-    void createNode(double lat, double loc) {
+    Marker createNode(double lat, double loc) {
         def geoPoint = new GeoPoint(lat, loc)
         createNode(geoPoint)
     }

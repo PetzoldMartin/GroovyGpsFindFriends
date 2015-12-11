@@ -24,6 +24,7 @@ import de.fh.zwickau.scriptsprachen.findme.client.ui.Progress
 import de.fh.zwickau.scriptsprachen.findme.client.R
 import de.fh.zwickau.scriptsprachen.findme.client.rest.RESTRequests
 import de.fh.zwickau.scriptsprachen.findme.client.rest.RESTServer
+import de.fh.zwickau.scriptsprachen.findme.client.util.Friend
 import org.osmdroid.views.MapView
 import android.os.Bundle
 
@@ -69,7 +70,14 @@ public class MainActivity extends AppCompatActivity {
         getSupportActionBar().setHomeButtonEnabled(true);
 
         Progress.showProgress("Aktualisiere Freundesliste", this)
-        Core.getConnector().getFriends(true)
+        def friendlist = Core.getConnector().getFriends(true)
+        Progress.dismissProgress()
+
+        Progress.showProgress("Aktualisiere Karte", this)
+        for(Friend friend : friendlist){
+            openStreetMap.createFriend(friend)
+        }
+        openStreetMap.refreshMap()
         Progress.dismissProgress()
     }
 

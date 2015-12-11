@@ -11,7 +11,10 @@ public class LocatorResource {
     @Path("/getLocation")
     @Produces("text/plain")
     public String getLocation() {
-        return "50.00 70.00"
+		def rand = new Random()
+		def x_rand = rand.nextInt(99)
+		def y_rand = rand.nextInt(99)
+        return "50.$x_rand 70.$y_rand"
     }
 
 }

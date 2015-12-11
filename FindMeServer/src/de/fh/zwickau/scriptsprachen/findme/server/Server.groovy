@@ -29,6 +29,13 @@ Auth.names.put(email, name)
 Auth.isLoggedIn.put(email, true)
 Mediator.ipMap.put(email, "10.0.2.2:8080")
 
+email="testemail2"
+name="testname2"
+Auth.eMailAddresses.add(email)
+Auth.names.put(email, name)
+Auth.isLoggedIn.put(email, true)
+Mediator.ipMap.put(email, "10.0.2.2:8080")
+
 //email="onlinemail"
 //name="online"
 //Auth.eMailAddresses.add(email)
