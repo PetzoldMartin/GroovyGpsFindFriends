@@ -30,7 +30,7 @@ public class RegisterActivity extends AppCompatActivity {
         // This must be called for saved state restoring
         SwissKnife.restoreState(this, savedInstanceState);
         // This mus be called for automatic parsing of intent extras
-        SwissKnife.loadExtras(this)
+        // SwissKnife.loadExtras(this)
 
         restRequests = new RESTRequests()
         nameTextfield = findViewById(R.id.textfield_name)
