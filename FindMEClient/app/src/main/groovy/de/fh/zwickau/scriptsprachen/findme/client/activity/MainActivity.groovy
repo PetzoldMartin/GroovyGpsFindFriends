@@ -14,6 +14,7 @@ import android.widget.ArrayAdapter
 import android.widget.ExpandableListView
 import android.widget.ExpandableListView.OnChildClickListener
 import android.widget.FrameLayout
+import android.widget.LinearLayout
 import android.widget.ListView
 import android.widget.TextView
 import android.widget.Toast
@@ -53,6 +54,9 @@ public class MainActivity extends AppCompatActivity {
 
         initLayouts();
         ((FrameLayout) findViewById(R.id.content_frame)).addView(main);
+        ((FrameLayout) findViewById(R.id.content_frame)).addView(friend);
+        friend.setVisibility(LinearLayout.GONE)
+        main.setVisibility(LinearLayout.VERTICAL)
         initToolbar()
         // This must be called for injection of views and callbacks to take place
         SwissKnife.inject(this);
@@ -128,13 +132,17 @@ public class MainActivity extends AppCompatActivity {
         Toast.makeText(baseContext, "Time for an upgrade!" + item, Toast.LENGTH_SHORT).show();
         switch (item) {
             case "Map":
-                ((FrameLayout) findViewById(R.id.content_frame)).removeAllViews()
-                ((FrameLayout) findViewById(R.id.content_frame)).addView(main);
+                //((FrameLayout) findViewById(R.id.content_frame)).removeAllViews()
+                //((FrameLayout) findViewById(R.id.content_frame)).addView(main);
+                friend.setVisibility(LinearLayout.GONE)
+                main.setVisibility(LinearLayout.VERTICAL)
                 initToolbar()
                 break
             case "Friendslist":
-                ((FrameLayout) findViewById(R.id.content_frame)).removeAllViews()
-                ((FrameLayout) findViewById(R.id.content_frame)).addView(friend);
+                //((FrameLayout) findViewById(R.id.content_frame)).removeAllViews()
+                //((FrameLayout) findViewById(R.id.content_frame)).addView(friend);
+                friend.setVisibility(LinearLayout.VERTICAL)
+                main.setVisibility(LinearLayout.GONE)
                 initToolbar()
                 setupFriendsList()
                 break
