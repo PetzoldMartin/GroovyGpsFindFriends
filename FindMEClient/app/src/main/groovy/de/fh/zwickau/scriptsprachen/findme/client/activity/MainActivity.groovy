@@ -73,8 +73,9 @@ public class MainActivity extends AppCompatActivity {
         addDrawerItems()
         setupDrawer()
 
-refresh()
+        refresh()
     }
+
     void initToolbar(){
         toolbar = (Toolbar) findViewById(R.id.tool_bar)
         setSupportActionBar(toolbar)
@@ -82,6 +83,7 @@ refresh()
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
     }
+
     void initFriends() {
         friendlist = Core.getConnector().getFriends(true)
         friendArray = new ArrayList<String>()

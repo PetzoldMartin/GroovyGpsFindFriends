@@ -46,7 +46,7 @@ class Connector implements IConnector {
                     if (restRequestFailed) {
                         Log.d("getFriends", "Failed to get IP for " + currentTargetEmail)
                         restRequestFailed = false
-                        continue
+                        restRequestDone = true
                     }
                 }
                 restRequestDone = false
@@ -58,7 +58,7 @@ class Connector implements IConnector {
                     if (restRequestFailed) {
                         Log.d("getFriends", "Failed to get location for " + currentTargetEmail)
                         restRequestFailed = false
-                        continue
+                        restRequestDone = true
                     }
                 }
                 restRequestDone = false
@@ -73,14 +73,15 @@ class Connector implements IConnector {
             // getOnlineUsers request
             response = response.replace("[", "").replace("]", "")
             String[] emailAddresses = response.split(",")
-            for (String email : emailAddresses) {
-                email = email.trim()
-                Friend f = friends[email]
+            for (String nameAndEmail : emailAddresses) {
+                nameAndEmail = nameAndEmail.trim()
+                String[] parts = nameAndEmail.split(":")
+                Friend f = friends[parts[1]]
                 if (f == null)
                     f = new Friend()
-                f.email = email
-                f.name = "test"
-                friends.put(email, f)
+                f.email = parts[1]
+                f.name = parts[0]
+                friends.put(f.email, f)
             }
         }
         else if (response.contains(":")) {
@@ -97,7 +98,6 @@ class Connector implements IConnector {
     }
 
     def restRequestFailed(String errorMessage) {
-        // TODO
         restRequestFailed = true
     }
 

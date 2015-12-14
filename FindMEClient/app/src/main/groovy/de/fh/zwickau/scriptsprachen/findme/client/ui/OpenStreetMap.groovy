@@ -81,6 +81,9 @@ class OpenStreetMap {
 
     @OnBackground
     public void createFriend(Friend friend){
+        if (friend.lastKnownLocation == null)
+            return
+
         def friendNode = createNode(friend.lastKnownLocation.x,friend.lastKnownLocation.y)
         friendNode.setTitle(friend.name)
         friendNode.setSnippet(friend.email)

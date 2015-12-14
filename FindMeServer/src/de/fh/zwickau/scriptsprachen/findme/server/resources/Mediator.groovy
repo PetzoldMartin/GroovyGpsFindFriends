@@ -28,7 +28,11 @@ class Mediator {
 	def getOnlineUsers(@Context org.glassfish.grizzly.http.server.Request req,@QueryParam('email') String email) {
 		checkIP(req, email)
 		if(Auth.isLoggedIn.get(email)) {
-			return  Auth.isLoggedIn.findAll{key, value -> value==true}.keySet().findAll{it!=email}.toString()
+			Set<String> emails = Auth.isLoggedIn.findAll{key, value -> value == true}.keySet().findAll{it != email}
+			StringBuilder b = new StringBuilder("[")
+			emails.each {b.append(Auth.names[it] + ":" + it + ",")}
+			b.replace(b.length() - 1, b.length(), "]")
+			return b.toString()
 		} else {
 			return "Cannot Respose you are not logged in"
 		}
