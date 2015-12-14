@@ -4,7 +4,9 @@ import android.content.res.Configuration
 import android.support.v4.widget.DrawerLayout
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
+import android.support.v7.widget.Toolbar
 import android.view.LayoutInflater
+import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.AdapterView
@@ -16,14 +18,13 @@ import android.widget.ListView
 import android.widget.TextView
 import android.widget.Toast
 import com.arasthel.swissknife.SwissKnife
+import com.arasthel.swissknife.annotations.OnClick
 import com.arasthel.swissknife.annotations.OnItemClick
 import de.fh.zwickau.scriptsprachen.findme.client.util.Core
 import de.fh.zwickau.scriptsprachen.findme.client.ui.ExpandableListAdapter
 import de.fh.zwickau.scriptsprachen.findme.client.ui.OpenStreetMap
 import de.fh.zwickau.scriptsprachen.findme.client.ui.Progress
 import de.fh.zwickau.scriptsprachen.findme.client.R
-import de.fh.zwickau.scriptsprachen.findme.client.rest.RESTRequests
-import de.fh.zwickau.scriptsprachen.findme.client.rest.RESTServer
 import de.fh.zwickau.scriptsprachen.findme.client.util.Friend
 import org.osmdroid.views.MapView
 import android.os.Bundle
@@ -41,12 +42,20 @@ public class MainActivity extends AppCompatActivity {
     List<String> listDataHeader;
     HashMap<String, List<String>> listDataChild;
     ArrayList<String> friendArray;
+    private Toolbar toolbar;
+    View main, friend;
+    def friendlist;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.sidebar_container);
-        this.setLayoutInlay(R.layout.activity_main);
+
+
+
+        initLayouts();
+        ((FrameLayout) findViewById(R.id.content_frame)).addView(main);
+        initToolbar()
         // This must be called for injection of views and callbacks to take place
         SwissKnife.inject(this);
         // This must be called for saved state restoring
@@ -56,9 +65,6 @@ public class MainActivity extends AppCompatActivity {
 
         Core.init(this)
         openStreetMap = new OpenStreetMap(this, (MapView) findViewById(R.id.mapview), Core.getLocator())
-        //def toolbar = (Toolbar) findViewById(R.id.toolbar)
-        //setSupportActionBar(toolbar)
-        getSupportActionBar().show();
 
 
         mDrawerList = (ListView) findViewById(R.id.navList);
@@ -66,19 +72,32 @@ public class MainActivity extends AppCompatActivity {
         mActivityTitle = getTitle().toString();
         addDrawerItems()
         setupDrawer()
+
+refresh()
+    }
+    void initToolbar(){
+        toolbar = (Toolbar) findViewById(R.id.tool_bar)
+        setSupportActionBar(toolbar)
+        getSupportActionBar().show();
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
-
-        Progress.showProgress("Aktualisiere Freundesliste", this)
-        def friendlist = Core.getConnector().getFriends(true)
-        Progress.dismissProgress()
-
-        Progress.showProgress("Aktualisiere Karte", this)
-        for(Friend friend : friendlist){
-            openStreetMap.createFriend(friend)
+    }
+    void initFriends() {
+        friendlist = Core.getConnector().getFriends(true)
+        friendArray = new ArrayList<String>()
+        for (String text : friendlist) {
+            def array=text.tokenize(',')
+            def ntext=array[0]+" :) "+array[1]
+            friendArray.add(ntext)
         }
-        openStreetMap.refreshMap()
-        Progress.dismissProgress()
+        //friendArray=friendlist;
+    }
+
+    void initLayouts() {
+        LayoutInflater inflater = getLayoutInflater();
+        main = inflater.inflate(R.layout.activity_main, null);
+        LayoutInflater inflater2 = getLayoutInflater();
+        friend = inflater2.inflate(R.layout.friends_list, null);
     }
 
     @Override
@@ -86,6 +105,21 @@ public class MainActivity extends AppCompatActivity {
         super.onStop()
         Core.stopServer()
     }
+    public void refresh(){
+        Toast.makeText(baseContext, "refresh", Toast.LENGTH_SHORT).show();
+        Progress.showProgress("Aktualisiere Freundesliste", this)
+        initFriends();
+
+        Progress.dismissProgress()
+
+        Progress.showProgress("Aktualisiere Karte", this)
+        for (Friend friend : friendlist) {
+            openStreetMap.createFriend(friend)
+        }
+        openStreetMap.refreshMap()
+        Progress.dismissProgress()
+    }
+
 
     @OnItemClick(R.id.navList)
     public void changeInlay(int position, AdapterView<?> parent, View view) {
@@ -93,23 +127,19 @@ public class MainActivity extends AppCompatActivity {
         Toast.makeText(baseContext, "Time for an upgrade!" + item, Toast.LENGTH_SHORT).show();
         switch (item) {
             case "Map":
-                this.setLayoutInlay(R.layout.activity_main);
-                openStreetMap.initialize()
+                ((FrameLayout) findViewById(R.id.content_frame)).removeAllViews()
+                ((FrameLayout) findViewById(R.id.content_frame)).addView(main);
+                initToolbar()
                 break
             case "Friendslist":
-                this.setLayoutInlay(R.layout.friends_list);
+                ((FrameLayout) findViewById(R.id.content_frame)).removeAllViews()
+                ((FrameLayout) findViewById(R.id.content_frame)).addView(friend);
+                initToolbar()
                 setupFriendsList()
                 break
         }
     }
 
-    private void setLayoutInlay(id) {
-        ((FrameLayout) findViewById(R.id.content_frame)).removeAllViews()
-
-        LayoutInflater inflater = getLayoutInflater();
-        View v = inflater.inflate(id, null);
-        ((FrameLayout) findViewById(R.id.content_frame)).addView(v);
-    }
 
     private void addDrawerItems() {
         String[] InlayArray = ["Map", "Friendslist"];
@@ -158,6 +188,10 @@ public class MainActivity extends AppCompatActivity {
         if (mDrawerToggle.onOptionsItemSelected(item)) {
             return true;
         }
+        if (id == R.id.action_refresh) {
+            refresh()
+            return true;
+        }
 
         return super.onOptionsItemSelected(item);
     }
@@ -182,10 +216,10 @@ public class MainActivity extends AppCompatActivity {
         List<String> friendsList
         // Adding child data
         listDataHeader.add("Friendslist");
-        if(friendArray!=null) {
+        if (friendArray != null) {
             friendsList = friendArray;
-        }else{
-            friendsList= new ArrayList<String>()
+        } else {
+            friendsList = new ArrayList<String>()
             friendsList.add("Friend 1");
             friendsList.add("Friend Smurf");
             friendsList.add("Friend Now");
@@ -202,7 +236,7 @@ public class MainActivity extends AppCompatActivity {
         friendArray = new_fList
     }
 
-    private void initExpandeblelistListeners(){
+    private void initExpandeblelistListeners() {
         // Listview on child click listener
         expListView.setOnChildClickListener(new OnChildClickListener() {
 
@@ -222,4 +256,13 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+
 }

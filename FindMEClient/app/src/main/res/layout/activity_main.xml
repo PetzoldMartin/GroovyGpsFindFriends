@@ -2,17 +2,28 @@
 
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/main_master"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="vertical"
-    android:weightSum="1"
-    android:id="@+id/main_master">
-    <org.osmdroid.views.MapView
-        xmlns:android="http://schemas.android.com/apk/res/android"
+    android:weightSum="1">
+
+    <include
+        android:id="@+id/tool_bar"
+        layout="@layout/tool_bar"></include>
+    <TextView
+        android:layout_below="@+id/tool_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/TextDimTop"
+        android:text="@string/hello_world" />
+
+
+    <org.osmdroid.views.MapView xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/mapview"
         android:layout_width="fill_parent"
         android:layout_height="398dp"
-        android:clickable="true"
-        android:layout_weight="0.33" />
+        android:layout_weight="0.33"
+        android:clickable="true" />
 
 </LinearLayout>

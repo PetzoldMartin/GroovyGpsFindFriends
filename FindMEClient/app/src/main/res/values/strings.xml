@@ -2,5 +2,7 @@
     <string name="app_name">FindMeClient</string>
     <string name="test">test</string>
     <string name="drawer_open">Open navigation drawer</string>
-    <string name="drawer_close">Close navigation drawer</string>s
+    <string name="drawer_close">Close navigation drawer</string>
+    <string name="hello_world" />
+    <string name="action_settings" />s
 </resources>
