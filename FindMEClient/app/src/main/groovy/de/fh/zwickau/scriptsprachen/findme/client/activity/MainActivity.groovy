@@ -98,10 +98,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     void initLayouts() {
-        LayoutInflater inflater = getLayoutInflater();
-        main = inflater.inflate(R.layout.activity_main, null);
+
         LayoutInflater inflater2 = getLayoutInflater();
         friend = inflater2.inflate(R.layout.friends_list, null);
+        LayoutInflater inflater = getLayoutInflater();
+        main = inflater.inflate(R.layout.activity_main, null);
     }
 
     @Override
@@ -136,14 +137,13 @@ public class MainActivity extends AppCompatActivity {
                 //((FrameLayout) findViewById(R.id.content_frame)).addView(main);
                 friend.setVisibility(LinearLayout.GONE)
                 main.setVisibility(LinearLayout.VERTICAL)
-                initToolbar()
                 break
             case "Friendslist":
                 //((FrameLayout) findViewById(R.id.content_frame)).removeAllViews()
                 //((FrameLayout) findViewById(R.id.content_frame)).addView(friend);
                 friend.setVisibility(LinearLayout.VERTICAL)
                 main.setVisibility(LinearLayout.GONE)
-                initToolbar()
+
                 setupFriendsList()
                 break
         }
