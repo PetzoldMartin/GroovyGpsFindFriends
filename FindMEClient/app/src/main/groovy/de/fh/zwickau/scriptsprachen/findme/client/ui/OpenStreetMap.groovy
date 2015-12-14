@@ -21,6 +21,7 @@ class OpenStreetMap {
     def mMapView
     def mMapController
     def ILocator
+    HashMap<String, Marker> friendNodes = [:]
 
     OpenStreetMap(Context mContext, MapView mMapView, ClientLocator ILocator) {
         this.mContext = mContext
@@ -88,6 +89,20 @@ class OpenStreetMap {
         friendNode.setTitle(friend.name)
         friendNode.setSnippet(friend.email)
         friendNode.setSubDescription(friend.lastKnownIp)
+        friendNodes[friend.email] = friendNode
+    }
+
+    @OnBackground
+    public void removeAllMarkers() {
+        for (Marker m : friendNodes.values())
+            mMapView.getOverlays().remove(m)
+    }
+
+    @OnBackground
+    public void removeFriend(Friend friend) {
+        def friendNode = friendNodes[friend.email]
+        if (friendNode != null)
+            mMapView.getOverlays().remove(friendNode)
     }
 
     /**

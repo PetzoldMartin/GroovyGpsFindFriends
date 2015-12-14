@@ -51,8 +51,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.sidebar_container);
 
-
-
         initLayouts();
         ((FrameLayout) findViewById(R.id.content_frame)).addView(main);
         initToolbar()
@@ -115,6 +113,7 @@ public class MainActivity extends AppCompatActivity {
         Progress.dismissProgress()
 
         Progress.showProgress("Aktualisiere Karte", this)
+        openStreetMap.removeAllMarkers()
         for (Friend friend : friendlist) {
             openStreetMap.createFriend(friend)
         }
