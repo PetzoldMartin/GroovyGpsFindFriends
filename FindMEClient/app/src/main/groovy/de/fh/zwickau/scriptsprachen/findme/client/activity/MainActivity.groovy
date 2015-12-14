@@ -90,15 +90,13 @@ public class MainActivity extends AppCompatActivity {
         friendlist = Core.getConnector().getFriends(true)
         friendArray = new ArrayList<String>()
         for (String text : friendlist) {
-            def array=text.tokenize(',')
-            def ntext=array[0]+" :) "+array[1]
+            def array = text.tokenize(',')
+            def ntext = array[0]+" :) "+array[1]
             friendArray.add(ntext)
         }
-        //friendArray=friendlist;
     }
 
     void initLayouts() {
-
         LayoutInflater inflater2 = getLayoutInflater();
         friend = inflater2.inflate(R.layout.friends_list, null);
         LayoutInflater inflater = getLayoutInflater();
@@ -111,7 +109,6 @@ public class MainActivity extends AppCompatActivity {
         Core.stopServer()
     }
     public void refresh(){
-        Toast.makeText(baseContext, "refresh", Toast.LENGTH_SHORT).show();
         Progress.showProgress("Aktualisiere Freundesliste", this)
         initFriends();
 
@@ -130,20 +127,14 @@ public class MainActivity extends AppCompatActivity {
     @OnItemClick(R.id.navList)
     public void changeInlay(int position, AdapterView<?> parent, View view) {
         String item = ((TextView) view).getText().toString();
-        Toast.makeText(baseContext, "Time for an upgrade!" + item, Toast.LENGTH_SHORT).show();
         switch (item) {
             case "Map":
-                //((FrameLayout) findViewById(R.id.content_frame)).removeAllViews()
-                //((FrameLayout) findViewById(R.id.content_frame)).addView(main);
                 friend.setVisibility(LinearLayout.GONE)
                 main.setVisibility(LinearLayout.VERTICAL)
                 break
             case "Friendslist":
-                //((FrameLayout) findViewById(R.id.content_frame)).removeAllViews()
-                //((FrameLayout) findViewById(R.id.content_frame)).addView(friend);
                 friend.setVisibility(LinearLayout.VERTICAL)
                 main.setVisibility(LinearLayout.GONE)
-
                 setupFriendsList()
                 break
         }
@@ -191,8 +182,6 @@ public class MainActivity extends AppCompatActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-
         // Activate the navigation drawer toggle
         if (mDrawerToggle.onOptionsItemSelected(item)) {
             return true;
@@ -229,14 +218,7 @@ public class MainActivity extends AppCompatActivity {
             friendsList = friendArray;
         } else {
             friendsList = new ArrayList<String>()
-            friendsList.add("Friend 1");
-            friendsList.add("Friend Smurf");
-            friendsList.add("Friend Now");
-            friendsList.add("Friend Canyons");
-            friendsList.add("Friend Report");
         }
-
-
 
         listDataChild.put(listDataHeader.get(0), friendsList); // Header, Child data
     }

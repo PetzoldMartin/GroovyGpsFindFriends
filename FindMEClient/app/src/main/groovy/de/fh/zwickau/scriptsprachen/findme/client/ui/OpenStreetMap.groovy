@@ -92,13 +92,11 @@ class OpenStreetMap {
         friendNodes[friend.email] = friendNode
     }
 
-    @OnBackground
     public void removeAllMarkers() {
         for (Marker m : friendNodes.values())
             mMapView.getOverlays().remove(m)
     }
 
-    @OnBackground
     public void removeFriend(Friend friend) {
         def friendNode = friendNodes[friend.email]
         if (friendNode != null)

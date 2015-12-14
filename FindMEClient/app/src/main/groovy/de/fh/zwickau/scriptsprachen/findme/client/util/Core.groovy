@@ -17,7 +17,7 @@ final class Core {
     }
 
     public static void init(Activity activity) {
-        locator = new ClientLocator(activity.getApplicationContext())
+        locator = new ClientLocator(activity)
         connector = Connector.getInstance(activity)
         restServer.startServer()
     }

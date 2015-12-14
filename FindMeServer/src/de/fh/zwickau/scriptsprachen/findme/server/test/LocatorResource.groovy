@@ -14,7 +14,7 @@ public class LocatorResource {
 		def rand = new Random()
 		def x_rand = rand.nextInt(99)
 		def y_rand = rand.nextInt(99)
-        return "50.$x_rand 70.$y_rand"
+        return "50.$x_rand 12.$y_rand"
     }
 
 }
