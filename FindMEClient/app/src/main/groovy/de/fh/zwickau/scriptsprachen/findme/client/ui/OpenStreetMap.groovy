@@ -9,6 +9,7 @@ import com.arasthel.swissknife.annotations.OnUIThread
 import de.fh.zwickau.scriptsprachen.findme.client.R
 import de.fh.zwickau.scriptsprachen.findme.client.location.ClientLocator
 import de.fh.zwickau.scriptsprachen.findme.client.util.Friend
+import org.osmdroid.bonuspack.overlays.InfoWindow
 import org.osmdroid.bonuspack.overlays.Marker
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory
 import org.osmdroid.util.GeoPoint
@@ -82,14 +83,23 @@ class OpenStreetMap {
     }
 
     public void removeAllMarkers() {
-        for (Marker m : friendNodes.values())
+        for (Marker m : friendNodes.values()) {
+            closeInfoWindow(m)
             mMapView.getOverlays().remove(m)
+        }
     }
 
     public void removeFriend(Friend friend) {
         def friendNode = friendNodes[friend.email]
-        if (friendNode != null)
+        if (friendNode != null){
+            closeInfoWindow(friendNode)
             mMapView.getOverlays().remove(friendNode)
+        }
+    }
+
+    @OnUIThread
+    public closeInfoWindow(Marker marker){
+        marker.closeInfoWindow()
     }
 
     Marker createNode(double lat, double loc) {
