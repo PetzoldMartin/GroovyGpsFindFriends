@@ -1,6 +1,7 @@
 package de.fh.zwickau.scriptsprachen.findme.client.activity
 
 import android.content.res.Configuration
+import android.os.Looper
 import android.support.v4.widget.DrawerLayout
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
@@ -19,6 +20,7 @@ import android.widget.ListView
 import android.widget.TextView
 import android.widget.Toast
 import com.arasthel.swissknife.SwissKnife
+import com.arasthel.swissknife.annotations.OnBackground
 import com.arasthel.swissknife.annotations.OnClick
 import com.arasthel.swissknife.annotations.OnItemClick
 import de.fh.zwickau.scriptsprachen.findme.client.util.Core
@@ -68,7 +70,6 @@ public class MainActivity extends AppCompatActivity {
         Core.init(this)
         openStreetMap = new OpenStreetMap(this, (MapView) findViewById(R.id.mapview), Core.getLocator())
 
-
         mDrawerList = (ListView) findViewById(R.id.navList);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mActivityTitle = getTitle().toString();
@@ -108,13 +109,18 @@ public class MainActivity extends AppCompatActivity {
         super.onStop()
         Core.stopServer()
     }
+
+    @OnBackground
     public void refresh(){
         Progress.showProgress("Aktualisiere Freundesliste", this)
+        while(!Progress.isDialogShown())
+            sleep(500)
         initFriends();
-
         Progress.dismissProgress()
 
         Progress.showProgress("Aktualisiere Karte", this)
+        while(!Progress.isDialogShown())
+            sleep(500)
         openStreetMap.removeAllMarkers()
         for (Friend friend : friendlist) {
             openStreetMap.createFriend(friend)

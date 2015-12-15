@@ -2,6 +2,8 @@ package de.fh.zwickau.scriptsprachen.findme.client.util
 
 import android.app.Activity
 import android.util.Log
+import android.widget.Toast
+import com.arasthel.swissknife.annotations.OnUIThread
 import de.fh.zwickau.scriptsprachen.findme.client.rest.RESTRequests
 import de.fh.zwickau.scriptsprachen.findme.client.location.Vector
 
@@ -34,6 +36,7 @@ class Connector implements IConnector {
             while (!restRequestDone) {
                 if (restRequestFailed) {
                     Log.d("getFriends", "Failed to get list of E-Mail addresses")
+                    showErrorToast("Fehler: E-Mail-Adressen konnten nicht empfangen werden")
                     restRequestFailed = false
                     break
                 }
@@ -45,6 +48,7 @@ class Connector implements IConnector {
                 while (!restRequestDone) {
                     if (restRequestFailed) {
                         Log.d("getFriends", "Failed to get IP for " + currentTargetEmail)
+                        showErrorToast("Fehler: IP-Adresse für " + currentTargetEmail + " konnte nicht empfangen werden")
                         restRequestFailed = false
                         restRequestDone = true
                     }
@@ -57,6 +61,7 @@ class Connector implements IConnector {
                 while (!restRequestDone) {
                     if (restRequestFailed) {
                         Log.d("getFriends", "Failed to get location for " + currentTargetEmail)
+                        showErrorToast("Fehler: Koordinaten für " + currentTargetEmail + " konnte nicht empfangen werden")
                         restRequestFailed = false
                         restRequestDone = true
                     }
@@ -99,6 +104,11 @@ class Connector implements IConnector {
 
     def restRequestFailed(String errorMessage) {
         restRequestFailed = true
+    }
+
+    @OnUIThread
+    def showErrorToast(String message) {
+        Toast.makeText(activity, message, Toast.LENGTH_LONG).show()
     }
 
 }
