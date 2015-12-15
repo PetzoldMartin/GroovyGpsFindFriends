@@ -19,7 +19,7 @@ final class Core {
     public static void init(Activity activity) {
         locator = new ClientLocator(activity)
         connector = Connector.getInstance(activity)
-        restServer.startServer()
+        restServer.startServer(activity)
     }
 
     public static synchronized IConnector getConnector() {

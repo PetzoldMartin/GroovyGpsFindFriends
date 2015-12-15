@@ -1,5 +1,12 @@
 package de.fh.zwickau.scriptsprachen.findme.client.rest
 
+import android.app.Activity
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+import android.net.ConnectivityManager
+import android.net.NetworkInfo
+import android.net.wifi.*
 import android.util.Log
 import com.arasthel.swissknife.annotations.OnBackground
 import com.sun.jersey.spi.container.servlet.ServletContainer
@@ -7,38 +14,63 @@ import org.eclipse.jetty.server.Server
 import org.eclipse.jetty.servlet.ServletContextHandler
 import org.eclipse.jetty.servlet.ServletHolder
 
-public class RESTServer {
+public class RESTServer extends BroadcastReceiver {
 
     private final static String LOG_TAG = "Jetty"
-    private Server webServer = null
 
-    def getServerAdress() {
+    private final static int port = 8080
+    private final static String localhost = "localhost"
+    private Server webServer = null
+    private static Activity context
+
+    def static getServerAdress() {
         try {
-            for (Enumeration<NetworkInterface> en = NetworkInterface.getNetworkInterfaces(); en.hasMoreElements();) {
-                NetworkInterface intf = en.nextElement();
-                for (Enumeration<InetAddress> enumIpAddr = intf.getInetAddresses(); enumIpAddr.hasMoreElements();) {
-                    InetAddress inetAddress = enumIpAddr.nextElement();
-                    if (!inetAddress.isLoopbackAddress()) {
-                        return new java.net.InetSocketAddress(inetAddress.getHostAddress().toString(),8080);
+            ConnectivityManager conMan = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE)
+            NetworkInfo netInfo = conMan.getActiveNetworkInfo()
+            String ipString=localhost;
+            if (netInfo != null && netInfo.getType() == ConnectivityManager.TYPE_WIFI) { //WIFI
+                Log.d(LOG_TAG, "Wifi connected");
+                WifiManager wifiMgr = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
+                WifiInfo wifiInfo = wifiMgr.getConnectionInfo();
+                int ip = wifiInfo.getIpAddress(); //int
+                 ipString = String.format(
+                        "%d.%d.%d.%d",
+                        (ip & 0xff),
+                        (ip >> 8 & 0xff),
+                        (ip >> 16 & 0xff),
+                        (ip >> 24 & 0xff))
+
+            } else if (netInfo != null && netInfo.getType() == ConnectivityManager.TYPE_MOBILE) {
+                Log.d(LOG_TAG, "Mobile connected");
+                for (Enumeration<NetworkInterface> en = NetworkInterface.getNetworkInterfaces(); en.hasMoreElements();) {
+                    NetworkInterface intf = (NetworkInterface) en.nextElement();
+                    for (Enumeration<InetAddress> enumIpAddr = intf.getInetAddresses(); enumIpAddr.hasMoreElements();) {
+                        InetAddress inetAddress = enumIpAddr.nextElement();
+                        if (!inetAddress.isLoopbackAddress()) {
+                            ipString = inetAddress.getHostAddress() //string
+                        }
                     }
                 }
             }
-        } catch (Exception ex) {
-            Log.e(LOG_TAG +" IP config", ex.toString());
+            Log.d(LOG_TAG, "Network Jetty IP: " + ipString)
+            return new java.net.InetSocketAddress(ipString, port)
+
+        } catch (Exception e) {
+            Log.e(LOG_TAG, e.getMessage())
         }
-        return new java.net.InetSocketAddress("localhost", 8080)
+        Log.d(LOG_TAG, "cant get network ip --> fallback bind Jetty to localhost")
+        return new java.net.InetSocketAddress(localhost, port) // fallback return
     }
 
     @OnBackground
-    public void startServer() {
-
-        java.net.InetSocketAddress addresse = new java.net.InetSocketAddress("localhost", 8080) //TODO for real android device
-        //java.net.InetSocketAddress addresse =  getServerAdress()
+    public void startServer(Activity activity) {
+        this.context = activity
+        java.net.InetSocketAddress addresse = getServerAdress()
 
         System.setProperty("java.net.preferIPv4Stack", "true")
         System.setProperty("java.net.preferIPv6Addresses", "false")
 
-        Log.i(LOG_TAG +" IP config","Jetty Ip set to: " + addresse.toString())
+        Log.i(LOG_TAG + " IP config", "Jetty Ip set to: " + addresse.toString())
 
         webServer = new Server(addresse)
 
@@ -60,7 +92,7 @@ public class RESTServer {
         try {
             webServer.start()
             Log.d(LOG_TAG, "Started Web server")
-            webServer.join()
+            //webServer.join()
         }
         catch (Exception ex) {
             Log.d(LOG_TAG, "Unexpected exception while starting Web server: " + ex)
@@ -70,11 +102,18 @@ public class RESTServer {
     @OnBackground
     public void stopServer() {
         try {
-            webServer.stop()
-            Log.d(LOG_TAG, "Stopped Web server")
+        Log.d(LOG_TAG, "Stopped Web server")
+        webServer.stop()
         } catch (Exception ex) {
             Log.d(LOG_TAG, "Unexpected exception while stopping Web server: " + ex)
         }
     }
 
+    @Override
+    void onReceive(Context context, Intent intent) {
+        Log.d(LOG_TAG, "Connectivity changed")
+        //stopServer()
+        //TODO check intent connectivity changed
+        //startServer(this.context)
+    }
 }

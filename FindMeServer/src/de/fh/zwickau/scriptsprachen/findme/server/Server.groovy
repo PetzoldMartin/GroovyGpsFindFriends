@@ -19,9 +19,25 @@ rc.register(Admin.class)
 rc.register(LocatorResource.class)
 rc.register(Admin2.class)
 rc.register(RequestFilter.class)
-final HttpServer server = GrizzlyHttpServerFactory.createHttpServer(Globals.SERVER_IP.toURI(), rc)
+
+
+// server binding
+Enumeration e = NetworkInterface.getNetworkInterfaces();
+while(e.hasMoreElements()) {
+	NetworkInterface n = (NetworkInterface) e.nextElement();
+	Enumeration ee = n.getInetAddresses();
+	while (ee.hasMoreElements()) {
+		InetAddress i = (InetAddress) ee.nextElement();
+		if(!(i.getHostAddress().startsWith("fe")||i.getHostAddress().startsWith("0:"))) { //TODO replace with regex
+			HttpServer server = GrizzlyHttpServerFactory.createHttpServer(("http://"+i.getHostAddress()+":"+8080).toURI(), rc)
+		}
+	}
+}
+
+//final HttpServer server = GrizzlyHttpServerFactory.createHttpServer(Globals.SERVER_IP.toURI(), rc)
 //server.getServerConfiguration().addHttpHandler(new CLStaticHttpHandler(...))
 
+// testdata
 String email="testemail"
 String name="testname"
 Auth.eMailAddresses.add(email)
