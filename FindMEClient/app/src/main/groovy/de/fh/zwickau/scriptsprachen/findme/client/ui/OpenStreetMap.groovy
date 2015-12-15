@@ -31,7 +31,7 @@ class OpenStreetMap {
     }
 
     public void initialize(){
-        //initial settings
+        // Initial settings
         mMapView.setTileSource(TileSourceFactory.DEFAULT_TILE_SOURCE)
         mMapView.setBuiltInZoomControls(true)
         mMapController = (MapController) mMapView.getController()
@@ -44,7 +44,7 @@ class OpenStreetMap {
 
     @OnBackground
     void setOwnLocationToCenter() {
-        // wait for listener to get data
+        // Wait for listener to get data
         while (ILocator.getLocation().x == null) {
             sleep(1000)
         }
@@ -53,23 +53,13 @@ class OpenStreetMap {
         createSelf(gPt)
 
         refreshMap()
-
-        // prepare for Toast in non UI thread
-        Looper.prepare()
-        Toast.makeText(mContext, "Ausgangspunkt " + ILocator.toString() + " gesetzt!", Toast.LENGTH_SHORT).show()
     }
 
-    /**
-     * Do this everytime on the UI thread because views can only get handled there
-     */
     @OnUIThread
     void refreshMap() {
         mMapView.invalidate()
     }
 
-    /**
-     * create Node on Map
-     */
     Marker createNode(GeoPoint geoPoint, boolean self = false) {
         Marker nodeMarker = new Marker(mMapView)
         nodeMarker.setPosition(geoPoint)
@@ -80,7 +70,6 @@ class OpenStreetMap {
         nodeMarker
     }
 
-    @OnBackground
     public void createFriend(Friend friend){
         if (friend.lastKnownLocation == null)
             return
@@ -103,9 +92,6 @@ class OpenStreetMap {
             mMapView.getOverlays().remove(friendNode)
     }
 
-    /**
-     * @Overload
-     */
     Marker createNode(double lat, double loc) {
         def geoPoint = new GeoPoint(lat, loc)
         createNode(geoPoint)
@@ -114,5 +100,6 @@ class OpenStreetMap {
     void createSelf(GeoPoint geoPoint) {
         createNode(geoPoint, true)
     }
+
 }
 

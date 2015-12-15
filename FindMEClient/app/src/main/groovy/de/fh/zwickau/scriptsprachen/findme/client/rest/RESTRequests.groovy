@@ -5,6 +5,7 @@ import com.arasthel.swissknife.annotations.OnBackground
 import de.fh.zwickau.scriptsprachen.findme.client.util.Connector
 import de.fh.zwickau.scriptsprachen.findme.client.util.Core
 import de.fh.zwickau.scriptsprachen.findme.client.activity.RegisterActivity
+import org.springframework.http.client.SimpleClientHttpRequestFactory
 import org.springframework.http.converter.StringHttpMessageConverter
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter
 import org.springframework.web.client.RestTemplate
@@ -12,6 +13,8 @@ import org.springframework.web.client.RestTemplate
 public class RESTRequests {
 
     private static final String SECRET = "geheim"
+    private static final int TIMEOUT_MS = 5000
+    private String lastResponse
 
     @OnBackground
     public void testRestRequest() {
@@ -115,7 +118,9 @@ public class RESTRequests {
     }
 
     private RestTemplate getRestTemplate() {
-        RestTemplate restTemplate = new RestTemplate()
+        def httpRequestFactory = new SimpleClientHttpRequestFactory()
+        httpRequestFactory.setConnectTimeout(TIMEOUT_MS)
+        RestTemplate restTemplate = new RestTemplate(httpRequestFactory)
         restTemplate.getMessageConverters().add(new StringHttpMessageConverter())
         return restTemplate
     }
