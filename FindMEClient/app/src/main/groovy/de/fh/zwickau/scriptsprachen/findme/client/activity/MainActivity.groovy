@@ -137,11 +137,13 @@ public class MainActivity extends AppCompatActivity {
             case "Map":
                 friend.setVisibility(LinearLayout.GONE)
                 main.setVisibility(LinearLayout.VERTICAL)
+                mDrawerLayout.closeDrawers()
                 break
             case "Friendslist":
                 friend.setVisibility(LinearLayout.VERTICAL)
                 main.setVisibility(LinearLayout.GONE)
                 setupFriendsList()
+                mDrawerLayout.closeDrawers()
                 break
         }
     }
