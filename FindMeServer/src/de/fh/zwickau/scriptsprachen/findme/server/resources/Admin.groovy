@@ -3,81 +3,141 @@ package de.fh.zwickau.scriptsprachen.findme.server.resources
 import javax.ws.rs.*
 import javax.ws.rs.core.*
 
-import org.glassfish.grizzly.http.server.Session
+import groovy.xml.MarkupBuilder
 
-import de.fh.zwickau.scriptsprachen.findme.server.Globals;
-import de.fh.zwickau.scriptsprachen.findme.server.HTML;
+import org.glassfish.grizzly.http.server.Session
 
 import org.glassfish.grizzly.http.server.Request
 import org.glassfish.grizzly.http.server.Response
 
 @Path('/admin')
-class Admin implements HTML {
-		
+class Admin {
+
 	private static final String ADMIN_USERNAME = "admin"
 	private static final String ADMIN_PASSWORD = "admin"
 	private static final String IS_LOGGED_IN = "isLoggedIn"
-	
+
+	@Context Request req
+
+	def getServerIP() {
+		"http://${req.getServerName()}:${req.getServerPort()}"
+	}
+
+
 	@GET
 	@Path('/login')
 	@Produces("text/html")
-	def login(@Context Request req, @QueryParam('error') String error) {
-		StringBuilder b = new StringBuilder()
-		b.append(HTML_LOGIN_BEGIN)
-		if (error != null && !error.equals("")) {
-			String errorMessage = "";
-			if (error.equals("notLoggedIn"))
-				errorMessage = "Login erforderlich"
-			else if (error.equals("invalid"))
-				errorMessage = "Ungueltige Zugangsdaten"
-			b.append("<h4>" + errorMessage + "</h4>")
+	def login(@QueryParam('error') String error) {
+		def writer = new StringWriter()
+		def builder = new groovy.xml.MarkupBuilder(writer)
+		builder.html () {
+			head {
+				title "Login"
+				link( rel:"stylesheet",	type:"text/css", href:"${getServerIP()}/admin/style.css")
+			}
+			body {
+				h1 "Login"
+				if (error != null && !error.equals("")) {
+					String errorMessage = "";
+					if (error.equals("notLoggedIn"))
+						errorMessage = "Login erforderlich"
+					else if (error.equals("invalid"))
+						errorMessage = "Ungueltige Zugangsdaten"
+					h4 (errorMessage)
+				}
+
+				form ('action': "${getServerIP()}/admin/performLogin", 'method':"post") {
+					table {
+						tr {
+							td {
+								label ('for':"username", "Nutzername")
+							}
+							td {
+								input ('type':"text", 'name':"username" ,'maxlength': 30)
+							}
+						}
+						tr {
+							td {
+								label ('for':"password", "Passwort")
+							}
+							td {
+								input ('type':"password", 'name':"password" ,'maxlength': 40)
+							}
+						}
+					}
+					br {
+						button ('type': "submit", "Login")
+					}
+				}
+			}
 		}
-		b.append(HTML_LOGIN_END)
-		return b.toString()
+		return writer.toString()
 	}
-	
+
 	@POST
 	@Path('/performLogin')
 	@Produces("text/html")
-	def performLogin(@Context Request req, @FormParam('username') String username, @FormParam('password') String password) {
+	def performLogin(@FormParam('username') String username, @FormParam('password') String password) {
 		Response res = req.getResponse()
 		if (!ADMIN_USERNAME.equals(username) || !ADMIN_PASSWORD.equals(password)) {
-			res.sendRedirect(Globals.SERVER_IP + "/admin/login?error=invalid")
+			res.sendRedirect("${getServerIP()}/admin/login?error=invalid")
 		}
 		else {
 			Session session = req.getSession(true)
 			Object isLoggedIn = session.getAttribute(IS_LOGGED_IN)
 			isLoggedIn = new Boolean(true)
 			session.setAttribute(IS_LOGGED_IN, isLoggedIn)
-			res.sendRedirect(Globals.SERVER_IP + "/admin/showUsers")
+			res.sendRedirect("${getServerIP()}/admin/showUsers")
 		}
 	}
-		
+
 	@GET
 	@Path('/showUsers')
 	@Produces("text/html")
-	def showUsers(@Context Request req) {
+	def showUsers() {
 		// Check session
 		Session session = req.getSession(true)
 		Object isLoggedIn = session.getAttribute(IS_LOGGED_IN)
 		if (isLoggedIn == null || isLoggedIn == false) {
 			Response res = req.getResponse()
-			res.sendRedirect(Globals.SERVER_IP + "/admin/login?error=notLoggedIn")
-			return
+			res.sendRedirect("${getServerIP()}/admin/login?error=notLoggedIn")
 		}
-		
-		StringBuilder b = new StringBuilder()
-		b.append(HTML_LIST_BEGIN)
-		for (String email : Auth.eMailAddresses) {
-			b.append("<tr>")
-			b.append("<td>" + email + "</td>")
-			b.append("<td>" + (Auth.isLoggedIn.get(email) == true ? "Online" : "Offline") + "</td>")
-			b.append("</tr>")
+
+		def writer = new StringWriter()
+		def builder = new groovy.xml.MarkupBuilder(writer)
+		builder.html () {
+			head {
+				title "User list"
+				link( rel:"stylesheet",	type:"text/css", href:"${getServerIP()}/admin/style.css")
+			}
+			body {
+				h1 "Registrierte Nutzer"
+				table (border:'1') {
+					tr {
+						th "E-Mail Adresse"
+						th "Name"
+						th "IP-Adresse"
+						th "Online-Status"
+					}
+					for (user in Auth.eMailAddresses.sort()) {
+						tr {
+							td user
+							td Auth.names[user]
+							td Mediator.ipMap[user]
+							td Auth.isLoggedIn[user] ? "Online" : "Offline"
+						}
+					}
+				}
+				br {
+					form ('action': "${getServerIP()}/admin/logout", 'method':"get") {
+						button ('type': "submit", "Logout")
+					}
+				}
+			}
 		}
-		b.append(HTML_LIST_END)
-		return b.toString()
+		return writer.toString()
 	}
-	
+
 	@GET
 	@Path('/style.css')
 	@Produces("text/css")
@@ -89,17 +149,16 @@ class Admin implements HTML {
 		lines.each {s -> cssBuilder.append(s)}
 		cssBuilder.toString()
 	}
-	
+
 	@GET
 	@Path('/logout')
 	@Produces("text/html")
-	def logout(@Context Request req) {
+	def logout() {
 		Response res = req.getResponse()
 		Session session = req.getSession(true)
 		Object isLoggedIn = session.getAttribute(IS_LOGGED_IN)
 		isLoggedIn = new Boolean(false)
 		session.setAttribute(IS_LOGGED_IN, isLoggedIn)
-		res.sendRedirect(Globals.SERVER_IP + "/admin/login")
+		res.sendRedirect("${getServerIP()}/admin/login")
 	}
-
 }

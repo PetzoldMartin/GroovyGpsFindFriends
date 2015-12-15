@@ -8,9 +8,7 @@ import org.glassfish.grizzly.http.server.CLStaticHttpHandler
 import de.fh.zwickau.scriptsprachen.findme.server.resources.*
 import de.fh.zwickau.scriptsprachen.findme.server.test.LocatorResource
 
-class Globals {
-	public static final String SERVER_IP = "http://localhost:8080"
-}
+
 
 final ResourceConfig rc = new ResourceConfig();
 rc.register(Auth.class)
