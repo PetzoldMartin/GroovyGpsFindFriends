@@ -25,7 +25,8 @@ while(e.hasMoreElements()) {
 	Enumeration ee = n.getInetAddresses();
 	while (ee.hasMoreElements()) {
 		InetAddress i = (InetAddress) ee.nextElement();
-		if(!(i.getHostAddress().startsWith("fe")||i.getHostAddress().startsWith("0:"))) { //TODO replace with regex
+		
+		if(!(i.getHostAddress() =~ /:/ || i.getHostAddress().startsWith("0."))  ) { 
 			HttpServer server = GrizzlyHttpServerFactory.createHttpServer(("http://"+i.getHostAddress()+":"+8080).toURI(), rc)
 		}
 	}

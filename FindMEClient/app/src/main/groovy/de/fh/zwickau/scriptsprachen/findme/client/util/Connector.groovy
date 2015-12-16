@@ -92,7 +92,7 @@ class Connector implements IConnector {
         else if (response.contains(":")) {
             // getIP request
             Friend f = friends[currentTargetEmail]
-            f.lastKnownIp = response
+            f.lastKnownIp = response.split(":")[0]
         }
         else {
             // getLocation request
