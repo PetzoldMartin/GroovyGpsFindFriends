@@ -40,16 +40,16 @@ String name="testname"
 Auth.eMailAddresses.add(email)
 Auth.names.put(email, name)
 Auth.isLoggedIn.put(email, true)
-Mediator.ipMap.put(email, "10.0.2.2:8080")
-//Mediator.ipMap.put(email, "141.32.27.248:8080")
+//Mediator.ipMap.put(email, "10.0.2.2:8080")
+Mediator.ipMap.put(email, "141.32.21.150:8080")
 
 email="testemail2"
 name="testname2"
 Auth.eMailAddresses.add(email)
 Auth.names.put(email, name)
 Auth.isLoggedIn.put(email, true)
-Mediator.ipMap.put(email, "10.0.2.2:8080")
-//Mediator.ipMap.put(email, "141.32.27.248:8080")
+//Mediator.ipMap.put(email, "10.0.2.2:8080")
+Mediator.ipMap.put(email, "141.32.21.150:8080")
 
 //email="onlinemail"
 //name="online"

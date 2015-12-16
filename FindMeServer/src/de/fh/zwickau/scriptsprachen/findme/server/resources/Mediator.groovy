@@ -41,8 +41,8 @@ class Mediator {
 	static def checkIP(org.glassfish.grizzly.http.server.Request req, String email) {
 		if (email!=null) {
 			String remoteAddr = req.getRemoteAddr();
-				int remotePort = req.getRemotePort();
-			ipMap[email]=remoteAddr + ":" + remotePort
+			int remotePort = req.getRemotePort();
+			ipMap[email] = remoteAddr + ":" + remotePort
 		} else {
 			println "No email id used for " + req.getRemoteAddr()
 		}
