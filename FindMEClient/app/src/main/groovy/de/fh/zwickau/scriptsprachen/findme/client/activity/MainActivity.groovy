@@ -1,7 +1,7 @@
 package de.fh.zwickau.scriptsprachen.findme.client.activity
 
 import android.content.res.Configuration
-import android.os.Looper
+import android.os.Bundle
 import android.support.v4.widget.DrawerLayout
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
@@ -10,27 +10,18 @@ import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
-import android.widget.ExpandableListView
+import android.widget.*
 import android.widget.ExpandableListView.OnChildClickListener
-import android.widget.FrameLayout
-import android.widget.LinearLayout
-import android.widget.ListView
-import android.widget.TextView
-import android.widget.Toast
 import com.arasthel.swissknife.SwissKnife
 import com.arasthel.swissknife.annotations.OnBackground
-import com.arasthel.swissknife.annotations.OnClick
 import com.arasthel.swissknife.annotations.OnItemClick
-import de.fh.zwickau.scriptsprachen.findme.client.util.Core
+import de.fh.zwickau.scriptsprachen.findme.client.R
 import de.fh.zwickau.scriptsprachen.findme.client.ui.ExpandableListAdapter
 import de.fh.zwickau.scriptsprachen.findme.client.ui.OpenStreetMap
 import de.fh.zwickau.scriptsprachen.findme.client.ui.Progress
-import de.fh.zwickau.scriptsprachen.findme.client.R
+import de.fh.zwickau.scriptsprachen.findme.client.util.Core
 import de.fh.zwickau.scriptsprachen.findme.client.util.Friend
 import org.osmdroid.views.MapView
-import android.os.Bundle
 
 public class MainActivity extends AppCompatActivity {
 
@@ -79,7 +70,7 @@ public class MainActivity extends AppCompatActivity {
         refresh()
     }
 
-    void initToolbar(){
+    void initToolbar() {
         toolbar = (Toolbar) findViewById(R.id.tool_bar)
         setSupportActionBar(toolbar)
         getSupportActionBar().show();
@@ -92,7 +83,7 @@ public class MainActivity extends AppCompatActivity {
         friendArray = new ArrayList<String>()
         for (String text : friendlist) {
             def array = text.tokenize(',')
-            def ntext = array[0]+" :) "+array[1]
+            def ntext = array[0] + " :) " + array[1]
             friendArray.add(ntext)
         }
     }
@@ -111,22 +102,19 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @OnBackground
-    public void refresh(){
+    public void refresh() {
         Progress.showProgress("Aktualisiere Freundesliste", this)
-        while(!Progress.isDialogShown())
+        while (!Progress.isDialogShown())
             sleep(500)
         initFriends();
         Progress.dismissProgress()
 
-        Progress.showProgress("Aktualisiere Karte", this)
-        while(!Progress.isDialogShown())
-            sleep(500)
         openStreetMap.removeAllMarkers()
         for (Friend friend : friendlist) {
             openStreetMap.createFriend(friend)
         }
+        openStreetMap.setOwnLocationToCenter()
         openStreetMap.refreshMap()
-        Progress.dismissProgress()
     }
 
 

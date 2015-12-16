@@ -1,15 +1,12 @@
 package de.fh.zwickau.scriptsprachen.findme.client.ui
 
 import android.content.Context
-import android.os.Looper
 import android.support.v4.content.ContextCompat
-import android.widget.Toast
 import com.arasthel.swissknife.annotations.OnBackground
 import com.arasthel.swissknife.annotations.OnUIThread
 import de.fh.zwickau.scriptsprachen.findme.client.R
 import de.fh.zwickau.scriptsprachen.findme.client.location.ClientLocator
 import de.fh.zwickau.scriptsprachen.findme.client.util.Friend
-import org.osmdroid.bonuspack.overlays.InfoWindow
 import org.osmdroid.bonuspack.overlays.Marker
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory
 import org.osmdroid.util.GeoPoint
@@ -23,35 +20,30 @@ class OpenStreetMap {
     def mMapController
     def ILocator
     HashMap<String, Marker> friendNodes = [:]
+    def selfNode
 
     OpenStreetMap(Context mContext, MapView mMapView, ClientLocator ILocator) {
         this.mContext = mContext
         this.mMapView = mMapView
         this.ILocator = ILocator
-        initialize()
-    }
-
-    public void initialize(){
         // Initial settings
         mMapView.setTileSource(TileSourceFactory.DEFAULT_TILE_SOURCE)
         mMapView.setBuiltInZoomControls(true)
         mMapController = (MapController) mMapView.getController()
-        mMapController.setZoom(13)
-        def gPt = new GeoPoint(0, 0)
-        mMapController.setCenter(gPt)
-
+        mMapController.setZoom(15)
         setOwnLocationToCenter()
     }
 
     @OnBackground
-    void setOwnLocationToCenter() {
+    public void setOwnLocationToCenter() {
         // Wait for listener to get data
         while (ILocator.getLocation().x == null) {
             sleep(1000)
         }
+        removeMarker(selfNode)
         def gPt = new GeoPoint(ILocator.getLocation().x, ILocator.getLocation().y)
+        selfNode = createSelf(gPt)
         mMapController.setCenter(gPt)
-        createSelf(gPt)
 
         refreshMap()
     }
@@ -71,11 +63,11 @@ class OpenStreetMap {
         nodeMarker
     }
 
-    public void createFriend(Friend friend){
+    public void createFriend(Friend friend) {
         if (friend.lastKnownLocation == null)
             return
 
-        def friendNode = createNode(friend.lastKnownLocation.x,friend.lastKnownLocation.y)
+        def friendNode = createNode(friend.lastKnownLocation.x, friend.lastKnownLocation.y)
         friendNode.setTitle(friend.name)
         friendNode.setSnippet(friend.email)
         friendNode.setSubDescription(friend.lastKnownIp)
@@ -84,21 +76,24 @@ class OpenStreetMap {
 
     public void removeAllMarkers() {
         for (Marker m : friendNodes.values()) {
-            closeInfoWindow(m)
-            mMapView.getOverlays().remove(m)
+            removeMarker(m)
         }
     }
 
     public void removeFriend(Friend friend) {
         def friendNode = friendNodes[friend.email]
-        if (friendNode != null){
-            closeInfoWindow(friendNode)
-            mMapView.getOverlays().remove(friendNode)
+        removeMarker(friendNode)
+    }
+
+    void removeMarker(Marker marker) {
+        if (marker != null) {
+            closeInfoWindow(marker)
+            mMapView.getOverlays().remove(marker)
         }
     }
 
     @OnUIThread
-    public closeInfoWindow(Marker marker){
+    public closeInfoWindow(Marker marker) {
         marker.closeInfoWindow()
     }
 
@@ -107,7 +102,7 @@ class OpenStreetMap {
         createNode(geoPoint)
     }
 
-    void createSelf(GeoPoint geoPoint) {
+    Marker createSelf(GeoPoint geoPoint) {
         createNode(geoPoint, true)
     }
 
