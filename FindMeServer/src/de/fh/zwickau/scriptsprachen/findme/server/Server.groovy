@@ -15,7 +15,6 @@ rc.register(Auth.class)
 rc.register(Mediator.class)
 rc.register(Admin.class)
 rc.register(LocatorResource.class)
-rc.register(Admin2.class)
 rc.register(RequestFilter.class)
 
 
