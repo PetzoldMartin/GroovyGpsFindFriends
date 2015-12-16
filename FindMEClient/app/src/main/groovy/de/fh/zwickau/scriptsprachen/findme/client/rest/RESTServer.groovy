@@ -29,7 +29,7 @@ public class RESTServer extends BroadcastReceiver {
             NetworkInfo netInfo = conMan.getActiveNetworkInfo()
             String ipString=localhost;
             if (netInfo != null && netInfo.getType() == ConnectivityManager.TYPE_WIFI) { //WIFI
-                Log.d(LOG_TAG, "Wifi connected");
+                Log.i(LOG_TAG, "Wifi connected");
                 WifiManager wifiMgr = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
                 WifiInfo wifiInfo = wifiMgr.getConnectionInfo();
                 int ip = wifiInfo.getIpAddress(); //int
@@ -41,7 +41,7 @@ public class RESTServer extends BroadcastReceiver {
                         (ip >> 24 & 0xff))
 
             } else if (netInfo != null && netInfo.getType() == ConnectivityManager.TYPE_MOBILE) {
-                Log.d(LOG_TAG, "Mobile connected");
+                Log.i(LOG_TAG, "Mobile connected");
                 for (Enumeration<NetworkInterface> en = NetworkInterface.getNetworkInterfaces(); en.hasMoreElements();) {
                     NetworkInterface intf = (NetworkInterface) en.nextElement();
                     for (Enumeration<InetAddress> enumIpAddr = intf.getInetAddresses(); enumIpAddr.hasMoreElements();) {
@@ -52,13 +52,13 @@ public class RESTServer extends BroadcastReceiver {
                     }
                 }
             }
-            Log.d(LOG_TAG, "Network Jetty IP: " + ipString)
+            Log.i(LOG_TAG, "Network Jetty IP: " + ipString)
             return new java.net.InetSocketAddress(ipString, port)
 
         } catch (Exception e) {
             Log.e(LOG_TAG, e.getMessage())
         }
-        Log.d(LOG_TAG, "cant get network ip --> fallback bind Jetty to localhost")
+        Log.i(LOG_TAG, "cant get network ip --> fallback bind Jetty to localhost")
         return new java.net.InetSocketAddress(localhost, port) // fallback return
     }
 
@@ -71,8 +71,9 @@ public class RESTServer extends BroadcastReceiver {
         System.setProperty("java.net.preferIPv6Addresses", "false")
 
         Log.i(LOG_TAG + " IP config", "Jetty Ip set to: " + addresse.toString())
-
-        webServer = new Server(addresse)
+        if (webServer==null) {
+            webServer = new Server(addresse)
+        }
 
         ServletHolder servletHolder = new ServletHolder(ServletContainer.class)
 
@@ -91,29 +92,32 @@ public class RESTServer extends BroadcastReceiver {
 
         try {
             webServer.start()
-            Log.d(LOG_TAG, "Started Web server")
-            //webServer.join()
+            Log.i(LOG_TAG, "Started Web server")
+            webServer.join()
         }
         catch (Exception ex) {
-            Log.d(LOG_TAG, "Unexpected exception while starting Web server: " + ex)
+            Log.i(LOG_TAG, "Unexpected exception while starting Web server: " + ex)
         }
     }
 
     @OnBackground
     public void stopServer() {
         try {
-        Log.d(LOG_TAG, "Stopped Web server")
-        webServer.stop()
+        Log.i(LOG_TAG, "Stopped Web server")
+            if(webServer!=null) {
+                webServer.stop()
+                webServer= null
+            }
         } catch (Exception ex) {
-            Log.d(LOG_TAG, "Unexpected exception while stopping Web server: " + ex)
+            Log.i(LOG_TAG, "Unexpected exception while stopping Web server: " + ex)
         }
     }
 
     @Override
     void onReceive(Context context, Intent intent) {
-        Log.d(LOG_TAG, "Connectivity changed")
-        //stopServer()
+        Log.i(LOG_TAG, "Connectivity changed")
+       // stopServer()
         //TODO check intent connectivity changed
-        //startServer(this.context)
+       // startServer(this.context)
     }
 }

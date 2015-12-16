@@ -102,13 +102,13 @@ public class RESTRequests {
     }
 
     @OnBackground
-    public void getLocation(String targetIpWithPort, Connector connector) {
-        final String url = "http://" + targetIpWithPort + "/locator/getLocation"
+    public void getLocation(String targetIp, Connector connector) {
+        final String url = "http://" + targetIp + ":8080/locator/getLocation"
         RestTemplate restTemplate = getRestTemplate()
         try {
             String response = restTemplate.getForObject(url, String.class)
             if (response.contains("null"))
-                connector.restRequestFailed("Could not get IP for " + targetIpWithPort)
+                connector.restRequestFailed("Could not get IP for " + targetIp)
             else
                 connector.restRequestDone(response)
         } catch (Exception ex) {
