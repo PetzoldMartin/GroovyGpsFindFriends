@@ -16,11 +16,13 @@ import com.arasthel.swissknife.SwissKnife
 import com.arasthel.swissknife.annotations.OnBackground
 import com.arasthel.swissknife.annotations.OnItemClick
 import de.fh.zwickau.scriptsprachen.findme.client.R
+import de.fh.zwickau.scriptsprachen.findme.client.rest.RESTRequests
 import de.fh.zwickau.scriptsprachen.findme.client.ui.ExpandableListAdapter
 import de.fh.zwickau.scriptsprachen.findme.client.ui.OpenStreetMap
 import de.fh.zwickau.scriptsprachen.findme.client.ui.Progress
 import de.fh.zwickau.scriptsprachen.findme.client.util.Core
 import de.fh.zwickau.scriptsprachen.findme.client.util.Friend
+import de.fh.zwickau.scriptsprachen.findme.client.util.StorageManager
 import org.osmdroid.views.MapView
 
 public class MainActivity extends AppCompatActivity {
@@ -98,6 +100,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onDestroy() {
         super.onStop()
+        RESTRequests req = new RESTRequests()
+        req.logout(StorageManager.getInstance().getLoginData(this))
         Core.stopServer()
     }
 

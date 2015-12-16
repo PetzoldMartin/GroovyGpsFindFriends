@@ -24,7 +24,10 @@ class ClientLocator {
     }
 
     Vector getLocation(){
-       return new Vector(x:mlocListenerI.getLa(), y:mlocListenerI.getLo())
+        if (mGpslocListenerI.getLa() == null)
+            return new Vector(x:mNetworklocListenerI.getLa(), y:mNetworklocListenerI.getLo())
+        else
+            return new Vector(x:mGpslocListenerI.getLa(), y:mGpslocListenerI.getLo())
     }
 
 }
