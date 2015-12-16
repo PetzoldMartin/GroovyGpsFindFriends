@@ -124,7 +124,9 @@ class Admin {
 							td user
 							td Auth.names[user]
 							td Mediator.ipMap[user]
-							td Auth.isLoggedIn[user] ? "Online" : "Offline"
+							td {
+								Auth.isLoggedIn[user] ? (font (color: "green", "Online")) : (font (color: "red", "Offline" ))
+							}
 						}
 					}
 				}

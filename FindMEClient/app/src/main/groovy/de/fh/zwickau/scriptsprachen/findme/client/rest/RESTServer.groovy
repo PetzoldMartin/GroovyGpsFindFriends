@@ -27,13 +27,13 @@ public class RESTServer extends BroadcastReceiver {
         try {
             ConnectivityManager conMan = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE)
             NetworkInfo netInfo = conMan.getActiveNetworkInfo()
-            String ipString=localhost;
+            String ipString = localhost;
             if (netInfo != null && netInfo.getType() == ConnectivityManager.TYPE_WIFI) { //WIFI
                 Log.i(LOG_TAG, "Wifi connected");
                 WifiManager wifiMgr = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
                 WifiInfo wifiInfo = wifiMgr.getConnectionInfo();
                 int ip = wifiInfo.getIpAddress(); //int
-                 ipString = String.format(
+                ipString = String.format(
                         "%d.%d.%d.%d",
                         (ip & 0xff),
                         (ip >> 8 & 0xff),
@@ -71,7 +71,7 @@ public class RESTServer extends BroadcastReceiver {
         System.setProperty("java.net.preferIPv6Addresses", "false")
 
         Log.i(LOG_TAG + " IP config", "Jetty Ip set to: " + addresse.toString())
-        if (webServer==null) {
+        if (webServer == null) {
             webServer = new Server(addresse)
         }
 
@@ -103,10 +103,10 @@ public class RESTServer extends BroadcastReceiver {
     @OnBackground
     public void stopServer() {
         try {
-        Log.i(LOG_TAG, "Stopped Web server")
-            if(webServer!=null) {
+            Log.i(LOG_TAG, "Stopped Web server")
+            if (webServer != null) {
                 webServer.stop()
-                webServer= null
+                webServer = null
             }
         } catch (Exception ex) {
             Log.i(LOG_TAG, "Unexpected exception while stopping Web server: " + ex)
@@ -116,8 +116,9 @@ public class RESTServer extends BroadcastReceiver {
     @Override
     void onReceive(Context context, Intent intent) {
         Log.i(LOG_TAG, "Connectivity changed")
-       // stopServer()
+        //TODO addconnector remove connector
+        // stopServer()
         //TODO check intent connectivity changed
-       // startServer(this.context)
+        // startServer(this.context)
     }
 }
