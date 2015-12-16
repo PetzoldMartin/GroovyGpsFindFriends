@@ -6,16 +6,21 @@ import android.location.LocationManager
 class ClientLocator {
 
     LocationManager locationManagerI
-    MyLocationListener mlocListenerI
+    MyLocationListener mGpslocListenerI
+    MyLocationListener mNetworklocListenerI
     Context mContext;
 
     ClientLocator(Context mContext){
         this.mContext = mContext;
         locationManagerI = (LocationManager) mContext.getSystemService(Context.LOCATION_SERVICE)
-        mlocListenerI = new MyLocationListener()
-        locationManagerI.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, mlocListenerI)
-        if (locationManagerI.getAllProviders().contains(LocationManager.NETWORK_PROVIDER)) // required since bluestacks does not have this provider
-            locationManagerI.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, mlocListenerI)
+        mGpslocListenerI = new MyLocationListener()
+        locationManagerI.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, mGpslocListenerI)
+        if (locationManagerI.getAllProviders().contains(LocationManager.NETWORK_PROVIDER)) { // required since bluestacks does not have this provider
+            mNetworklocListenerI = new MyLocationListener()
+            locationManagerI.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, mNetworklocListenerI)
+            def gpsStatusListener = new MyGpsStatusListener(locationManagerI, mNetworklocListenerI)
+            locationManagerI.addGpsStatusListener(gpsStatusListener)
+        }
     }
 
     Vector getLocation(){
