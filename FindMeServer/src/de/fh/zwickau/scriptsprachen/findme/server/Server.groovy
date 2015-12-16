@@ -7,8 +7,7 @@ import org.glassfish.grizzly.http.server.CLStaticHttpHandler
 
 import de.fh.zwickau.scriptsprachen.findme.server.resources.*
 import de.fh.zwickau.scriptsprachen.findme.server.test.LocatorResource
-
-
+import org.glassfish.grizzly.http.server.NetworkListener
 
 final ResourceConfig rc = new ResourceConfig();
 rc.register(Auth.class)
@@ -17,6 +16,7 @@ rc.register(Admin.class)
 rc.register(LocatorResource.class)
 rc.register(RequestFilter.class)
 
+HttpServer server = null
 
 // server binding
 Enumeration e = NetworkInterface.getNetworkInterfaces();
@@ -27,7 +27,12 @@ while(e.hasMoreElements()) {
 		InetAddress i = (InetAddress) ee.nextElement();
 		
 		if(!(i.getHostAddress() =~ /:/ || i.getHostAddress().startsWith("0."))  ) { 
-			HttpServer server = GrizzlyHttpServerFactory.createHttpServer(("http://"+i.getHostAddress()+":"+8080).toURI(), rc)
+			if (server == null)
+				server = GrizzlyHttpServerFactory.createHttpServer(("http://" + i.getHostAddress() + ":" + 8080).toURI(), rc)
+			else {
+				final NetworkListener listener = new NetworkListener("grizzly", i.getHostAddress(), 8080)
+				server.addListener(listener)
+			}
 		}
 	}
 }
