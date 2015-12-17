@@ -2,6 +2,8 @@ package de.fh.zwickau.scriptsprachen.findme.client.rest
 
 import android.util.Log
 import com.arasthel.swissknife.annotations.OnBackground
+import de.fh.zwickau.scriptsprachen.findme.client.friend.Friend
+import de.fh.zwickau.scriptsprachen.findme.client.friend.FriendState
 import de.fh.zwickau.scriptsprachen.findme.client.util.Connector
 import de.fh.zwickau.scriptsprachen.findme.client.util.Core
 import de.fh.zwickau.scriptsprachen.findme.client.activity.RegisterActivity
@@ -102,8 +104,8 @@ public class RESTRequests {
     }
 
     @OnBackground
-    public void getLocation(String targetIp, Connector connector) {
-        final String url = "http://" + targetIp + ":8080/locator/getLocation"
+    public void getLocation(String targetIp, String ownEmail, Connector connector) {
+        final String url = "http://" + targetIp + ":8080/locator/getLocation?ownEmail=$ownEmail"
         RestTemplate restTemplate = getRestTemplate()
         try {
             String response = restTemplate.getForObject(url, String.class)
@@ -113,6 +115,66 @@ public class RESTRequests {
                 connector.restRequestDone(response)
         } catch (Exception ex) {
             connector.restRequestFailed("Target address unavailable")
+            Log.d("RESTClient", "Exception while REST request: " + ex.toString())
+        }
+    }
+
+    // TODO: The state of the friend has to be set outside of the following methods
+
+    @OnBackground
+    public void requestFriend(Friend friend, String ownEmail, String ownName) {
+        final String url = "http://" + friend.lastKnownIp + ":8080/friend/requestFriend?ownEmail=$ownEmail&ownName=$ownName"
+        RestTemplate restTemplate = getRestTemplate()
+        try {
+            String response = restTemplate.getForObject(url, String.class)
+            if (response.equals("Okay"))
+                ; // TODO
+            else
+                ; // TODO
+        } catch (Exception ex) {
+            // TODO
+            Log.d("RESTClient", "Exception while REST request: " + ex.toString())
+        }
+    }
+
+    @OnBackground
+    public void accept(Friend friend, String ownEmail, String ownName, Connector connector) {
+        final String url = "http://" + friend.lastKnownIp + ":8080/friend/accept?ownEmail=$ownEmail&ownName=$ownName"
+        RestTemplate restTemplate = getRestTemplate()
+        try {
+            String response = restTemplate.getForObject(url, String.class)
+            if (response.equals("Okay"))
+                connector.updateFriend(friend, FriendState.FRIEND)
+        } catch (Exception ex) {
+            // Nothing to do - we will send this request again later if it fails
+            Log.d("RESTClient", "Exception while REST request: " + ex.toString())
+        }
+    }
+
+    @OnBackground
+    public void deny(Friend friend, String ownEmail, Connector connector) {
+        final String url = "http://" + friend.lastKnownIp + ":8080/friend/deny?ownEmail=$ownEmail"
+        RestTemplate restTemplate = getRestTemplate()
+        try {
+            String response = restTemplate.getForObject(url, String.class)
+            if (response.equals("Okay"))
+                connector.removeFriend(friend, false)
+        } catch (Exception ex) {
+            // Nothing to do - we will send this request again later if it fails
+            Log.d("RESTClient", "Exception while REST request: " + ex.toString())
+        }
+    }
+
+    @OnBackground
+    public void remove(Friend friend, String ownEmail, Connector connector) {
+        final String url = "http://" + friend.lastKnownIp + ":8080/friend/remove?ownEmail=$ownEmail"
+        RestTemplate restTemplate = getRestTemplate()
+        try {
+            String response = restTemplate.getForObject(url, String.class)
+            if (response.equals("Okay"))
+                connector.removeFriend(friend, false)
+        } catch (Exception ex) {
+            // Nothing to do - we will send this request again later if it fails
             Log.d("RESTClient", "Exception while REST request: " + ex.toString())
         }
     }

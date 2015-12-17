@@ -25,8 +25,7 @@ public class FriendResource {
             f = new Friend()
             f.name = name
             f.email = email
-            f.state = FriendState.REQUESTED
-            Core.getConnector().updateFriend(f)
+            Core.getConnector().updateFriend(f, FriendState.REQUESTED)
             return "Okay"
         }
     }
@@ -42,9 +41,7 @@ public class FriendResource {
         else {
             if (f.state == FriendState.REQUESTED) {
                 // E-Mail is already set at this point
-                f.name = name
-                f.state = FriendState.FRIEND
-                Core.getConnector().updateFriend(f)
+                Core.getConnector().updateFriend(f, FriendState.FRIEND)
                 return "Okay"
             }
             else
@@ -79,7 +76,7 @@ public class FriendResource {
         if (f == null)
             return "Friend not known"
         else {
-            Core.getConnector().removeFriend(f)
+            Core.getConnector().removeFriend(f, false)
             return "Okay"
         }
     }

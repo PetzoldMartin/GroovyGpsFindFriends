@@ -59,7 +59,7 @@ class Connector implements IConnector {
             }
             for (Friend f : friends.values()) {
                 currentTargetEmail = f.email
-                restRequest.getLocation(f.lastKnownIp, this)
+                restRequest.getLocation(f.lastKnownIp, email, this)
                 while (!restRequestDone) {
                     if (restRequestFailed) {
                         Log.d("getFriends", "Failed to get location for " + currentTargetEmail)
@@ -75,13 +75,23 @@ class Connector implements IConnector {
         return friends.values().asList()
     }
 
-    public void updateFriend(Friend friend) {
+    public void updateFriend(Friend friend, FriendState newState) {
+        friend.state = newState
         friends.put(friend.email, friend)
     }
 
-    public void removeFriend(Friend friend) {
-        if (friends.containsKey(friend.email))
+    public void removeFriend(Friend friend, boolean withRestRequest) {
+        if (withRestRequest == true) {
+            // We are the initiator of the remove functionality
+            Friend f = friends.get(friend.email)
+            f.state = FriendState.REMOVED
+            def email = StorageManager.getInstance().getEmail(activity)
+            restRequest.remove(f, email, this)
+        }
+        else {
+            // We received the remove request or the REST request was successful
             friends.remove(friend.email)
+        }
     }
 
     def restRequestDone(String response) {
@@ -125,6 +135,18 @@ class Connector implements IConnector {
     @OnUIThread
     def showErrorToast(String message) {
         Toast.makeText(activity, message, Toast.LENGTH_LONG).show()
+    }
+
+    def retryRequests(String ownEmail, String ownName) {
+        for (Friend f : friends.values()) {
+            // No need to wait after sending the requests
+            if (f.state == FriendState.REMOVED)
+                restRequest.remove(f, ownEmail, this)
+            if (f.state == FriendState.ACCEPTED)
+                restRequest.accept(f, ownEmail, ownName,  this)
+            if (f.state == FriendState.DENIED)
+                restRequest.deny(f, ownEmail, this)
+        }
     }
 
 }

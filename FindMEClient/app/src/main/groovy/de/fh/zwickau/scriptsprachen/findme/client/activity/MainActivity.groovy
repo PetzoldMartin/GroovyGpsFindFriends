@@ -97,14 +97,6 @@ public class MainActivity extends AppCompatActivity {
         main = inflater.inflate(R.layout.activity_main, null);
     }
 
-    @Override
-    public void onDestroy() {
-        super.onStop()
-        RESTRequests req = new RESTRequests()
-        req.logout(StorageManager.getInstance().getEmail(this))
-        Core.stopServer()
-    }
-
     @OnBackground
     public void refresh() {
         Progress.showProgress("Aktualisiere Freundesliste", this)
