@@ -18,6 +18,7 @@ class Vector {
             return v
         } catch (NumberFormatException ex) {
             println "Error while parsing Vector from String: " + ex
+            return new Vector(x: null, y: null)
         }
     }
 

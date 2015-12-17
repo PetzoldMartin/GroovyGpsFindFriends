@@ -97,8 +97,12 @@ class Connector implements IConnector {
         }
         else {
             // getLocation request
-            Friend f = friends[currentTargetEmail]
-            f.lastKnownLocation = Vector.fromString(response)
+            if (!"Not a friend".equals(response)) {
+                Friend f = friends[currentTargetEmail]
+                f.lastKnownLocation = Vector.fromString(response)
+            }
+            else
+                showErrorToast(currentTargetEmail + " ist kein Freund")
         }
         restRequestDone = true
     }
