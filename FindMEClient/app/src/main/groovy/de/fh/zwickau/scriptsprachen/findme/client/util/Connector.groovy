@@ -32,8 +32,10 @@ class Connector implements IConnector {
 
     @Override
     List<Friend> getFriends(boolean update) {
+        def email = StorageManager.getInstance().getEmail(activity)
+        def name = StorageManager.getInstance().getName(activity)
+        retryRequests(email, name)
         if (update) {
-            def email = StorageManager.getInstance().getEmail(activity)
             restRequest.getAllUsers(email, this)
             while (!restRequestDone) {
                 if (restRequestFailed) {
@@ -45,6 +47,8 @@ class Connector implements IConnector {
             }
             restRequestDone = false
             for (Friend f : friends.values()) {
+                if (f.state != FriendState.FRIEND)
+                    continue
                 currentTargetEmail = f.email
                 restRequest.getIpForEmail(email, currentTargetEmail, this)
                 while (!restRequestDone) {
@@ -58,6 +62,8 @@ class Connector implements IConnector {
                 restRequestDone = false
             }
             for (Friend f : friends.values()) {
+                if (f.state != FriendState.FRIEND)
+                    continue
                 currentTargetEmail = f.email
                 restRequest.getLocation(f.lastKnownIp, email, this)
                 while (!restRequestDone) {

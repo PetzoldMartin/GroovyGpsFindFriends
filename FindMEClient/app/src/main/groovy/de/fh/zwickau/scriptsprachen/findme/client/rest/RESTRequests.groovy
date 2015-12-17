@@ -127,10 +127,9 @@ public class RESTRequests {
         RestTemplate restTemplate = getRestTemplate()
         try {
             String response = restTemplate.getForObject(url, String.class)
+            // TODO
             if (response.equals("Okay"))
-                ; // TODO
-            else
-                ; // TODO
+                println response
         } catch (Exception ex) {
             // TODO
             Log.d("RESTClient", "Exception while REST request: " + ex.toString())

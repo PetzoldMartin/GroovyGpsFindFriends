@@ -14,12 +14,15 @@ import android.widget.*
 import android.widget.ExpandableListView.OnChildClickListener
 import com.arasthel.swissknife.SwissKnife
 import com.arasthel.swissknife.annotations.OnBackground
+import com.arasthel.swissknife.annotations.OnClick
 import com.arasthel.swissknife.annotations.OnItemClick
 import de.fh.zwickau.scriptsprachen.findme.client.R
+import de.fh.zwickau.scriptsprachen.findme.client.friend.FriendState
 import de.fh.zwickau.scriptsprachen.findme.client.rest.RESTRequests
 import de.fh.zwickau.scriptsprachen.findme.client.ui.ExpandableListAdapter
 import de.fh.zwickau.scriptsprachen.findme.client.ui.OpenStreetMap
 import de.fh.zwickau.scriptsprachen.findme.client.ui.Progress
+import de.fh.zwickau.scriptsprachen.findme.client.util.Connector
 import de.fh.zwickau.scriptsprachen.findme.client.util.Core
 import de.fh.zwickau.scriptsprachen.findme.client.friend.Friend
 import de.fh.zwickau.scriptsprachen.findme.client.util.StorageManager
