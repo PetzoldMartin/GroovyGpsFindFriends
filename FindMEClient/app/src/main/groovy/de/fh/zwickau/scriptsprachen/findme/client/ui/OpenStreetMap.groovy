@@ -6,7 +6,7 @@ import com.arasthel.swissknife.annotations.OnBackground
 import com.arasthel.swissknife.annotations.OnUIThread
 import de.fh.zwickau.scriptsprachen.findme.client.R
 import de.fh.zwickau.scriptsprachen.findme.client.location.ClientLocator
-import de.fh.zwickau.scriptsprachen.findme.client.util.Friend
+import de.fh.zwickau.scriptsprachen.findme.client.friend.Friend
 import org.osmdroid.bonuspack.overlays.Marker
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory
 import org.osmdroid.util.GeoPoint

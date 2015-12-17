@@ -21,7 +21,7 @@ import de.fh.zwickau.scriptsprachen.findme.client.ui.ExpandableListAdapter
 import de.fh.zwickau.scriptsprachen.findme.client.ui.OpenStreetMap
 import de.fh.zwickau.scriptsprachen.findme.client.ui.Progress
 import de.fh.zwickau.scriptsprachen.findme.client.util.Core
-import de.fh.zwickau.scriptsprachen.findme.client.util.Friend
+import de.fh.zwickau.scriptsprachen.findme.client.friend.Friend
 import de.fh.zwickau.scriptsprachen.findme.client.util.StorageManager
 import org.osmdroid.views.MapView
 

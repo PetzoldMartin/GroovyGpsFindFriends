@@ -4,6 +4,7 @@ import android.app.Activity
 import android.util.Log
 import android.widget.Toast
 import com.arasthel.swissknife.annotations.OnUIThread
+import de.fh.zwickau.scriptsprachen.findme.client.friend.Friend
 import de.fh.zwickau.scriptsprachen.findme.client.rest.RESTRequests
 import de.fh.zwickau.scriptsprachen.findme.client.location.Vector
 

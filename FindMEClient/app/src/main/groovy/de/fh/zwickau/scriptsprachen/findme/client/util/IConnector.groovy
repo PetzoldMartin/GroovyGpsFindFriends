@@ -1,4 +1,6 @@
-package de.fh.zwickau.scriptsprachen.findme.client.util;
+package de.fh.zwickau.scriptsprachen.findme.client.util
+
+import de.fh.zwickau.scriptsprachen.findme.client.friend.Friend;
 
 interface IConnector {
 
