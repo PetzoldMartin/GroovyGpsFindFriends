@@ -20,6 +20,7 @@ public class RegisterActivity extends AppCompatActivity {
     EditText nameTextfield
     EditText emailTextfield
     ProgressDialog progDialog
+    String usedName
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,7 +40,7 @@ public class RegisterActivity extends AppCompatActivity {
         // For debug purposes
         nameTextfield.setText("debug")
 
-        String email = StorageManager.getInstance().getLoginData(this)
+        String email = StorageManager.getInstance().getEmail(this)
         if (email != null) {
             Progress.showProgress("Login", this)
             restRequests.login(email, this)
@@ -48,12 +49,12 @@ public class RegisterActivity extends AppCompatActivity {
 
     @OnClick(R.id.button_register)
     public void onRegisterClicked() {
-        String name = nameTextfield.getText()
+        usedName = nameTextfield.getText()
         String email = emailTextfield.getText()
-        name = name.trim()
+        usedName = name.trim()
         email = email.trim()
 
-        if ("debug".equals(name)) {
+        if ("debug".equals(usedName)) {
             // Skip connection to server for test purposes
             Intent intent = new Intent(this, MainActivity.class)
             startActivity(intent)
@@ -61,9 +62,9 @@ public class RegisterActivity extends AppCompatActivity {
             return
         }
 
-        if (checkValidInput(name, email)) {
+        if (checkValidInput(usedName, email)) {
             Progress.showProgress("Registrieren", this)
-            restRequests.register(email, name, this)
+            restRequests.register(email, usedName, this)
         }
         else
             Toast.makeText(this, "E-Mail-Adresse oder Name ungültig", Toast.LENGTH_LONG).show()
@@ -116,7 +117,7 @@ public class RegisterActivity extends AppCompatActivity {
     @OnUIThread
     public void showMapScreen(String email) {
         Toast.makeText(this, "Login erfolgreich", Toast.LENGTH_LONG).show()
-        StorageManager.getInstance().storeLoginData(email, this)
+        StorageManager.getInstance().storeLoginData(email, usedName, this)
         Intent intent = new Intent(this, MainActivity.class)
         startActivity(intent)
         finish()

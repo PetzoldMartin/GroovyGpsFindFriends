@@ -70,23 +70,28 @@ public class RESTServer extends BroadcastReceiver {
         System.setProperty("java.net.preferIPv4Stack", "true")
         System.setProperty("java.net.preferIPv6Addresses", "false")
 
-        Log.i(LOG_TAG + " IP config", "Jetty Ip set to: " + addresse.toString())
+        Log.i(LOG_TAG + " IP config", "Jetty IP set to: " + addresse.toString())
         if (webServer == null) {
             webServer = new Server(addresse)
         }
 
-        ServletHolder servletHolder = new ServletHolder(ServletContainer.class)
+        ServletContextHandler servletContextHandler = new ServletContextHandler(webServer, "/", true, false)
 
+        ServletHolder servletHolder = new ServletHolder(ServletContainer.class)
         servletHolder.setInitParameter("com.sun.jersey.config.property.resourceConfigClass", "com.sun.jersey.api.core.ClassNamesResourceConfig")
         servletHolder.setInitParameter("com.sun.jersey.config.property.classnames", "de.fh.zwickau.scriptsprachen.findme.client.rest.resources.HelloResource")
-
-        ServletContextHandler servletContextHandler = new ServletContextHandler(webServer, "/", true, false)
-        servletContextHandler.addServlet(servletHolder, "/hello/*")
 
         ServletHolder locatorHolder = new ServletHolder(ServletContainer.class)
         locatorHolder.setInitParameter("com.sun.jersey.config.property.resourceConfigClass", "com.sun.jersey.api.core.ClassNamesResourceConfig")
         locatorHolder.setInitParameter("com.sun.jersey.config.property.classnames", "de.fh.zwickau.scriptsprachen.findme.client.rest.resources.LocatorResource")
+
+        ServletHolder friendHolder = new ServletHolder(ServletContainer.class)
+        locatorHolder.setInitParameter("com.sun.jersey.config.property.resourceConfigClass", "com.sun.jersey.api.core.ClassNamesResourceConfig")
+        locatorHolder.setInitParameter("com.sun.jersey.config.property.classnames", "de.fh.zwickau.scriptsprachen.findme.client.rest.resources.FriendResource")
+
+        servletContextHandler.addServlet(servletHolder, "/hello/*")
         servletContextHandler.addServlet(locatorHolder, "/locator/*")
+        servletContextHandler.addServlet(friendHolder, "/friend/*")
 
         webServer.setHandler(servletContextHandler)
 

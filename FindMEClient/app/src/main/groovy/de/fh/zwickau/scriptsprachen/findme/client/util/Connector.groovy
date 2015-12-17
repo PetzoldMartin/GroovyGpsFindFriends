@@ -31,7 +31,7 @@ class Connector implements IConnector {
     @Override
     List<Friend> getFriends(boolean update) {
         if (update) {
-            def email = StorageManager.getInstance().getLoginData(activity)
+            def email = StorageManager.getInstance().getEmail(activity)
             restRequest.getAllUsers(email, this)
             while (!restRequestDone) {
                 if (restRequestFailed) {

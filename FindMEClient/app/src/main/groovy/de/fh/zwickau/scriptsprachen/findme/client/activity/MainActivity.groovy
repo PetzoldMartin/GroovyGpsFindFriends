@@ -101,7 +101,7 @@ public class MainActivity extends AppCompatActivity {
     public void onDestroy() {
         super.onStop()
         RESTRequests req = new RESTRequests()
-        req.logout(StorageManager.getInstance().getLoginData(this))
+        req.logout(StorageManager.getInstance().getEmail(this))
         Core.stopServer()
     }
 
