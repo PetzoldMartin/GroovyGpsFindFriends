@@ -5,6 +5,7 @@ import android.util.Log
 import android.widget.Toast
 import com.arasthel.swissknife.annotations.OnUIThread
 import de.fh.zwickau.scriptsprachen.findme.client.friend.Friend
+import de.fh.zwickau.scriptsprachen.findme.client.friend.FriendState
 import de.fh.zwickau.scriptsprachen.findme.client.rest.RESTRequests
 import de.fh.zwickau.scriptsprachen.findme.client.location.Vector
 
@@ -74,6 +75,15 @@ class Connector implements IConnector {
         return friends.values().asList()
     }
 
+    public void updateFriend(Friend friend) {
+        friends.put(friend.email, friend)
+    }
+
+    public void removeFriend(Friend friend) {
+        if (friends.containsKey(friend.email))
+            friends.remove(friend.email)
+    }
+
     def restRequestDone(String response) {
         if (response.startsWith("[")) {
             // getOnlineUsers request
@@ -87,6 +97,7 @@ class Connector implements IConnector {
                     f = new Friend()
                 f.email = parts[1]
                 f.name = parts[0]
+                f.state = FriendState.FRIEND
                 friends.put(f.email, f)
             }
         }

@@ -24,7 +24,7 @@ class ClientLocator {
     }
 
     Vector getLocation(){
-        if (mGpslocListenerI.getLa() == null)
+        if (mGpslocListenerI.getLa() == null && locationManagerI.getAllProviders().contains(LocationManager.NETWORK_PROVIDER))
             return new Vector(x:mNetworklocListenerI.getLa(), y:mNetworklocListenerI.getLo())
         else
             return new Vector(x:mGpslocListenerI.getLa(), y:mGpslocListenerI.getLo())

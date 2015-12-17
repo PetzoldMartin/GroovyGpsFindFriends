@@ -51,7 +51,7 @@ public class RegisterActivity extends AppCompatActivity {
     public void onRegisterClicked() {
         usedName = nameTextfield.getText()
         String email = emailTextfield.getText()
-        usedName = name.trim()
+        usedName = usedName.trim()
         email = email.trim()
 
         if ("debug".equals(usedName)) {
