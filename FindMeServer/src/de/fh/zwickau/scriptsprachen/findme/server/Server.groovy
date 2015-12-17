@@ -6,6 +6,7 @@ import org.glassfish.jersey.server.ResourceConfig
 import org.glassfish.grizzly.http.server.CLStaticHttpHandler
 
 import de.fh.zwickau.scriptsprachen.findme.server.resources.*
+import de.fh.zwickau.scriptsprachen.findme.server.test.FriendResource
 import de.fh.zwickau.scriptsprachen.findme.server.test.LocatorResource
 import org.glassfish.grizzly.http.server.NetworkListener
 
@@ -14,6 +15,7 @@ rc.register(Auth.class)
 rc.register(Mediator.class)
 rc.register(Admin.class)
 rc.register(LocatorResource.class)
+rc.register(FriendResource.class)
 rc.register(RequestFilter.class)
 
 HttpServer server = null
