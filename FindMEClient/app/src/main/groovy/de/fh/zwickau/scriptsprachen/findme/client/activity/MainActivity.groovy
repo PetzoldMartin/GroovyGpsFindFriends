@@ -95,9 +95,9 @@ public class MainActivity extends AppCompatActivity {
 
     void initLayouts() {
         LayoutInflater inflater2 = getLayoutInflater();
-        friend = inflater2.inflate(R.layout.friends_list, null,false);
+        friend = inflater2.inflate(R.layout.friends_list, null, false);
         LayoutInflater inflater = getLayoutInflater();
-        main = inflater.inflate(R.layout.activity_main, null,false);
+        main = inflater.inflate(R.layout.activity_main, null, false);
     }
 
     @OnBackground
@@ -232,17 +232,45 @@ public class MainActivity extends AppCompatActivity {
             public boolean onChildClick(ExpandableListView parent, View v,
                                         int groupPosition, int childPosition, long id) {
                 // TODO Auto-generated method stub
+                CheckBox cb = (CheckBox) v.findViewById(R.id.check1);
                 Toast.makeText(
                         getApplicationContext(),
                         listDataHeader.get(groupPosition)
                                 + " : "
                                 + listDataChild.get(
                                 listDataHeader.get(groupPosition)).get(
-                                childPosition), Toast.LENGTH_SHORT)
+                                childPosition) + " details " + cb.isChecked()
+
+                        , Toast.LENGTH_SHORT)
                         .show();
                 return false;
             }
         });
+
+        expListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                if (ExpandableListView.getPackedPositionType(id) == ExpandableListView.PACKED_POSITION_TYPE_CHILD) {
+                    final ExpandableListAdapter adapter = ((ExpandableListView) parent).getExpandableListAdapter();
+                    long packedPos = ((ExpandableListView) parent).getExpandableListPosition(position);
+                    int groupPosition = ExpandableListView.getPackedPositionGroup(packedPos);
+                    int childPosition = ExpandableListView.getPackedPositionChild(packedPos);
+                    Toast.makeText(
+                            getApplicationContext(),
+                            listDataHeader.get(groupPosition)
+                                    + " : Long "
+                                    + listDataChild.get(
+                                    listDataHeader.get(groupPosition)).get(
+                                    childPosition) + " details " 
+
+                            , Toast.LENGTH_SHORT)
+                            .show();
+                }
+                // do whatever you want with groupPos and childPos here - I used these to get my object from list adapter.
+                return false
+            }
+        })
+
     }
 
     @Override
