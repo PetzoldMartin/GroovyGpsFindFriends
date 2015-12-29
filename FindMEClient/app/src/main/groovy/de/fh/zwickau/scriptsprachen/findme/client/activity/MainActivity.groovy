@@ -95,9 +95,9 @@ public class MainActivity extends AppCompatActivity {
 
     void initLayouts() {
         LayoutInflater inflater2 = getLayoutInflater();
-        friend = inflater2.inflate(R.layout.friends_list, null);
+        friend = inflater2.inflate(R.layout.friends_list, null,false);
         LayoutInflater inflater = getLayoutInflater();
-        main = inflater.inflate(R.layout.activity_main, null);
+        main = inflater.inflate(R.layout.activity_main, null,false);
     }
 
     @OnBackground
@@ -196,10 +196,8 @@ public class MainActivity extends AppCompatActivity {
         prepareListData(friendArray);
 
         listAdapter = new ExpandableListAdapter(this, listDataHeader, listDataChild);
-
         // setting list adapter
         expListView.setAdapter(listAdapter);
-        expListView.expandGroup(0)
     }
 
     private void prepareListData(ArrayList<String> friendArray) {
@@ -209,6 +207,8 @@ public class MainActivity extends AppCompatActivity {
         List<String> friendsList
         // Adding child data
         listDataHeader.add("Friendslist");
+        listDataHeader.add("NewFriends");
+
         if (friendArray != null) {
             friendsList = friendArray;
         } else {
@@ -216,6 +216,8 @@ public class MainActivity extends AppCompatActivity {
         }
 
         listDataChild.put(listDataHeader.get(0), friendsList); // Header, Child data
+        listDataChild.put(listDataHeader.get(1), friendsList); // Header, Child data
+
     }
 
     private void setFriendslist(ArrayList<String> new_fList) {

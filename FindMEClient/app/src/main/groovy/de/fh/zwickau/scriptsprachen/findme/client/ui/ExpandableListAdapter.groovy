@@ -46,6 +46,17 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
             convertView = infalInflater.inflate(R.layout.list_item, null);
         }
 
+        if (groupPosition==0){
+            convertView.findViewById(R.id.add).setVisibility(View.INVISIBLE);
+            convertView.findViewById(R.id.delete).setVisibility(View.VISIBLE);
+            convertView.findViewById(R.id.check1).setVisibility(View.VISIBLE);
+        }
+        if (groupPosition==1){
+            convertView.findViewById(R.id.add).setVisibility(View.VISIBLE);
+            convertView.findViewById(R.id.delete).setVisibility(View.INVISIBLE);
+            convertView.findViewById(R.id.check1).setVisibility(View.INVISIBLE);
+
+        }
         TextView txtListChild = (TextView) convertView
                 .findViewById(R.id.lblListItem);
 

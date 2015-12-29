@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout  xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="55dip"
     android:orientation="vertical" >
@@ -8,9 +8,32 @@
         android:id="@+id/lblListItem"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:textSize="27dip"
+        android:textSize="17dp"
         android:paddingTop="5dp"
         android:paddingBottom="5dp"
+
         android:paddingLeft="?android:attr/expandableListPreferredChildPaddingLeft" />
 
-</LinearLayout>
+    <ImageView
+        android:id="@+id/add"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:src="@drawable/zoom_in"
+        android:contentDescription="@string/app_name"/>
+
+    <ImageView
+        android:id="@+id/delete"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toLeftOf="@id/add"
+        android:src="@drawable/zoom_out"
+        android:contentDescription="@string/app_name"/>
+
+    <CheckBox android:id="@+id/check1"
+        android:focusable="false"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        />
+
+</RelativeLayout >
