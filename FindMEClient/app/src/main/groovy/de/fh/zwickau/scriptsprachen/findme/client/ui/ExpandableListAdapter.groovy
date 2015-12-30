@@ -16,10 +16,13 @@ import de.fh.zwickau.scriptsprachen.findme.client.friend.FriendState
 
 public class ExpandableListAdapter extends BaseExpandableListAdapter {
 
+    def friendGroupID = 1
+    def requestedGroupID = 0
     private def friendsList
     private Context _context;
     private List<String> _listDataHeader;
     private HashMap<String, List<String>> _listDataChild;
+
     public List<String> getListDataHeader() {
         return _listDataHeader;
     }
@@ -33,24 +36,29 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         this.friendsList = friendList;
         def listDataHeader = new ArrayList<String>();
         def listChildData = new HashMap<String, List<String>>();
-        listDataHeader.add("Friendslist");
-        listDataHeader.add("Requested Friends");
+
         ArrayList<String> friendArray = new ArrayList<String>()
         ArrayList<String> reqFriendArray = new ArrayList<String>()
         friendList.each {
             if (it.state == FriendState.FRIEND) {
                 friendArray.add(it.name.toString() + " : " + it.email)
-                it.setViewGroupNr(0);
+                it.setViewGroupNr(friendGroupID);
                 it.setViewNr(friendArray.size() - 1)
             }
             if (it.state == FriendState.REQUESTED) {
                 reqFriendArray.add(it.name.toString() + " : " + it.email)
-                it.setViewGroupNr(1);
+                it.setViewGroupNr(requestedGroupID);
                 it.setViewNr(reqFriendArray.size() - 1)
             }
         }
-        listChildData.put(listDataHeader.get(0), (List<String>) friendArray); // Header, Child data
-        listChildData.put(listDataHeader.get(1), (List<String>) reqFriendArray);
+
+        //order off the groups have to synct with group ids
+        listDataHeader.add("Requesting Friends");
+        listDataHeader.add("Friendslist");
+
+
+        listChildData.put(listDataHeader.get(requestedGroupID), (List<String>) reqFriendArray);
+        listChildData.put(listDataHeader.get(friendGroupID), (List<String>) friendArray);
         // Header, Child data
         this._context = context;
         this._listDataHeader = listDataHeader;
@@ -78,11 +86,17 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView = infalInflater.inflate(R.layout.list_item, null);
         }
-        if (groupPosition == 0) {
+        if (groupPosition == friendGroupID) {
             convertView.findViewById(R.id.add).setVisibility(View.INVISIBLE);
             convertView.findViewById(R.id.delete).setVisibility(View.INVISIBLE);
             convertView.findViewById(R.id.check1).setVisibility(View.VISIBLE);
             Switch toggle = (Switch) convertView.findViewById(R.id.check1)
+            if (toggle.isChecked()) {
+                friendsList.getFriendByListId(groupPosition, childPosition).setVisibility(true);
+            } else {
+                friendsList.getFriendByListId(groupPosition, childPosition).setVisibility(false);
+            }
+
             toggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                     if (isChecked) {
@@ -94,7 +108,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
             });
         }
 
-        if (groupPosition == 1) {
+        if (groupPosition == requestedGroupID) {
             convertView.findViewById(R.id.add).setVisibility(View.VISIBLE);
             convertView.findViewById(R.id.delete).setVisibility(View.VISIBLE);
             convertView.findViewById(R.id.check1).setVisibility(View.INVISIBLE);
