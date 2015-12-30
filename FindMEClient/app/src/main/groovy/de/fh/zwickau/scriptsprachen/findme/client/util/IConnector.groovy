@@ -9,4 +9,6 @@ interface IConnector {
     public void updateFriend(Friend friend, FriendState newState)
     public void removeFriend(Friend friend, boolean withRestRequest)
 
+
+
 }

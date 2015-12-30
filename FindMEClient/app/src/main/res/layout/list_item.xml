@@ -14,7 +14,7 @@
 
         android:paddingLeft="?android:attr/expandableListPreferredChildPaddingLeft" />
 
-    <ImageView
+    <ImageButton
         android:id="@+id/add"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -22,7 +22,7 @@
         android:src="@drawable/zoom_in"
         android:contentDescription="@string/app_name"/>
 
-    <ImageView
+    <ImageButton
         android:id="@+id/delete"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -30,10 +30,12 @@
         android:src="@drawable/zoom_out"
         android:contentDescription="@string/app_name"/>
 
-    <CheckBox android:id="@+id/check1"
+    <Switch android:id="@+id/check1"
         android:focusable="false"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_toLeftOf="@id/delete"
+
         />
 
 </RelativeLayout >

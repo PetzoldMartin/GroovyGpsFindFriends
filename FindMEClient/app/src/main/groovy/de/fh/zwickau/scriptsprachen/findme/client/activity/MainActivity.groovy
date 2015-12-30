@@ -14,18 +14,15 @@ import android.widget.*
 import android.widget.ExpandableListView.OnChildClickListener
 import com.arasthel.swissknife.SwissKnife
 import com.arasthel.swissknife.annotations.OnBackground
-import com.arasthel.swissknife.annotations.OnClick
 import com.arasthel.swissknife.annotations.OnItemClick
 import de.fh.zwickau.scriptsprachen.findme.client.R
 import de.fh.zwickau.scriptsprachen.findme.client.friend.FriendState
-import de.fh.zwickau.scriptsprachen.findme.client.rest.RESTRequests
+import de.fh.zwickau.scriptsprachen.findme.client.ui.EFriendList
 import de.fh.zwickau.scriptsprachen.findme.client.ui.ExpandableListAdapter
 import de.fh.zwickau.scriptsprachen.findme.client.ui.OpenStreetMap
 import de.fh.zwickau.scriptsprachen.findme.client.ui.Progress
-import de.fh.zwickau.scriptsprachen.findme.client.util.Connector
 import de.fh.zwickau.scriptsprachen.findme.client.util.Core
 import de.fh.zwickau.scriptsprachen.findme.client.friend.Friend
-import de.fh.zwickau.scriptsprachen.findme.client.util.StorageManager
 import org.osmdroid.views.MapView
 
 public class MainActivity extends AppCompatActivity {
@@ -43,11 +40,13 @@ public class MainActivity extends AppCompatActivity {
     ArrayList<String> friendArray;
     private Toolbar toolbar;
     View main, friend;
-    def friendlist;
+    EFriendList friendsList;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.sidebar_container);
 
         initLayouts();
@@ -75,6 +74,8 @@ public class MainActivity extends AppCompatActivity {
         refresh()
     }
 
+
+
     void initToolbar() {
         toolbar = (Toolbar) findViewById(R.id.tool_bar)
         setSupportActionBar(toolbar)
@@ -84,13 +85,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     void initFriends() {
-        friendlist = Core.getConnector().getFriends(true)
-        friendArray = new ArrayList<String>()
-        for (String text : friendlist) {
-            def array = text.tokenize(',')
-            def ntext = array[0] + " :) " + array[1]
-            friendArray.add(ntext)
-        }
+
+        friendsList = new EFriendList(Core.getConnector().getFriends(true))
+
     }
 
     void initLayouts() {
@@ -109,7 +106,7 @@ public class MainActivity extends AppCompatActivity {
         Progress.dismissProgress()
 
         openStreetMap.removeAllMarkers()
-        for (Friend friend : friendlist) {
+        for (Friend friend : friendsList) {
             openStreetMap.createFriend(friend)
         }
         openStreetMap.setOwnLocationToCenter()
@@ -172,12 +169,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
-        // Activate the navigation drawer toggle
         if (mDrawerToggle.onOptionsItemSelected(item)) {
             return true;
         }
@@ -185,54 +177,25 @@ public class MainActivity extends AppCompatActivity {
             refresh()
             return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 
     void setupFriendsList() {
         expListView = (ExpandableListView) findViewById(R.id.Friend_list);
-
-        // preparing list data
-        prepareListData(friendArray);
-
-        listAdapter = new ExpandableListAdapter(this, listDataHeader, listDataChild);
-        // setting list adapter
+        initExpandeblelistListeners();
+        listAdapter = new ExpandableListAdapter(this, friendsList);
+        this.listDataHeader = listAdapter.getListDataHeader()
+        this.listDataChild = listAdapter.getListDataChild()
         expListView.setAdapter(listAdapter);
     }
 
-    private void prepareListData(ArrayList<String> friendArray) {
-        initExpandeblelistListeners();
-        listDataHeader = new ArrayList<String>();
-        listDataChild = new HashMap<String, List<String>>();
-        List<String> friendsList
-        // Adding child data
-        listDataHeader.add("Friendslist");
-        listDataHeader.add("NewFriends");
-
-        if (friendArray != null) {
-            friendsList = friendArray;
-        } else {
-            friendsList = new ArrayList<String>()
-        }
-
-        listDataChild.put(listDataHeader.get(0), friendsList); // Header, Child data
-        listDataChild.put(listDataHeader.get(1), friendsList); // Header, Child data
-
-    }
-
-    private void setFriendslist(ArrayList<String> new_fList) {
-        friendArray = new_fList
-    }
 
     private void initExpandeblelistListeners() {
-        // Listview on child click listener
         expListView.setOnChildClickListener(new OnChildClickListener() {
-
             @Override
             public boolean onChildClick(ExpandableListView parent, View v,
                                         int groupPosition, int childPosition, long id) {
-                // TODO Auto-generated method stub
-                CheckBox cb = (CheckBox) v.findViewById(R.id.check1);
+                Switch cb = (Switch) v.findViewById(R.id.check1);
                 Toast.makeText(
                         getApplicationContext(),
                         listDataHeader.get(groupPosition)
@@ -255,18 +218,8 @@ public class MainActivity extends AppCompatActivity {
                     long packedPos = ((ExpandableListView) parent).getExpandableListPosition(position);
                     int groupPosition = ExpandableListView.getPackedPositionGroup(packedPos);
                     int childPosition = ExpandableListView.getPackedPositionChild(packedPos);
-                    Toast.makeText(
-                            getApplicationContext(),
-                            listDataHeader.get(groupPosition)
-                                    + " : Long "
-                                    + listDataChild.get(
-                                    listDataHeader.get(groupPosition)).get(
-                                    childPosition) + " details " 
-
-                            , Toast.LENGTH_SHORT)
-                            .show();
+                    friendsList.getFriendByListId(groupPosition,childPosition).setState(FriendState.REMOVED);
                 }
-                // do whatever you want with groupPos and childPos here - I used these to get my object from list adapter.
                 return false
             }
         })

@@ -100,6 +100,8 @@ class Connector implements IConnector {
         }
     }
 
+
+
     def restRequestDone(String response) {
         if (response.startsWith("[")) {
             // getOnlineUsers request

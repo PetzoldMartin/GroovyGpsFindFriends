@@ -1,5 +1,9 @@
 package de.fh.zwickau.scriptsprachen.findme.client.ui
 
+import android.widget.CompoundButton
+import android.widget.ExpandableListView
+import android.widget.ImageButton
+import android.widget.Switch
 import de.fh.zwickau.scriptsprachen.findme.client.R
 import android.content.Context;
 import android.graphics.Typeface;
@@ -7,21 +11,52 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
-import android.widget.TextView;
+import android.widget.TextView
+import de.fh.zwickau.scriptsprachen.findme.client.friend.FriendState
 
 public class ExpandableListAdapter extends BaseExpandableListAdapter {
 
+    private def friendsList
     private Context _context;
-    private List<String> _listDataHeader; // header titles
-    // child data in format of header title, child title
+    private List<String> _listDataHeader;
     private HashMap<String, List<String>> _listDataChild;
+    public List<String> getListDataHeader() {
+        return _listDataHeader;
+    }
 
-    public ExpandableListAdapter(Context context, List<String> listDataHeader,
-                                 HashMap<String, List<String>> listChildData) {
+    public HashMap<String, List<String>> getListDataChild() {
+        return _listDataChild;
+    }
+
+
+    public ExpandableListAdapter(Context context, def friendList) {
+        this.friendsList = friendList;
+        def listDataHeader = new ArrayList<String>();
+        def listChildData = new HashMap<String, List<String>>();
+        listDataHeader.add("Friendslist");
+        listDataHeader.add("Requested Friends");
+        ArrayList<String> friendArray = new ArrayList<String>()
+        ArrayList<String> reqFriendArray = new ArrayList<String>()
+        friendList.each {
+            if (it.state == FriendState.FRIEND) {
+                friendArray.add(it.name.toString() + " : " + it.email)
+                it.setViewGroupNr(0);
+                it.setViewNr(friendArray.size() - 1)
+            }
+            if (it.state == FriendState.REQUESTED) {
+                reqFriendArray.add(it.name.toString() + " : " + it.email)
+                it.setViewGroupNr(1);
+                it.setViewNr(reqFriendArray.size() - 1)
+            }
+        }
+        listChildData.put(listDataHeader.get(0), (List<String>) friendArray); // Header, Child data
+        listChildData.put(listDataHeader.get(1), (List<String>) reqFriendArray);
+        // Header, Child data
         this._context = context;
         this._listDataHeader = listDataHeader;
         this._listDataChild = listChildData;
     }
+
 
     @Override
     public Object getChild(int groupPosition, int childPosititon) {
@@ -37,29 +72,49 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
     @Override
     public View getChildView(int groupPosition, final int childPosition,
                              boolean isLastChild, View convertView, ViewGroup parent) {
-
         final String childText = (String) getChild(groupPosition, childPosition);
-
         if (convertView == null) {
             LayoutInflater infalInflater = (LayoutInflater) this._context
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView = infalInflater.inflate(R.layout.list_item, null);
         }
-
-        if (groupPosition==0){
+        if (groupPosition == 0) {
             convertView.findViewById(R.id.add).setVisibility(View.INVISIBLE);
-            convertView.findViewById(R.id.delete).setVisibility(View.VISIBLE);
-            convertView.findViewById(R.id.check1).setVisibility(View.VISIBLE);
-        }
-        if (groupPosition==1){
-            convertView.findViewById(R.id.add).setVisibility(View.VISIBLE);
             convertView.findViewById(R.id.delete).setVisibility(View.INVISIBLE);
-            convertView.findViewById(R.id.check1).setVisibility(View.INVISIBLE);
+            convertView.findViewById(R.id.check1).setVisibility(View.VISIBLE);
+            Switch toggle = (Switch) convertView.findViewById(R.id.check1)
+            toggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    if (isChecked) {
+                        friendsList.getFriendByListId(groupPosition, childPosition).setVisibility(true);
+                    } else {
+                        friendsList.getFriendByListId(groupPosition, childPosition).setVisibility(false);
+                    }
+                }
+            });
+        }
 
+        if (groupPosition == 1) {
+            convertView.findViewById(R.id.add).setVisibility(View.VISIBLE);
+            convertView.findViewById(R.id.delete).setVisibility(View.VISIBLE);
+            convertView.findViewById(R.id.check1).setVisibility(View.INVISIBLE);
+            def imageButton = (ImageButton) convertView.findViewById(R.id.add);
+            imageButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View arg0) {
+                    friendsList.getFriendByListId(groupPosition, childPosition).setState(FriendState.ACCEPTED);
+                }
+            });
+            def imageButton2 = (ImageButton) convertView.findViewById(R.id.delete);
+            imageButton2.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View arg0) {
+                    friendsList.getFriendByListId(groupPosition, childPosition).setState(FriendState.DENIED);
+                }
+            });
         }
         TextView txtListChild = (TextView) convertView
                 .findViewById(R.id.lblListItem);
-
         txtListChild.setText(childText);
         return convertView;
     }
@@ -100,6 +155,8 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         lblListHeader.setTypeface(null, Typeface.BOLD);
         lblListHeader.setText(headerTitle);
 
+        ExpandableListView mExpandableListView = (ExpandableListView) parent;
+        mExpandableListView.expandGroup(groupPosition);
         return convertView;
     }
 
