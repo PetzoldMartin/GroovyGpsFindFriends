@@ -52,6 +52,8 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
             }
         }
 
+
+
         //order off the groups have to synct with group ids
         listDataHeader.add("Requesting Friends");
         listDataHeader.add("Friendslist");
@@ -64,6 +66,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         this._listDataHeader = listDataHeader;
         this._listDataChild = listChildData;
     }
+
 
 
     @Override

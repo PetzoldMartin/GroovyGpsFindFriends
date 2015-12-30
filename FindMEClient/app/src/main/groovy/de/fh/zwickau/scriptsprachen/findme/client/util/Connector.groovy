@@ -146,8 +146,8 @@ class Connector implements IConnector {
     }
 
     def retryRequests(String ownEmail, String ownName) {
-        for (Friend f : friends.values()) {
-            // No need to wait after sending the requests
+        friends.values().each {
+            def f=(Friend)it;
             if (f.state == FriendState.REMOVED)
                 restRequest.remove(f, ownEmail, this)
             if (f.state == FriendState.ACCEPTED)
@@ -155,6 +155,7 @@ class Connector implements IConnector {
             if (f.state == FriendState.DENIED)
                 restRequest.deny(f, ownEmail, this)
         }
+
     }
 
 }

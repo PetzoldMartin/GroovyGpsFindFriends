@@ -40,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
     ArrayList<String> friendArray;
     private Toolbar toolbar;
     View main, friend;
-    EFriendList friendsList;
+    static EFriendList friendsList;
 
 
     @Override
@@ -72,8 +72,9 @@ public class MainActivity extends AppCompatActivity {
         setupDrawer()
 
         refresh()
-    }
+        setupFriendsList();
 
+    }
 
 
     void initToolbar() {
@@ -103,6 +104,7 @@ public class MainActivity extends AppCompatActivity {
         while (!Progress.isDialogShown())
             sleep(500)
         initFriends();
+
         Progress.dismissProgress()
 
         openStreetMap.removeAllMarkers()
@@ -175,6 +177,8 @@ public class MainActivity extends AppCompatActivity {
         }
         if (id == R.id.action_refresh) {
             refresh()
+            setupFriendsList();
+
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -191,24 +195,19 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void initExpandeblelistListeners() {
-        expListView.setOnChildClickListener(new OnChildClickListener() {
+        /*expListView.setOnChildClickListener(new OnChildClickListener() {
             @Override
             public boolean onChildClick(ExpandableListView parent, View v,
                                         int groupPosition, int childPosition, long id) {
-                Switch cb = (Switch) v.findViewById(R.id.check1);
+                friendsList.getFriendByListId(groupPosition, childPosition).setState(FriendState.REMOVED)
+                setupFriendsList();
                 Toast.makeText(
                         getApplicationContext(),
-                        listDataHeader.get(groupPosition)
-                                + " : "
-                                + listDataChild.get(
-                                listDataHeader.get(groupPosition)).get(
-                                childPosition) + " details " + cb.isChecked()
-
-                        , Toast.LENGTH_SHORT)
+                        "short", Toast.LENGTH_SHORT)
                         .show();
                 return false;
             }
-        });
+        });*/
 
         expListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
@@ -218,7 +217,13 @@ public class MainActivity extends AppCompatActivity {
                     long packedPos = ((ExpandableListView) parent).getExpandableListPosition(position);
                     int groupPosition = ExpandableListView.getPackedPositionGroup(packedPos);
                     int childPosition = ExpandableListView.getPackedPositionChild(packedPos);
-                    friendsList.getFriendByListId(groupPosition,childPosition).setState(FriendState.REMOVED);
+                    friendsList.getFriendByListId(groupPosition, childPosition).setState(FriendState.REMOVED)
+                    setupFriendsList();
+                    Toast.makeText(
+                            getApplicationContext(),
+                            "state"
+
+                            , Toast.LENGTH_SHORT)
                 }
                 return false
             }
