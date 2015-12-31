@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.TextView
 import de.fh.zwickau.scriptsprachen.findme.client.friend.FriendState
+import de.fh.zwickau.scriptsprachen.findme.client.util.Core
 
 public class ExpandableListAdapter extends BaseExpandableListAdapter {
 
@@ -119,14 +120,16 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
             imageButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View arg0) {
-                    friendsList.getFriendByListId(groupPosition, childPosition).setState(FriendState.ACCEPTED);
+                    Core.getConnector().updateFriend(friendsList.getFriendByListId(groupPosition, childPosition),FriendState.ACCEPTED)
+                    //friendsList.getFriendByListId(groupPosition, childPosition).setState(FriendState.ACCEPTED);
                 }
             });
             def imageButton2 = (ImageButton) convertView.findViewById(R.id.delete);
             imageButton2.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View arg0) {
-                    friendsList.getFriendByListId(groupPosition, childPosition).setState(FriendState.DENIED);
+                    Core.getConnector().updateFriend(friendsList.getFriendByListId(groupPosition, childPosition),FriendState.DENIED)
+                    //friendsList.getFriendByListId(groupPosition, childPosition).setState(FriendState.DENIED);
                 }
             });
         }

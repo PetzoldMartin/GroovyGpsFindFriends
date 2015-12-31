@@ -104,7 +104,6 @@ public class MainActivity extends AppCompatActivity {
         while (!Progress.isDialogShown())
             sleep(500)
         initFriends();
-
         Progress.dismissProgress()
 
         openStreetMap.removeAllMarkers()
@@ -128,6 +127,7 @@ public class MainActivity extends AppCompatActivity {
             case "Friendslist":
                 friend.setVisibility(LinearLayout.VERTICAL)
                 main.setVisibility(LinearLayout.GONE)
+                refresh()
                 setupFriendsList()
                 mDrawerLayout.closeDrawers()
                 break
@@ -179,6 +179,7 @@ public class MainActivity extends AppCompatActivity {
             refresh()
             setupFriendsList();
 
+
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -217,7 +218,9 @@ public class MainActivity extends AppCompatActivity {
                     long packedPos = ((ExpandableListView) parent).getExpandableListPosition(position);
                     int groupPosition = ExpandableListView.getPackedPositionGroup(packedPos);
                     int childPosition = ExpandableListView.getPackedPositionChild(packedPos);
-                    friendsList.getFriendByListId(groupPosition, childPosition).setState(FriendState.REMOVED)
+                    //friendsList.getFriendByListId(groupPosition, childPosition).setState(FriendState.REMOVED)
+                    Core.getConnector().updateFriend(friendsList.getFriendByListId(groupPosition, childPosition),FriendState.REMOVED)
+                    Core.getConnector().removeFriend(friendsList.getFriendByListId(groupPosition, childPosition),false)
                     setupFriendsList();
                     Toast.makeText(
                             getApplicationContext(),
