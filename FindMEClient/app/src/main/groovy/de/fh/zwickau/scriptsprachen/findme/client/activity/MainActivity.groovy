@@ -218,9 +218,7 @@ public class MainActivity extends AppCompatActivity {
                     long packedPos = ((ExpandableListView) parent).getExpandableListPosition(position);
                     int groupPosition = ExpandableListView.getPackedPositionGroup(packedPos);
                     int childPosition = ExpandableListView.getPackedPositionChild(packedPos);
-                    //friendsList.getFriendByListId(groupPosition, childPosition).setState(FriendState.REMOVED)
-                    Core.getConnector().updateFriend(friendsList.getFriendByListId(groupPosition, childPosition),FriendState.REMOVED)
-                    Core.getConnector().removeFriend(friendsList.getFriendByListId(groupPosition, childPosition),false)
+                    Core.getConnector().removeFriend(friendsList.getFriendByListId(groupPosition, childPosition), true)
                     setupFriendsList();
                     Toast.makeText(
                             getApplicationContext(),

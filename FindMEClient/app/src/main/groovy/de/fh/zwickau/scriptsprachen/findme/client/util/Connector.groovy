@@ -84,6 +84,12 @@ class Connector implements IConnector {
     public void updateFriend(Friend friend, FriendState newState) {
         friend.state = newState
         friends.put(friend.email, friend)
+        def email = StorageManager.getInstance().getEmail(activity)
+        def name = StorageManager.getInstance().getName(activity)
+		if (newState == FriendState.ACCEPTED)
+			restRequest.accept(friend, email, name, this)
+		if (newState == FriendState.DENIED)
+			restRequest.deny(friend, email, this)
     }
 
     public void removeFriend(Friend friend, boolean withRestRequest) {
@@ -99,8 +105,6 @@ class Connector implements IConnector {
             friends.remove(friend.email)
         }
     }
-
-
 
     def restRequestDone(String response) {
         if (response.startsWith("[")) {
@@ -147,15 +151,10 @@ class Connector implements IConnector {
 
     def retryRequests(String ownEmail, String ownName) {
         for (Friend f : friends.values()) {
-            //continue
-            if (f.state == FriendState.REMOVED) {
+            if (f.state == FriendState.REMOVED) 
                 restRequest.remove(f, ownEmail, this)
-            println("remove")
-            }
-            //continue
             if (f.state == FriendState.ACCEPTED)
                 restRequest.accept(f, ownEmail, ownName,  this)
-            //continue
             if (f.state == FriendState.DENIED)
                 restRequest.deny(f, ownEmail, this)
         }
