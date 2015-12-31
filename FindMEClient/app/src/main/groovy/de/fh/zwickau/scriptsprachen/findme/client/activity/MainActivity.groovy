@@ -177,9 +177,7 @@ public class MainActivity extends AppCompatActivity {
         }
         if (id == R.id.action_refresh) {
             refresh()
-            setupFriendsList();
-
-
+            setupFriendsList()
             return true;
         }
         return super.onOptionsItemSelected(item);
