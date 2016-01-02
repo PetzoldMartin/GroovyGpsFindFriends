@@ -115,7 +115,8 @@ public class MainActivity extends AppCompatActivity {
 
         openStreetMap.removeAllMarkers()
         for (Friend friend : friendsList) {
-            openStreetMap.createFriend(friend)
+            if(friend.visibility)
+                openStreetMap.createFriend(friend)
         }
         openStreetMap.setOwnLocationToCenter()
         openStreetMap.refreshMap()
