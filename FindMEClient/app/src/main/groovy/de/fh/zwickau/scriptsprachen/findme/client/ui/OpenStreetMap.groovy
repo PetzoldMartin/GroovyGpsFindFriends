@@ -56,9 +56,10 @@ class OpenStreetMap {
     Marker createNode(GeoPoint geoPoint, boolean self = false) {
         Marker nodeMarker = new Marker(mMapView)
         nodeMarker.setPosition(geoPoint)
-        def nodeIcon = ContextCompat.getDrawable(mContext, R.drawable.marker_cluster)
-        if (!self)
+        if (!self){
+            def nodeIcon = ContextCompat.getDrawable(mContext, R.drawable.ic_marker_friend)
             nodeMarker.setIcon(nodeIcon)
+        }
         mMapView.getOverlays().add(nodeMarker)
         nodeMarker
     }
