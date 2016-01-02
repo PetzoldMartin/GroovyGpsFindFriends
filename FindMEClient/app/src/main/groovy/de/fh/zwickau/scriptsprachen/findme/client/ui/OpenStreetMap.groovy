@@ -1,5 +1,6 @@
 package de.fh.zwickau.scriptsprachen.findme.client.ui
 
+import android.app.Activity
 import android.content.Context
 import android.support.v4.content.ContextCompat
 import com.arasthel.swissknife.annotations.OnBackground
@@ -7,6 +8,9 @@ import com.arasthel.swissknife.annotations.OnUIThread
 import de.fh.zwickau.scriptsprachen.findme.client.R
 import de.fh.zwickau.scriptsprachen.findme.client.location.ClientLocator
 import de.fh.zwickau.scriptsprachen.findme.client.friend.Friend
+import de.fh.zwickau.scriptsprachen.findme.client.rest.RESTRequests
+import de.fh.zwickau.scriptsprachen.findme.client.util.Core
+import de.fh.zwickau.scriptsprachen.findme.client.util.StorageManager
 import org.osmdroid.bonuspack.overlays.Marker
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory
 import org.osmdroid.util.GeoPoint
@@ -15,6 +19,7 @@ import org.osmdroid.views.MapView
 
 class OpenStreetMap {
 
+    def mActivity
     def mContext
     def mMapView
     def mMapController
@@ -22,8 +27,9 @@ class OpenStreetMap {
     HashMap<String, Marker> friendNodes = [:]
     def selfNode
 
-    OpenStreetMap(Context mContext, MapView mMapView, ClientLocator ILocator) {
-        this.mContext = mContext
+    OpenStreetMap(Activity mActivity, MapView mMapView, ClientLocator ILocator) {
+        this.mActivity = mActivity
+        this.mContext = mActivity.applicationContext
         this.mMapView = mMapView
         this.ILocator = ILocator
         // Initial settings
@@ -104,7 +110,15 @@ class OpenStreetMap {
     }
 
     Marker createSelf(GeoPoint geoPoint) {
-        createNode(geoPoint, true)
+        def selfNode = createNode(geoPoint, true)
+
+        def ownEmail = StorageManager.getInstance().getEmail(mActivity)
+        def ownName = StorageManager.getInstance().getName(mActivity)
+
+        selfNode.setTitle(ownName)
+        selfNode.setSnippet(ownEmail)
+        def ownIP = new RESTRequests().getIpForEmail(ownEmail,ownEmail, Core.getConnector())
+        selfNode.setSubDescription(ownIP)
     }
 
 }
