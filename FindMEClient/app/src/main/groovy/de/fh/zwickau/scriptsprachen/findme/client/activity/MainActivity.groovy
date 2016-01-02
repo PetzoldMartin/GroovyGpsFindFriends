@@ -1,5 +1,7 @@
 package de.fh.zwickau.scriptsprachen.findme.client.activity
 
+import android.app.AlertDialog
+import android.content.DialogInterface
 import android.content.res.Configuration
 import android.os.Bundle
 import android.support.v4.widget.DrawerLayout
@@ -17,17 +19,21 @@ import com.arasthel.swissknife.annotations.OnBackground
 import com.arasthel.swissknife.annotations.OnItemClick
 import de.fh.zwickau.scriptsprachen.findme.client.R
 import de.fh.zwickau.scriptsprachen.findme.client.friend.FriendState
+import de.fh.zwickau.scriptsprachen.findme.client.rest.RESTRequests
 import de.fh.zwickau.scriptsprachen.findme.client.ui.EFriendList
 import de.fh.zwickau.scriptsprachen.findme.client.ui.ExpandableListAdapter
 import de.fh.zwickau.scriptsprachen.findme.client.ui.OpenStreetMap
 import de.fh.zwickau.scriptsprachen.findme.client.ui.Progress
+import de.fh.zwickau.scriptsprachen.findme.client.util.Connector
 import de.fh.zwickau.scriptsprachen.findme.client.util.Core
 import de.fh.zwickau.scriptsprachen.findme.client.friend.Friend
+import de.fh.zwickau.scriptsprachen.findme.client.util.StorageManager
 import org.osmdroid.views.MapView
 
 public class MainActivity extends AppCompatActivity {
 
     def openStreetMap;
+    def activity
     private ListView mDrawerList;
     private ArrayAdapter<String> mAdapter;
     private ActionBarDrawerToggle mDrawerToggle;
@@ -62,7 +68,8 @@ public class MainActivity extends AppCompatActivity {
         // This mus be called for automatic parsing of intent extras
         SwissKnife.loadExtras(this)
 
-        Core.init(this)
+        activity = this
+        Core.init(activity)
         openStreetMap = new OpenStreetMap(this, (MapView) findViewById(R.id.mapview), Core.getLocator())
 
         mDrawerList = (ListView) findViewById(R.id.navList);
@@ -179,6 +186,9 @@ public class MainActivity extends AppCompatActivity {
             refresh()
             setupFriendsList()
             return true;
+        }else if (id == R.id.action_addFriend) {
+            createAddFriendWindow()
+            return true;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -237,5 +247,41 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
+    public void createAddFriendWindow() {
+        LayoutInflater li = LayoutInflater.from(this);
+        def promptsView = li.inflate(R.layout.popup_friendadd, null);
 
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+        alertDialogBuilder.setView(promptsView);
+
+        final EditText userInput = (EditText) promptsView
+                .findViewById(R.id.editTextDialogUserInput);
+
+        // set dialog message
+        alertDialogBuilder
+                .setCancelable(false)
+                .setPositiveButton("OK",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog,int id) {
+                        // TODO: Correct friend instance
+                        /*
+                        def emailInput = userInput.getText()
+                        def friendToBeAdded = Connector.getInstance().getFriends().get(emailInput)
+                        def ownEmail = StorageManager.getInstance().getEmail(activity)
+                        def ownName = StorageManager.getInstance().getName(activity)
+
+                        def restRequests = new RESTRequests()
+                        restRequests.requestFriend(friendToBeAdded, ownEmail, ownName)*/
+                    }
+                })
+                .setNegativeButton("Cancel",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog,int id) {
+                        dialog.cancel();
+                    }
+                });
+
+        AlertDialog alertDialog = alertDialogBuilder.create();
+        alertDialog.show();
+    }
 }
