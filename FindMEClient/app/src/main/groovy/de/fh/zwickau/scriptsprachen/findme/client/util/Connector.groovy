@@ -3,6 +3,7 @@ package de.fh.zwickau.scriptsprachen.findme.client.util
 import android.app.Activity
 import android.util.Log
 import android.widget.Toast
+import com.arasthel.swissknife.annotations.OnBackground
 import com.arasthel.swissknife.annotations.OnUIThread
 import de.fh.zwickau.scriptsprachen.findme.client.friend.Friend
 import de.fh.zwickau.scriptsprachen.findme.client.friend.FriendState
@@ -36,6 +37,7 @@ class Connector implements IConnector {
         def name = StorageManager.getInstance().getName(activity)
         retryRequests(email, name)
         if (update) {
+            // TODO: Remove the following code once the Friend functionality is fully implemented
             restRequest.getAllUsers(email, this)
             while (!restRequestDone) {
                 if (restRequestFailed) {
@@ -46,6 +48,7 @@ class Connector implements IConnector {
                 }
             }
             restRequestDone = false
+
             for (Friend f : friends.values()) {
                 if (f.state != FriendState.FRIEND)
                     continue
@@ -61,6 +64,7 @@ class Connector implements IConnector {
                 }
                 restRequestDone = false
             }
+
             for (Friend f : friends.values()) {
                 if (f.state != FriendState.FRIEND)
                     continue
@@ -81,15 +85,38 @@ class Connector implements IConnector {
         return friends.values().asList()
     }
 
+    @OnBackground
     public void updateFriend(Friend friend, FriendState newState) {
+        def email = StorageManager.getInstance().getEmail(activity)
+
         friend.state = newState
         friends.put(friend.email, friend)
-        def email = StorageManager.getInstance().getEmail(activity)
-        def name = StorageManager.getInstance().getName(activity)
-		if (newState == FriendState.ACCEPTED)
-			restRequest.accept(friend, email, name, this)
+
+        if (friend.lastKnownIp == null)
+            if (!tryGetIp(friend, email))
+                return
+
+		if (newState == FriendState.ACCEPTED) {
+            def name = StorageManager.getInstance().getName(activity)
+            restRequest.accept(friend, email, name, this)
+        }
 		if (newState == FriendState.DENIED)
 			restRequest.deny(friend, email, this)
+    }
+
+    private boolean tryGetIp(Friend f, String ownEmail) {
+        currentTargetEmail = f.email
+        restRequest.getIpForEmail(ownEmail, currentTargetEmail, this)
+        while (!restRequestDone) {
+            if (restRequestFailed) {
+                Log.d("getFriends", "Failed to get IP for " + currentTargetEmail)
+                showErrorToast("Fehler: IP-Adresse für " + currentTargetEmail + " konnte nicht empfangen werden")
+                restRequestFailed = false
+                return false
+            }
+        }
+        restRequestDone = false
+        return true
     }
 
     public void removeFriend(Friend friend, boolean withRestRequest) {
@@ -149,8 +176,12 @@ class Connector implements IConnector {
         Toast.makeText(activity, message, Toast.LENGTH_LONG).show()
     }
 
+    @OnBackground
     def retryRequests(String ownEmail, String ownName) {
         for (Friend f : friends.values()) {
+            if (!tryGetIp(f, ownEmail))
+                continue;
+
             if (f.state == FriendState.REMOVED) 
                 restRequest.remove(f, ownEmail, this)
             if (f.state == FriendState.ACCEPTED)

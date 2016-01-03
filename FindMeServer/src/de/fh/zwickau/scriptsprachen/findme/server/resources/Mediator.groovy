@@ -28,7 +28,7 @@ class Mediator {
 	def getOnlineUsers(@Context org.glassfish.grizzly.http.server.Request req,@QueryParam('email') String email) {
 		checkIP(req, email)
 		if(Auth.isLoggedIn.get(email)) {
-			Set<String> emails = Auth.isLoggedIn.findAll{key, value -> value == true}.keySet().findAll{it != email}
+			Set<String> emails = Auth.isLoggedIn.findAll{key, value -> value == true}.keySet().findAll{it != email /* TODO: REMOVE && !it.equals("testemail")*/}
 			StringBuilder b = new StringBuilder("[")
 			emails.each {b.append(Auth.names[it] + ":" + it + ",")}
 			b.replace(b.length() - 1, b.length(), "]")
