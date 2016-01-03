@@ -249,7 +249,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void createAddFriendWindow() {
-        LayoutInflater li = LayoutInflater.from(this);
+        LayoutInflater li = getLayoutInflater();
         def promptsView = li.inflate(R.layout.popup_friendadd, null);
 
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
@@ -264,15 +264,13 @@ public class MainActivity extends AppCompatActivity {
                 .setPositiveButton("OK",
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog,int id) {
-                        // TODO: Correct friend instance
-                        /*
                         def emailInput = userInput.getText()
-                        def friendToBeAdded = Connector.getInstance().getFriends().get(emailInput)
                         def ownEmail = StorageManager.getInstance().getEmail(activity)
                         def ownName = StorageManager.getInstance().getName(activity)
 
                         def restRequests = new RESTRequests()
-                        restRequests.requestFriend(friendToBeAdded, ownEmail, ownName)*/
+                        restRequests.getIpForEmail(emailInput) // currently needed should be an internal check
+                        restRequests.requestFriend(friendsList.getFriendByEmail(emailInput), ownEmail, ownName)
                     }
                 })
                 .setNegativeButton("Cancel",

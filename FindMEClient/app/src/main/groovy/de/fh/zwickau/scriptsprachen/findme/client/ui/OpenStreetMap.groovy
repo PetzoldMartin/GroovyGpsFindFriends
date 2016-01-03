@@ -117,8 +117,10 @@ class OpenStreetMap {
 
         selfNode.setTitle(ownName)
         selfNode.setSnippet(ownEmail)
-        def ownIP = new RESTRequests().getIpForEmail(ownEmail,ownEmail, Core.getConnector())
-        selfNode.setSubDescription(ownIP)
+        def restRequests = new RESTRequests()
+        restRequests.getIpForEmail(ownEmail,ownEmail, Core.getConnector())
+
+        // selfNode.setSubDescription(ownIP)
     }
 
 }
