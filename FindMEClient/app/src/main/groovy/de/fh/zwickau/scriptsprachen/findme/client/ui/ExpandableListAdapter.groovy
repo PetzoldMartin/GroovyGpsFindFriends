@@ -95,11 +95,9 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
             convertView.findViewById(R.id.delete).setVisibility(View.INVISIBLE);
             convertView.findViewById(R.id.check1).setVisibility(View.VISIBLE);
             Switch toggle = (Switch) convertView.findViewById(R.id.check1)
-            if (toggle.isChecked()) {
-                friendsList.getFriendByListId(groupPosition, childPosition).setVisibility(true);
-            } else {
-                friendsList.getFriendByListId(groupPosition, childPosition).setVisibility(false);
-            }
+            toggle.setChecked(friendsList.getFriendByListId(groupPosition, childPosition).getVisibility());
+
+
 
             toggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
