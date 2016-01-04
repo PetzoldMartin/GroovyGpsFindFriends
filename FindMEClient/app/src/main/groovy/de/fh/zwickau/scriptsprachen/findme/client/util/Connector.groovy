@@ -199,15 +199,15 @@ class Connector implements IConnector {
     @OnBackground
     public void requestFriend(String targetEmail) {
         Friend f = friends.get(targetEmail)
-        if (f != null)
-            return
-        f = new Friend()
-        f.setEmail(targetEmail)
-        friends.put(targetEmail, f)
-        def ownEmail = StorageManager.getInstance().getEmail(activity)
-        def ownName = StorageManager.getInstance().getName(activity)
-        if (tryGetIp(f, ownEmail))
-            restRequest.requestFriend(f, ownEmail, ownName)
+        if (f == null || f.state == FriendState.REQUESTED) {
+            f = new Friend()
+            f.setEmail(targetEmail)
+            f.setState(FriendState.REQUESTED)
+            friends.put(targetEmail, f)
+            def ownEmail = StorageManager.getInstance().getEmail(activity)
+            def ownName = StorageManager.getInstance().getName(activity)
+            if (tryGetIp(f, ownEmail))
+                restRequest.requestFriend(f, ownEmail, ownName)
+        }
     }
-
 }
