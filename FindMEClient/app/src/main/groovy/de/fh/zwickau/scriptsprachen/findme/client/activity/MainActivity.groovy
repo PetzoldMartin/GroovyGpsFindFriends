@@ -92,7 +92,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     void initFriends() {
-
+        //TODO Friend compare
         friendsList = new EFriendList(Core.getConnector().getFriends(true))
 
     }
@@ -132,6 +132,7 @@ public class MainActivity extends AppCompatActivity {
                 friend.setVisibility(LinearLayout.GONE)
                 main.setVisibility(LinearLayout.VERTICAL)
                 mDrawerLayout.closeDrawers()
+                refresh()
                 break
             case "Friendslist":
                 friend.setVisibility(LinearLayout.VERTICAL)
