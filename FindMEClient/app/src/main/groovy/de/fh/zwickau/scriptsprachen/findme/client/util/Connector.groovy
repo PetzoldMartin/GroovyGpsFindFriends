@@ -35,7 +35,10 @@ class Connector implements IConnector {
     List<Friend> getFriends(boolean update) {
         def email = StorageManager.getInstance().getEmail(activity)
         def name = StorageManager.getInstance().getName(activity)
-        retryRequests(email, name)
+        List<Friend> requestList = friends.values().asList().findAll {
+            ((Friend) it).state != FriendState.FRIEND && ((Friend) it).state != FriendState.REQUESTED
+        }
+        retryRequests(email, name, requestList)
         if (update) {
             // TODO: Remove the following code once the Friend functionality is fully implemented
             restRequest.getAllUsers(email, this)
@@ -177,7 +180,7 @@ class Connector implements IConnector {
     }
 
     @OnBackground
-    def retryRequests(String ownEmail, String ownName) {
+    def retryRequests(String ownEmail, String ownName, List<Friend> list) {
         for (Friend f : friends.values()) {
             if (!tryGetIp(f, ownEmail))
                 continue;

@@ -17,6 +17,7 @@ import android.widget.ExpandableListView.OnChildClickListener
 import com.arasthel.swissknife.SwissKnife
 import com.arasthel.swissknife.annotations.OnBackground
 import com.arasthel.swissknife.annotations.OnItemClick
+import com.arasthel.swissknife.annotations.OnUIThread
 import de.fh.zwickau.scriptsprachen.findme.client.R
 import de.fh.zwickau.scriptsprachen.findme.client.friend.FriendState
 import de.fh.zwickau.scriptsprachen.findme.client.rest.RESTRequests
@@ -79,8 +80,6 @@ public class MainActivity extends AppCompatActivity {
         setupDrawer()
 
         refresh()
-        setupFriendsList();
-
     }
 
 
@@ -120,6 +119,8 @@ public class MainActivity extends AppCompatActivity {
         }
         openStreetMap.setOwnLocationToCenter()
         openStreetMap.refreshMap()
+
+        setupFriendsList()
     }
 
 
@@ -136,7 +137,6 @@ public class MainActivity extends AppCompatActivity {
                 friend.setVisibility(LinearLayout.VERTICAL)
                 main.setVisibility(LinearLayout.GONE)
                 refresh()
-                setupFriendsList()
                 mDrawerLayout.closeDrawers()
                 break
         }
@@ -185,15 +185,15 @@ public class MainActivity extends AppCompatActivity {
         }
         if (id == R.id.action_refresh) {
             refresh()
-            setupFriendsList()
             return true;
-        }else if (id == R.id.action_addFriend) {
+        } else if (id == R.id.action_addFriend) {
             createAddFriendWindow()
             return true;
         }
         return super.onOptionsItemSelected(item);
     }
 
+    @OnUIThread
     void setupFriendsList() {
         expListView = (ExpandableListView) findViewById(R.id.Friend_list);
         initExpandeblelistListeners();
