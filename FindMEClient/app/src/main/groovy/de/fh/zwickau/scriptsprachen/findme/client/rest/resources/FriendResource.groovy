@@ -15,7 +15,7 @@ public class FriendResource {
     @GET
     @Path("/requestFriend")
     @Produces("text/plain")
-    public String requestFriend(@QueryParam('ownEmail') String email, @QueryParam('ownName') String  name) {
+    public String requestFriend(@QueryParam('ownEmail') String email, @QueryParam('ownName') String name) {
         List<Friend> friends = Core.getConnector().getFriends(false)
         Friend f = friends.find{email.equals(it.email)}
         if (f != null)
@@ -33,7 +33,7 @@ public class FriendResource {
     @GET
     @Path("/accept")
     @Produces("text/plain")
-    public String accept(@QueryParam('ownEmail') String  email, @QueryParam('ownName') String  name) {
+    public String accept(@QueryParam('ownEmail') String email, @QueryParam('ownName') String name) {
         List<Friend> friends = Core.getConnector().getFriends(false)
         Friend f = friends.find{email.equals(it.email)}
         if (f == null)
@@ -41,6 +41,7 @@ public class FriendResource {
         else {
             if (f.state == FriendState.REQUESTED) {
                 // E-Mail is already set at this point
+                f.name = name
                 Core.getConnector().updateFriend(f, FriendState.FRIEND)
                 return "Okay"
             }
@@ -52,14 +53,14 @@ public class FriendResource {
     @GET
     @Path("/deny")
     @Produces("text/plain")
-    public String deny(@QueryParam('ownEmail') String  email) {
+    public String deny(@QueryParam('ownEmail') String email) {
         List<Friend> friends = Core.getConnector().getFriends(false)
         Friend f = friends.find{email.equals(it.email)}
         if (f == null)
             return "No request was sent"
         else {
             if (f.state == FriendState.REQUESTED) {
-                Core.getConnector().removeFriend(f)
+                Core.getConnector().removeFriend(f, false)
                 return "Okay"
             }
             else
@@ -70,7 +71,7 @@ public class FriendResource {
     @GET
     @Path("/remove")
     @Produces("text/plain")
-    public String remove(@QueryParam('ownEmail') String  email) {
+    public String remove(@QueryParam('ownEmail') String email) {
         List<Friend> friends = Core.getConnector().getFriends(false)
         Friend f = friends.find{email.equals(it.email)}
         if (f == null)

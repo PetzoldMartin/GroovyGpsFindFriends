@@ -206,19 +206,17 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void initExpandeblelistListeners() {
-        /*expListView.setOnChildClickListener(new OnChildClickListener() {
+        /*
+        expListView.setOnChildClickListener(new OnChildClickListener() {
             @Override
             public boolean onChildClick(ExpandableListView parent, View v,
                                         int groupPosition, int childPosition, long id) {
                 friendsList.getFriendByListId(groupPosition, childPosition).setState(FriendState.REMOVED)
                 setupFriendsList();
-                Toast.makeText(
-                        getApplicationContext(),
-                        "short", Toast.LENGTH_SHORT)
-                        .show();
                 return false;
             }
-        });*/
+        });
+        */
 
         expListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
@@ -230,11 +228,6 @@ public class MainActivity extends AppCompatActivity {
                     int childPosition = ExpandableListView.getPackedPositionChild(packedPos);
                     Core.getConnector().removeFriend(friendsList.getFriendByListId(groupPosition, childPosition), true)
                     setupFriendsList();
-                    Toast.makeText(
-                            getApplicationContext(),
-                            "state"
-
-                            , Toast.LENGTH_SHORT)
                 }
                 return false
             }
