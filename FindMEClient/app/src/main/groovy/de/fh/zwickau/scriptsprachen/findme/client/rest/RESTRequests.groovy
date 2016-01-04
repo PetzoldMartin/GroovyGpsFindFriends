@@ -1,5 +1,6 @@
 package de.fh.zwickau.scriptsprachen.findme.client.rest
 
+import android.app.Application
 import android.util.Log
 import com.arasthel.swissknife.annotations.OnBackground
 import de.fh.zwickau.scriptsprachen.findme.client.friend.Friend
@@ -127,11 +128,13 @@ public class RESTRequests {
         RestTemplate restTemplate = getRestTemplate()
         try {
             String response = restTemplate.getForObject(url, String.class)
-            // TODO
             if (response.equals("Okay"))
                 println response
+            else
+                throw new Exception()
         } catch (Exception ex) {
-            // TODO
+            Connector con = Core.getConnector()
+            con.showErrorToast("Fehler bei der Freundesanfrage!")
             Log.d("RESTClient", "Exception while REST request: " + ex.toString())
         }
     }

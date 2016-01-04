@@ -258,13 +258,7 @@ public class MainActivity extends AppCompatActivity {
                 .setPositiveButton("OK",
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog,int id) {
-                        def emailInput = userInput.getText()
-                        def ownEmail = StorageManager.getInstance().getEmail(activity)
-                        def ownName = StorageManager.getInstance().getName(activity)
-
-                        def restRequests = new RESTRequests()
-                        restRequests.getIpForEmail(emailInput) // currently needed should be an internal check
-                        restRequests.requestFriend(friendsList.getFriendByEmail(emailInput), ownEmail, ownName)
+                        Core.getConnector().requestFriend(userInput.getText().toString())
                     }
                 })
                 .setNegativeButton("Cancel",

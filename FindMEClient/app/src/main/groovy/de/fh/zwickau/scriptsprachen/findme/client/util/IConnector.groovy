@@ -8,7 +8,7 @@ interface IConnector {
     public List<Friend> getFriends(boolean update)
     public void updateFriend(Friend friend, FriendState newState)
     public void removeFriend(Friend friend, boolean withRestRequest)
-
+    public void requestFriend(String targetEmail)
 
 
 }

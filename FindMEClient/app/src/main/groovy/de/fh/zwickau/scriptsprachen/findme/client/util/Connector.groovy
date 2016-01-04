@@ -41,6 +41,7 @@ class Connector implements IConnector {
         retryRequests(email, name, requestList)
         if (update) {
             // TODO: Remove the following code once the Friend functionality is fully implemented
+            /*
             restRequest.getAllUsers(email, this)
             while (!restRequestDone) {
                 if (restRequestFailed) {
@@ -51,7 +52,7 @@ class Connector implements IConnector {
                 }
             }
             restRequestDone = false
-
+            */
             for (Friend f : friends.values()) {
                 if (f.state != FriendState.FRIEND)
                     continue
@@ -193,6 +194,20 @@ class Connector implements IConnector {
                 restRequest.deny(f, ownEmail, this)
         }
 
+    }
+
+    @OnBackground
+    public void requestFriend(String targetEmail) {
+        Friend f = friends.get(targetEmail)
+        if (f != null)
+            return
+        f = new Friend()
+        f.setEmail(targetEmail)
+        friends.put(targetEmail, f)
+        def ownEmail = StorageManager.getInstance().getEmail(activity)
+        def ownName = StorageManager.getInstance().getName(activity)
+        if (tryGetIp(f, ownEmail))
+            restRequest.requestFriend(f, ownEmail, ownName)
     }
 
 }
