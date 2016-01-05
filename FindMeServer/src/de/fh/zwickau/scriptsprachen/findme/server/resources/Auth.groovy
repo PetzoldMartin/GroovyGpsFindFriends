@@ -45,9 +45,9 @@ class Auth {
 				eMailAddresses.add(email)
 				names.put(email, name)
 				isLoggedIn.put(email, false)
+				save()
 				return "Register successful"
 			}
-			save()
 		}
 	}
 
