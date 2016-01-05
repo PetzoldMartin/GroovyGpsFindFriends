@@ -6,8 +6,7 @@ import org.glassfish.jersey.server.ResourceConfig
 import org.glassfish.grizzly.http.server.CLStaticHttpHandler
 
 import de.fh.zwickau.scriptsprachen.findme.server.resources.*
-import de.fh.zwickau.scriptsprachen.findme.server.test.FriendResource
-import de.fh.zwickau.scriptsprachen.findme.server.test.LocatorResource
+import de.fh.zwickau.scriptsprachen.findme.server.test.*
 import org.glassfish.grizzly.http.server.NetworkListener
 
 final ResourceConfig rc = new ResourceConfig();
@@ -58,3 +57,4 @@ Auth.names.put(email, name)
 Auth.isLoggedIn.put(email, true)
 //Mediator.ipMap.put(email, "10.0.2.2:8080")
 Mediator.ipMap.put(email, "141.32.23.70:8080")
+
