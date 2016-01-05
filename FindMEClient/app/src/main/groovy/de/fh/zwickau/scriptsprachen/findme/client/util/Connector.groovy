@@ -31,10 +31,27 @@ class Connector implements IConnector {
         return instance
     }
 
+    Friend getTestFriend() {
+        Friend test= new Friend()
+        test.email="testemail"
+        test.name="testname"
+        test.state=FriendState.FRIEND
+        test.lastKnownIp="192.168.0.5"
+        return test
+    }
+
     @Override
     List<Friend> getFriends(boolean update) {
         def email = StorageManager.getInstance().getEmail(activity)
         def name = StorageManager.getInstance().getName(activity)
+
+//      testing data for serialization
+//        friends.put(getTestFriend().email,getTestFriend())
+//        StorageManager.getInstance().storeFriends(friends,activity)
+//        friends=[:]
+
+        friends = StorageManager.getInstance().loadFriends(activity)
+
         List<Friend> requestList = friends.values().asList().findAll {
             ((Friend) it).state != FriendState.FRIEND && ((Friend) it).state != FriendState.REQUESTED
         }
@@ -42,7 +59,7 @@ class Connector implements IConnector {
         if (update) {
             // TODO: Remove the following code once the Friend functionality is fully implemented
             /*
-            restRequest.getAllUsers(email, this)
+            retryRequests(email, name)
             while (!restRequestDone) {
                 if (restRequestFailed) {
                     Log.d("getFriends", "Failed to get list of E-Mail addresses")
@@ -85,6 +102,7 @@ class Connector implements IConnector {
                 restRequestDone = false
             }
         }
+        StorageManager.getInstance().storeFriends(friends,activity)
         println friends.values()
         return friends.values().asList()
     }
@@ -95,6 +113,7 @@ class Connector implements IConnector {
 
         friend.state = newState
         friends.put(friend.email, friend)
+        StorageManager.getInstance().storeFriends(friends,activity)
 
         if (friend.lastKnownIp == null)
             if (!tryGetIp(friend, email))
@@ -106,6 +125,7 @@ class Connector implements IConnector {
         }
 		if (newState == FriendState.DENIED)
 			restRequest.deny(friend, email, this)
+
     }
 
     private boolean tryGetIp(Friend f, String ownEmail) {
@@ -134,7 +154,9 @@ class Connector implements IConnector {
         else {
             // We received the remove request or the REST request was successful
             friends.remove(friend.email)
+            StorageManager.getInstance().storeFriends(friends,activity)
         }
+
     }
 
     def restRequestDone(String response) {
@@ -169,6 +191,8 @@ class Connector implements IConnector {
                 showErrorToast(currentTargetEmail + " ist kein Freund")
         }
         restRequestDone = true
+        StorageManager.getInstance().storeFriends(friends,activity)
+
     }
 
     def restRequestFailed(String errorMessage) {

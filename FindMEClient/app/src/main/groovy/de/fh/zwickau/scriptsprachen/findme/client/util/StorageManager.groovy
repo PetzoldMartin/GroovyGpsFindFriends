@@ -2,12 +2,15 @@ package de.fh.zwickau.scriptsprachen.findme.client.util
 
 import android.app.Activity
 import android.content.Context
+import de.fh.zwickau.scriptsprachen.findme.client.friend.Friend
 
 class StorageManager {
 
     private static StorageManager instance
 
     private static final String LOGIN_DATA_FILENAME = "loginData"
+    private static final String FRIEND_LIST_FILENAME = "friendsData"
+
 
     private StorageManager() {
 
@@ -19,11 +22,34 @@ class StorageManager {
         return instance
     }
 
+    public void storeFriends( def friends, Activity context) {
+        FileOutputStream fos = context.openFileOutput(FRIEND_LIST_FILENAME, Context.MODE_PRIVATE)
+        ObjectOutputStream os = new ObjectOutputStream(fos)
+        os.writeObject(friends)
+        os.close()
+        fos.close()
+    }
+
+    public def loadFriends(Activity context) {
+        try {
+            FileInputStream fis = context.openFileInput(FRIEND_LIST_FILENAME)
+            ObjectInputStream is = new ObjectInputStream(fis)
+            def friends = is.readObject();
+            is.close()
+            fis.close()
+            return friends
+        } catch(Exception e) {
+            return [:]
+        }
+    }
+
     public void storeLoginData(String email, String name, Activity context) {
         FileOutputStream fos = context.openFileOutput(LOGIN_DATA_FILENAME, Context.MODE_PRIVATE)
         fos.write(new String(email + ":" + name).getBytes())
         fos.close()
     }
+
+
 
     public String getEmail(Activity context) {
         try {
