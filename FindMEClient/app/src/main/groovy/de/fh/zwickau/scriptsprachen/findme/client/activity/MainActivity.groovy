@@ -4,31 +4,29 @@ import android.app.AlertDialog
 import android.content.DialogInterface
 import android.content.res.Configuration
 import android.os.Bundle
+import android.support.annotation.UiThread
 import android.support.v4.widget.DrawerLayout
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.*
-import android.widget.ExpandableListView.OnChildClickListener
 import com.arasthel.swissknife.SwissKnife
 import com.arasthel.swissknife.annotations.OnBackground
 import com.arasthel.swissknife.annotations.OnItemClick
 import com.arasthel.swissknife.annotations.OnUIThread
 import de.fh.zwickau.scriptsprachen.findme.client.R
-import de.fh.zwickau.scriptsprachen.findme.client.friend.FriendState
 import de.fh.zwickau.scriptsprachen.findme.client.rest.RESTRequests
 import de.fh.zwickau.scriptsprachen.findme.client.ui.EFriendList
 import de.fh.zwickau.scriptsprachen.findme.client.ui.ExpandableListAdapter
 import de.fh.zwickau.scriptsprachen.findme.client.ui.OpenStreetMap
 import de.fh.zwickau.scriptsprachen.findme.client.ui.Progress
-import de.fh.zwickau.scriptsprachen.findme.client.util.Connector
 import de.fh.zwickau.scriptsprachen.findme.client.util.Core
 import de.fh.zwickau.scriptsprachen.findme.client.friend.Friend
-import de.fh.zwickau.scriptsprachen.findme.client.util.StorageManager
 import org.osmdroid.views.MapView
 
 public class MainActivity extends AppCompatActivity {
@@ -137,12 +135,20 @@ public class MainActivity extends AppCompatActivity {
                 main.setVisibility(LinearLayout.GONE)
                 mDrawerLayout.closeDrawers()
                 break
+            case "Logout":
+                mDrawerLayout.closeDrawers()
+                showLogoutDialog()
+                break
+            default:
+                mDrawerLayout.closeDrawers()
+                Toast.makeText(this, "Nicht implementiert", Toast.LENGTH_LONG).show()
+                break
         }
     }
 
 
     private void addDrawerItems() {
-        String[] InlayArray = ["Map", "Friendslist"];
+        String[] InlayArray = ["Map", "Friendslist","Logout"];
         mAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, InlayArray);
         mDrawerList.setAdapter(mAdapter);
     }
@@ -276,4 +282,26 @@ public class MainActivity extends AppCompatActivity {
         alertDialog.show();
     }
 
+
+    def showLogoutDialog() {
+        //TODO Dialog
+        Progress.showProgress("Logout",this)
+        new RESTRequests().logout(this)
+    }
+
+    public void logoutSucceeded(boolean success,String response){
+        Progress.dismissProgress()
+        if (success) {
+            Core.stopServer()
+            finish()
+        } else {
+            showHardLogoutDialog(response)
+        }
+    }
+
+    void showHardLogoutDialog(String response) {
+        //TODO Dialog
+        Core.stopServer()
+        finish()
+    }
 }

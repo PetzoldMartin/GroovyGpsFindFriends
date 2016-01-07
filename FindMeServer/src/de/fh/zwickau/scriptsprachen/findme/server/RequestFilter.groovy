@@ -20,7 +20,8 @@ public class RequestFilter implements ContainerRequestFilter {
     public void filter( ContainerRequestContext requestCtx ) throws IOException {
 
         String path = requestCtx.getUriInfo().getPath();
-        log.info( "Filtering request path: " + path );
+        if (!path.contains("admin/"))
+		log.info( "Filtering request path: " + path );
 		
 		def authHash = requestCtx.getHeaderString(HttpHeaders.AUTHORIZATION)
 		//log.info("Hash: " + authHash)
