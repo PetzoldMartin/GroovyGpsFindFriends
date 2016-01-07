@@ -121,6 +121,7 @@ class OpenStreetMap {
         restRequests.getIpForEmail(ownEmail,ownEmail, Core.getConnector())
 
         // selfNode.setSubDescription(ownIP)
+        selfNode
     }
 
 }
