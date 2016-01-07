@@ -282,13 +282,31 @@ public class MainActivity extends AppCompatActivity {
         alertDialog.show();
     }
 
-
+    @OnUIThread
     def showLogoutDialog() {
-        //TODO Dialog
-        Progress.showProgress("Logout",this)
-        new RESTRequests().logout(this)
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+        alertDialogBuilder // set dialog message
+                .setCancelable(false)
+                .setTitle("Logout?")
+                .setMessage("Wollen Sie sich wirklich Ausloggen?")
+                .setPositiveButton("Ja",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog,int id) {
+                        Progress.showProgress("Logout",MainActivity.this)
+                        new RESTRequests().logout(MainActivity.this)
+                    }
+                })
+                .setNegativeButton("Abrechen",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog,int id) {
+                        dialog.cancel();
+                    }
+                });
+        AlertDialog alertDialog = alertDialogBuilder.create();
+        alertDialog.show();
     }
 
+    @OnBackground
     public void logoutSucceeded(boolean success,String response){
         Progress.dismissProgress()
         if (success) {
@@ -299,9 +317,27 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    @OnUIThread
     void showHardLogoutDialog(String response) {
-        //TODO Dialog
-        Core.stopServer()
-        finish()
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+        alertDialogBuilder // set dialog message
+                .setCancelable(false)
+                .setTitle("$response!")
+                .setMessage("Wollen Sie trotzdem beenden?")
+                .setPositiveButton("Ja",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog,int id) {
+                        Core.stopServer()
+                        finish()
+                    }
+                })
+                .setNegativeButton("Nein",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog,int id) {
+                        dialog.cancel();
+                    }
+                });
+        AlertDialog alertDialog = alertDialogBuilder.create();
+        alertDialog.show();
     }
 }
