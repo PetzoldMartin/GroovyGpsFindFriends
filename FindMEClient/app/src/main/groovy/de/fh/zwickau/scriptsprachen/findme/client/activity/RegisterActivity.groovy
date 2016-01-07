@@ -73,8 +73,13 @@ public class RegisterActivity extends AppCompatActivity {
 
     @OnClick(R.id.button_login)
     public void onLoginClicked() {
+        usedName = nameTextfield.getText()
         String email = emailTextfield.getText()
-        if (checkValidInput(email)) {
+        usedName = usedName.trim()
+        email = email.trim()
+        StorageManager.getInstance().storeLoginData(email, usedName, this)
+
+        if (checkValidInput(email, usedName)) {
             Progress.showProgress("Login", this)
             restRequests.login(email, this)
         }
