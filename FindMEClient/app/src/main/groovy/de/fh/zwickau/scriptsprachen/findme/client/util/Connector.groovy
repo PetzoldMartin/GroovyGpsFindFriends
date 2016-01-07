@@ -14,7 +14,7 @@ class Connector implements IConnector {
 
     private static Connector instance;
 
-    def friends = [:]
+    def friends = Collections.synchronizedMap(new HashMap<String, Friend>())
     def restRequest = new RESTRequests()
     def activity = null
     def restRequestDone = false
@@ -205,7 +205,8 @@ class Connector implements IConnector {
     @OnBackground
     def retryRequests(String ownEmail, String ownName, List<Friend> list) {
         for (Friend f : friends.values()) {
-            if (!tryGetIp(f, ownEmail))
+            if (f.state == FriendState.REQUESTED || f.state == FriendState.FRIEND ||
+                    f.state == FriendState.REQUESTSENT || !tryGetIp(f, ownEmail))
                 continue;
 
             if (f.state == FriendState.REMOVED) 

@@ -37,9 +37,9 @@ class StorageManager {
             def friends = is.readObject();
             is.close()
             fis.close()
-            return friends
+            return Collections.synchronizedMap(friends)
         } catch(Exception e) {
-            return [:]
+            return Collections.synchronizedMap(new HashMap<String, Friend>())
         }
     }
 
