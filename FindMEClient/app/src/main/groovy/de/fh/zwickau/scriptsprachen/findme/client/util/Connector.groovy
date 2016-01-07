@@ -23,6 +23,11 @@ class Connector implements IConnector {
 
     private Connector(Activity activity) {
         this.activity = activity
+        friends = StorageManager.getInstance().loadFriends(activity)
+        //testing data for serialization
+//        friends.put(getTestFriend().email,getTestFriend())
+//        StorageManager.getInstance().storeFriends(friends,activity)
+//        friends=[:]
     }
 
     public static synchronized Connector getInstance(Activity activity) {
@@ -45,13 +50,6 @@ class Connector implements IConnector {
         def email = StorageManager.getInstance().getEmail(activity)
         def name = StorageManager.getInstance().getName(activity)
 
-//      testing data for serialization
-//        friends.put(getTestFriend().email,getTestFriend())
-//        StorageManager.getInstance().storeFriends(friends,activity)
-//        friends=[:]
-
-        friends = StorageManager.getInstance().loadFriends(activity)
-
         List<Friend> requestList = friends.values().asList().findAll {
             ((Friend) it).state != FriendState.FRIEND && ((Friend) it).state != FriendState.REQUESTED
         }
@@ -59,7 +57,7 @@ class Connector implements IConnector {
         if (update) {
             // TODO: Remove the following code once the Friend functionality is fully implemented
             /*
-            retryRequests(email, name)
+            restRequest.getAllUsers(email, this)
             while (!restRequestDone) {
                 if (restRequestFailed) {
                     Log.d("getFriends", "Failed to get list of E-Mail addresses")
