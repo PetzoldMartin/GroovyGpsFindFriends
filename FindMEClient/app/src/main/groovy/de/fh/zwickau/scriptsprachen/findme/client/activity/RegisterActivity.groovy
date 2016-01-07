@@ -79,7 +79,7 @@ public class RegisterActivity extends AppCompatActivity {
         email = email.trim()
         StorageManager.getInstance().storeLoginData(email, usedName, this)
 
-        if (checkValidInput(email, usedName)) {
+        if (checkValidInput(usedName, email)) {
             Progress.showProgress("Login", this)
             restRequests.login(email, this)
         }
