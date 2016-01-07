@@ -39,7 +39,7 @@ public class FriendResource {
         if (f == null)
             return "No request was sent"
         else {
-            if (f.state == FriendState.REQUESTED) {
+            if (f.state == FriendState.REQUESTSENT) {
                 // E-Mail is already set at this point
                 f.name = name
                 Core.getConnector().updateFriend(f, FriendState.FRIEND)
@@ -59,7 +59,7 @@ public class FriendResource {
         if (f == null)
             return "No request was sent"
         else {
-            if (f.state == FriendState.REQUESTED) {
+            if (f.state == FriendState.REQUESTSENT) {
                 Core.getConnector().removeFriend(f, false)
                 return "Okay"
             }
