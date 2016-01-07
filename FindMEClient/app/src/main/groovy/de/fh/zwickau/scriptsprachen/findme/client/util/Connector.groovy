@@ -221,10 +221,10 @@ class Connector implements IConnector {
     @OnBackground
     public void requestFriend(String targetEmail) {
         Friend f = friends.get(targetEmail)
-        if (f == null || f.state == FriendState.REQUESTED) {
+        if (f == null || f.state == FriendState.REQUESTSENT) {
             f = new Friend()
             f.setEmail(targetEmail)
-            f.setState(FriendState.REQUESTED)
+            f.setState(FriendState.REQUESTSENT)
             friends.put(targetEmail, f)
             def ownEmail = StorageManager.getInstance().getEmail(activity)
             def ownName = StorageManager.getInstance().getName(activity)
