@@ -48,7 +48,7 @@ Auth.eMailAddresses.add(email)
 Auth.names.put(email, name)
 Auth.isLoggedIn.put(email, true)
 //Mediator.ipMap.put(email, "10.0.2.2:8080")
-Mediator.ipMap.put(email, "141.32.23.70:8080")
+Mediator.ipMap.put(email, "141.32.20.144:8080")
 
 email="testemail2"
 name="testname2"
@@ -56,5 +56,5 @@ Auth.eMailAddresses.add(email)
 Auth.names.put(email, name)
 Auth.isLoggedIn.put(email, true)
 //Mediator.ipMap.put(email, "10.0.2.2:8080")
-Mediator.ipMap.put(email, "141.32.23.70:8080")
+Mediator.ipMap.put(email, "141.32.20.144:8080")
 

@@ -41,6 +41,7 @@ public class RegisterActivity extends AppCompatActivity {
         nameTextfield.setText("debug")
 
         String email = StorageManager.getInstance().getEmail(this)
+        usedName = StorageManager.getInstance().getName(this)
         if (email != null) {
             Progress.showProgress("Login", this)
             restRequests.login(email, this)
