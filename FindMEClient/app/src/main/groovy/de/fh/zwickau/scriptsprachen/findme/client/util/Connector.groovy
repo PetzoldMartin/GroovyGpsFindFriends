@@ -51,23 +51,10 @@ class Connector implements IConnector {
         def name = StorageManager.getInstance().getName(activity)
 
         List<Friend> requestList = friends.values().asList().findAll {
-            ((Friend) it).state != FriendState.FRIEND && ((Friend) it).state != FriendState.REQUESTED
+            ((Friend) it).state != FriendState.FRIEND && ((Friend) it).state != FriendState.REQUESTED && ((Friend) it).state != FriendState.REQUESTSENT
         }
         retryRequests(email, name, requestList)
         if (update) {
-            // TODO: Remove the following code once the Friend functionality is fully implemented
-            /*
-            restRequest.getAllUsers(email, this)
-            while (!restRequestDone) {
-                if (restRequestFailed) {
-                    Log.d("getFriends", "Failed to get list of E-Mail addresses")
-                    showErrorToast("Fehler: E-Mail-Adressen konnten nicht empfangen werden")
-                    restRequestFailed = false
-                    break
-                }
-            }
-            restRequestDone = false
-            */
             for (Friend f : friends.values()) {
                 if (f.state != FriendState.FRIEND)
                     continue
@@ -113,7 +100,7 @@ class Connector implements IConnector {
         friends.put(friend.email, friend)
         StorageManager.getInstance().storeFriends(friends,activity)
 
-        if (friend.lastKnownIp == null)
+        if (friend.lastKnownIp == null && friend.state != FriendState.REQUESTED)
             if (!tryGetIp(friend, email))
                 return
 

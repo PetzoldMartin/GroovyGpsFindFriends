@@ -12,12 +12,15 @@ class Progress {
     @OnUIThread
     public static void showProgress(String title, Activity activity) {
         progDialog = ProgressDialog.show(activity, title, "Bitte warten")
+        progDialog.setCancelable(true)
         progDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER)
         isDialogShownFlag = true
     }
 
     @OnUIThread
     public static void dismissProgress() {
+        if (progDialog == null)
+            return
         progDialog.dismiss()
         progDialog = null
         isDialogShownFlag = false

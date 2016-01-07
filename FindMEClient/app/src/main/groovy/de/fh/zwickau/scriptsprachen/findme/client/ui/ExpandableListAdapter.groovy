@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.TextView
+import de.fh.zwickau.scriptsprachen.findme.client.activity.MainActivity
 import de.fh.zwickau.scriptsprachen.findme.client.friend.FriendState
 import de.fh.zwickau.scriptsprachen.findme.client.util.Core
 
@@ -20,7 +21,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
     def friendGroupID = 1
     def requestedGroupID = 0
     private def friendsList
-    private Context _context;
+    private MainActivity _context;
     private List<String> _listDataHeader;
     private HashMap<String, List<String>> _listDataChild;
 
@@ -33,7 +34,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
     }
 
 
-    public ExpandableListAdapter(Context context, def friendList) {
+    public ExpandableListAdapter(MainActivity context, def friendList) {
         this.friendsList = friendList;
         def listDataHeader = new ArrayList<String>();
         def listChildData = new HashMap<String, List<String>>();
@@ -41,24 +42,38 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         ArrayList<String> friendArray = new ArrayList<String>()
         ArrayList<String> reqFriendArray = new ArrayList<String>()
         friendList.each {
-            if (it.state == FriendState.FRIEND) {
-                friendArray.add(it.name.toString() + " : " + it.email)
-                it.setViewGroupNr(friendGroupID);
-                it.setViewNr(friendArray.size() - 1)
+            switch (it.state) {
+                case FriendState.FRIEND:
+                case FriendState.ACCEPTED:
+                    friendArray.add(it.name.toString() + " : " + it.email)
+                    it.setViewGroupNr(friendGroupID)
+                    it.setViewNr(friendArray.size() - 1)
+                    break
+                case FriendState.REQUESTED:
+                    reqFriendArray.add(it.name.toString() + " : " + it.email)
+                    it.setViewGroupNr(requestedGroupID)
+                    it.setViewNr(reqFriendArray.size() - 1)
+                    break
+                default:
+                    it.setViewGroupNr(-1)
+                    it.setViewNr(-1)
+                    break
             }
-            if (it.state == FriendState.REQUESTED) {
-                reqFriendArray.add(it.name.toString() + " : " + it.email)
-                it.setViewGroupNr(requestedGroupID);
-                it.setViewNr(reqFriendArray.size() - 1)
-            }
+//            if (it.state == FriendState.FRIEND || it.state == FriendState.ACCEPTED) {
+//                friendArray.add(it.name.toString() + " : " + it.email)
+//                it.setViewGroupNr(friendGroupID);
+//                it.setViewNr(friendArray.size() - 1)
+//            }
+//            if (it.state == FriendState.REQUESTED) {
+//                reqFriendArray.add(it.name.toString() + " : " + it.email)
+//                it.setViewGroupNr(requestedGroupID);
+//                it.setViewNr(reqFriendArray.size() - 1)
+//            }
         }
-
-
 
         //order off the groups have to synct with group ids
         listDataHeader.add("Requesting Friends");
         listDataHeader.add("Friendslist");
-
 
         listChildData.put(listDataHeader.get(requestedGroupID), (List<String>) reqFriendArray);
         listChildData.put(listDataHeader.get(friendGroupID), (List<String>) friendArray);
@@ -67,8 +82,6 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         this._listDataHeader = listDataHeader;
         this._listDataChild = listChildData;
     }
-
-
 
     @Override
     public Object getChild(int groupPosition, int childPosititon) {
@@ -119,7 +132,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                 @Override
                 public void onClick(View arg0) {
                     Core.getConnector().updateFriend(friendsList.getFriendByListId(groupPosition, childPosition),FriendState.ACCEPTED)
-                    //friendsList.getFriendByListId(groupPosition, childPosition).setState(FriendState.ACCEPTED);
+                    _context.updateFriendList()
                 }
             });
             def imageButton2 = (ImageButton) convertView.findViewById(R.id.delete);
@@ -127,7 +140,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                 @Override
                 public void onClick(View arg0) {
                     Core.getConnector().updateFriend(friendsList.getFriendByListId(groupPosition, childPosition),FriendState.DENIED)
-                    //friendsList.getFriendByListId(groupPosition, childPosition).setState(FriendState.DENIED);
+                    _context.updateFriendList()
                 }
             });
         }

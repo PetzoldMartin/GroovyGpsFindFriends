@@ -91,10 +91,8 @@ public class MainActivity extends AppCompatActivity {
         getSupportActionBar().setHomeButtonEnabled(true);
     }
 
-    void initFriends() {
-        //TODO Friend compare
-        friendsList = new EFriendList(Core.getConnector().getFriends(true))
-
+    void initFriends(boolean update) {
+        friendsList = new EFriendList(Core.getConnector().getFriends(update))
     }
 
     void initLayouts() {
@@ -109,7 +107,7 @@ public class MainActivity extends AppCompatActivity {
         Progress.showProgress("Aktualisiere Freundesliste", this)
         while (!Progress.isDialogShown())
             sleep(500)
-        initFriends();
+        initFriends(true);
         Progress.dismissProgress()
 
         openStreetMap.removeAllMarkers()
@@ -137,7 +135,6 @@ public class MainActivity extends AppCompatActivity {
             case "Friendslist":
                 friend.setVisibility(LinearLayout.VERTICAL)
                 main.setVisibility(LinearLayout.GONE)
-                refresh()
                 mDrawerLayout.closeDrawers()
                 break
         }
@@ -201,7 +198,14 @@ public class MainActivity extends AppCompatActivity {
         listAdapter = new ExpandableListAdapter(this, friendsList);
         this.listDataHeader = listAdapter.getListDataHeader()
         this.listDataChild = listAdapter.getListDataChild()
-        expListView.setAdapter(listAdapter);
+        expListView.setAdapter(listAdapter)
+    }
+
+    void updateFriendList() {
+        initFriends(false)
+        setupFriendsList()
+        listAdapter.notifyDataSetChanged()
+        expListView.invalidateViews()
     }
 
 
@@ -271,4 +275,5 @@ public class MainActivity extends AppCompatActivity {
         AlertDialog alertDialog = alertDialogBuilder.create();
         alertDialog.show();
     }
+
 }

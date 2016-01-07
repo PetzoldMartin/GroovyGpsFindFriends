@@ -1,6 +1,7 @@
 package de.fh.zwickau.scriptsprachen.findme.client.ui
 
-import de.fh.zwickau.scriptsprachen.findme.client.friend.Friend;
+import de.fh.zwickau.scriptsprachen.findme.client.friend.Friend
+import de.fh.zwickau.scriptsprachen.findme.client.friend.FriendState;
 
 class EFriendList extends ArrayList<Friend> {
 
