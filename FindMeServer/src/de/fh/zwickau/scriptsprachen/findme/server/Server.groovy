@@ -41,6 +41,15 @@ while(e.hasMoreElements()) {
 //final HttpServer server = GrizzlyHttpServerFactory.createHttpServer(Globals.SERVER_IP.toURI(), rc)
 //server.getServerConfiguration().addHttpHandler(new CLStaticHttpHandler(...))
 
+//Afraid DNS
+//https://freedns.afraid.org/dynamic/update.php?MG1idG1BZFVmcW9ldVU4SEl4WEJNc2pBOjE1NDAyMjYx --> update request
+//http://findmeserver.mooo.com --> server domain
+
+String response= new URL('https://freedns.afraid.org/dynamic/update.php?MG1idG1BZFVmcW9ldVU4SEl4WEJNc2pBOjE1NDAyMjYx').getText()
+if (!response.startsWith("ERROR:")) {
+	println "--> $response"
+}
+
 // testdata
 String email="testemail"
 String name="testname"
