@@ -25,7 +25,7 @@ class OpenStreetMap {
     def mMapController
     def ILocator
     HashMap<String, Marker> friendNodes = [:]
-    def selfNode
+    def static selfNode = null
 
     OpenStreetMap(Activity mActivity, MapView mMapView, ClientLocator ILocator) {
         this.mActivity = mActivity
