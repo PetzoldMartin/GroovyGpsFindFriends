@@ -1,19 +1,15 @@
 package de.fh.zwickau.scriptsprachen.findme.client.ui
 
-import android.widget.CompoundButton
-import android.widget.ExpandableListView
-import android.widget.ImageButton
-import android.widget.Switch
+import android.content.Context
+import android.graphics.Typeface
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.*
 import de.fh.zwickau.scriptsprachen.findme.client.R
-import android.content.Context;
-import android.graphics.Typeface;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.BaseExpandableListAdapter;
-import android.widget.TextView
 import de.fh.zwickau.scriptsprachen.findme.client.activity.MainActivity
 import de.fh.zwickau.scriptsprachen.findme.client.friend.FriendState
+import de.fh.zwickau.scriptsprachen.findme.client.ui.ExpandableListAdapter
 import de.fh.zwickau.scriptsprachen.findme.client.util.Core
 
 public class ExpandableListAdapter extends BaseExpandableListAdapter {
@@ -131,7 +127,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
             imageButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View arg0) {
-                    Core.getConnector().updateFriend(friendsList.getFriendByListId(groupPosition, childPosition),FriendState.ACCEPTED)
+                    Core.getConnector().updateFriend(friendsList.getFriendByListId(groupPosition, childPosition), FriendState.ACCEPTED)
                     _context.updateFriendList()
                 }
             });
@@ -139,7 +135,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
             imageButton2.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View arg0) {
-                    Core.getConnector().updateFriend(friendsList.getFriendByListId(groupPosition, childPosition),FriendState.DENIED)
+                    Core.getConnector().updateFriend(friendsList.getFriendByListId(groupPosition, childPosition), FriendState.DENIED)
                     _context.updateFriendList()
                 }
             });

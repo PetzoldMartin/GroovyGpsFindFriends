@@ -1,15 +1,15 @@
 package de.fh.zwickau.scriptsprachen.findme.client.ui
 
 import de.fh.zwickau.scriptsprachen.findme.client.friend.Friend
-import de.fh.zwickau.scriptsprachen.findme.client.friend.FriendState;
 
 class EFriendList extends ArrayList<Friend> {
 
-    public EFriendList(List<Friend> list){
+    public EFriendList(List<Friend> list) {
         this.addAll(list);
 
     }
-    Friend getFriendByListId (int ViewGroupNr, int ViewNr){
+
+    Friend getFriendByListId(int ViewGroupNr, int ViewNr) {
         def f = null;
         this.each {
             if (it.getClass() == Friend.class) {
@@ -21,7 +21,7 @@ class EFriendList extends ArrayList<Friend> {
         return f;
     }
 
-    Friend getFriendByEmail(String email){
+    Friend getFriendByEmail(String email) {
         def f = null;
         this.each {
             if (it.getClass() == Friend.class) {

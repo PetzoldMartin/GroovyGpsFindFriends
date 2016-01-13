@@ -8,7 +8,6 @@ import android.support.v4.widget.DrawerLayout
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
@@ -19,13 +18,13 @@ import com.arasthel.swissknife.annotations.OnBackground
 import com.arasthel.swissknife.annotations.OnItemClick
 import com.arasthel.swissknife.annotations.OnUIThread
 import de.fh.zwickau.scriptsprachen.findme.client.R
+import de.fh.zwickau.scriptsprachen.findme.client.friend.Friend
 import de.fh.zwickau.scriptsprachen.findme.client.rest.RESTRequests
 import de.fh.zwickau.scriptsprachen.findme.client.ui.EFriendList
 import de.fh.zwickau.scriptsprachen.findme.client.ui.ExpandableListAdapter
 import de.fh.zwickau.scriptsprachen.findme.client.ui.OpenStreetMap
 import de.fh.zwickau.scriptsprachen.findme.client.ui.Progress
 import de.fh.zwickau.scriptsprachen.findme.client.util.Core
-import de.fh.zwickau.scriptsprachen.findme.client.friend.Friend
 import org.osmdroid.views.MapView
 
 public class MainActivity extends AppCompatActivity {
@@ -108,7 +107,7 @@ public class MainActivity extends AppCompatActivity {
 
         openStreetMap.removeAllMarkers()
         for (Friend friend : friendsList) {
-            if(friend.visibility)
+            if (friend.visibility)
                 openStreetMap.createFriend(friend)
         }
         openStreetMap.setOwnLocationToCenter()
@@ -144,7 +143,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void addDrawerItems() {
-        String[] InlayArray = ["Karte", "Freundesliste","Ausloggen"];
+        String[] InlayArray = ["Karte", "Freundesliste", "Ausloggen"];
         mAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, InlayArray);
         mDrawerList.setAdapter(mAdapter);
     }
@@ -232,7 +231,7 @@ public class MainActivity extends AppCompatActivity {
                     long packedPos = ((ExpandableListView) parent).getExpandableListPosition(position);
                     int groupPosition = ExpandableListView.getPackedPositionGroup(packedPos);
                     int childPosition = ExpandableListView.getPackedPositionChild(packedPos);
-                    showDeleteFriendRealy(groupPosition,childPosition);
+                    showDeleteFriendRealy(groupPosition, childPosition);
 
                 }
                 return false
@@ -241,22 +240,22 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    void showDeleteFriendRealy(int groupPosition,int childPosition){
+    void showDeleteFriendRealy(int groupPosition, int childPosition) {
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
         alertDialogBuilder // set dialog message
                 .setCancelable(false)
                 .setTitle("Freund löschen?")
-                .setMessage("Wollen Sie den Freund wirklich "+friendsList.getFriendByListId(groupPosition, childPosition).getEmail()+" löschen?")
+                .setMessage("Wollen Sie den Freund wirklich " + friendsList.getFriendByListId(groupPosition, childPosition).getEmail() + " löschen?")
                 .setPositiveButton("Ja",
                 new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog,int id2) {
+                    public void onClick(DialogInterface dialog, int id2) {
                         Core.getConnector().removeFriend(friendsList.getFriendByListId(groupPosition, childPosition), true)
                         setupFriendsList();
                     }
                 })
                 .setNegativeButton("Nein",
                 new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog,int id2) {
+                    public void onClick(DialogInterface dialog, int id2) {
                         dialog.cancel();
                     }
                 });
@@ -287,13 +286,13 @@ public class MainActivity extends AppCompatActivity {
                 .setTitle("Freundschaftsanfrage")
                 .setPositiveButton("Sende",
                 new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog,int id) {
+                    public void onClick(DialogInterface dialog, int id) {
                         Core.getConnector().requestFriend(userInput.getText().toString())
                     }
                 })
                 .setNegativeButton("Abbrechen",
                 new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog,int id) {
+                    public void onClick(DialogInterface dialog, int id) {
                         dialog.cancel();
                     }
                 });
@@ -311,14 +310,14 @@ public class MainActivity extends AppCompatActivity {
                 .setMessage("Wollen Sie sich wirklich ausloggen?")
                 .setPositiveButton("Ja",
                 new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog,int id) {
-                        Progress.showProgress("Logout",MainActivity.this)
+                    public void onClick(DialogInterface dialog, int id) {
+                        Progress.showProgress("Logout", MainActivity.this)
                         new RESTRequests().logout(MainActivity.this)
                     }
                 })
                 .setNegativeButton("Abbrechen",
                 new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog,int id) {
+                    public void onClick(DialogInterface dialog, int id) {
                         dialog.cancel();
                     }
                 });
@@ -327,7 +326,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @OnBackground
-    public void logoutSucceeded(boolean success,String response){
+    public void logoutSucceeded(boolean success, String response) {
         Progress.dismissProgress()
         if (success) {
             Core.stopServer()
@@ -347,14 +346,14 @@ public class MainActivity extends AppCompatActivity {
                 .setMessage("Wollen Sie trotzdem beenden?")
                 .setPositiveButton("Ja",
                 new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog,int id) {
+                    public void onClick(DialogInterface dialog, int id) {
                         Core.stopServer()
                         finish()
                     }
                 })
                 .setNegativeButton("Nein",
                 new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog,int id) {
+                    public void onClick(DialogInterface dialog, int id) {
                         dialog.cancel();
                     }
                 });

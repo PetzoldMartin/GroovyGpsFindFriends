@@ -7,8 +7,8 @@ import com.arasthel.swissknife.annotations.OnBackground
 import com.arasthel.swissknife.annotations.OnUIThread
 import de.fh.zwickau.scriptsprachen.findme.client.friend.Friend
 import de.fh.zwickau.scriptsprachen.findme.client.friend.FriendState
-import de.fh.zwickau.scriptsprachen.findme.client.rest.RESTRequests
 import de.fh.zwickau.scriptsprachen.findme.client.location.Vector
+import de.fh.zwickau.scriptsprachen.findme.client.rest.RESTRequests
 
 class Connector implements IConnector {
 
@@ -37,11 +37,11 @@ class Connector implements IConnector {
     }
 
     Friend getTestFriend() {
-        Friend test= new Friend()
-        test.email="testemail"
-        test.name="testname"
-        test.state=FriendState.FRIEND
-        test.lastKnownIp="192.168.0.5"
+        Friend test = new Friend()
+        test.email = "testemail"
+        test.name = "testname"
+        test.state = FriendState.FRIEND
+        test.lastKnownIp = "192.168.0.5"
         return test
     }
 
@@ -87,7 +87,7 @@ class Connector implements IConnector {
                 restRequestDone = false
             }
         }
-        StorageManager.getInstance().storeFriends(friends,activity)
+        StorageManager.getInstance().storeFriends(friends, activity)
         println friends.values()
         return friends.values().asList()
     }
@@ -98,18 +98,18 @@ class Connector implements IConnector {
 
         friend.state = newState
         friends.put(friend.email, friend)
-        StorageManager.getInstance().storeFriends(friends,activity)
+        StorageManager.getInstance().storeFriends(friends, activity)
 
         if (friend.lastKnownIp == null && friend.state != FriendState.REQUESTED)
             if (!tryGetIp(friend, email))
                 return
 
-		if (newState == FriendState.ACCEPTED) {
+        if (newState == FriendState.ACCEPTED) {
             def name = StorageManager.getInstance().getName(activity)
             restRequest.accept(friend, email, name, this)
         }
-		if (newState == FriendState.DENIED)
-			restRequest.deny(friend, email, this)
+        if (newState == FriendState.DENIED)
+            restRequest.deny(friend, email, this)
 
     }
 
@@ -135,11 +135,10 @@ class Connector implements IConnector {
             f.state = FriendState.REMOVED
             def email = StorageManager.getInstance().getEmail(activity)
             restRequest.remove(f, email, this)
-        }
-        else {
+        } else {
             // We received the remove request or the REST request was successful
             friends.remove(friend.email)
-            StorageManager.getInstance().storeFriends(friends,activity)
+            StorageManager.getInstance().storeFriends(friends, activity)
         }
 
     }
@@ -160,23 +159,20 @@ class Connector implements IConnector {
                 f.state = FriendState.FRIEND
                 friends.put(f.email, f)
             }
-        }
-        else if (response.contains(":")) {
+        } else if (response.contains(":")) {
             // getIP request
             Friend f = friends[currentTargetEmail]
             f.lastKnownIp = response.split(":")[0]
-        }
-        else {
+        } else {
             // getLocation request
             if (!"Not a friend".equals(response)) {
                 Friend f = friends[currentTargetEmail]
                 f.lastKnownLocation = Vector.fromString(response)
-            }
-            else
+            } else
                 showErrorToast(currentTargetEmail + " ist kein Freund")
         }
         restRequestDone = true
-        StorageManager.getInstance().storeFriends(friends,activity)
+        StorageManager.getInstance().storeFriends(friends, activity)
 
     }
 
@@ -196,10 +192,10 @@ class Connector implements IConnector {
                     f.state == FriendState.REQUESTSENT || !tryGetIp(f, ownEmail))
                 continue;
 
-            if (f.state == FriendState.REMOVED) 
+            if (f.state == FriendState.REMOVED)
                 restRequest.remove(f, ownEmail, this)
             if (f.state == FriendState.ACCEPTED)
-                restRequest.accept(f, ownEmail, ownName,  this)
+                restRequest.accept(f, ownEmail, ownName, this)
             if (f.state == FriendState.DENIED)
                 restRequest.deny(f, ownEmail, this)
         }

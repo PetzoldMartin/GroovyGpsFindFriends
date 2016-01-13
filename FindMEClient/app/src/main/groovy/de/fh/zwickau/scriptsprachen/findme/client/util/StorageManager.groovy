@@ -22,7 +22,7 @@ class StorageManager {
         return instance
     }
 
-    public void storeFriends( def friends, Activity context) {
+    public void storeFriends(def friends, Activity context) {
         FileOutputStream fos = context.openFileOutput(FRIEND_LIST_FILENAME, Context.MODE_PRIVATE)
         ObjectOutputStream os = new ObjectOutputStream(fos)
         os.writeObject(friends)
@@ -38,7 +38,7 @@ class StorageManager {
             is.close()
             fis.close()
             return Collections.synchronizedMap(friends)
-        } catch(Exception e) {
+        } catch (Exception e) {
             return Collections.synchronizedMap(new HashMap<String, Friend>())
         }
     }
@@ -48,7 +48,6 @@ class StorageManager {
         fos.write(new String(email + ":" + name).getBytes())
         fos.close()
     }
-
 
 
     public String getEmail(Activity context) {

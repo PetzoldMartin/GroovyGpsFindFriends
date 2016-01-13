@@ -10,9 +10,9 @@ import com.arasthel.swissknife.SwissKnife
 import com.arasthel.swissknife.annotations.OnClick
 import com.arasthel.swissknife.annotations.OnUIThread
 import de.fh.zwickau.scriptsprachen.findme.client.R
+import de.fh.zwickau.scriptsprachen.findme.client.rest.RESTRequests
 import de.fh.zwickau.scriptsprachen.findme.client.ui.Progress
 import de.fh.zwickau.scriptsprachen.findme.client.util.StorageManager
-import de.fh.zwickau.scriptsprachen.findme.client.rest.RESTRequests
 
 public class RegisterActivity extends AppCompatActivity {
 
@@ -65,8 +65,7 @@ public class RegisterActivity extends AppCompatActivity {
         if (checkValidInput(usedName, email)) {
             Progress.showProgress("Registrieren", this)
             restRequests.register(email, usedName, this)
-        }
-        else
+        } else
             Toast.makeText(this, "E-Mail-Adresse oder Name ungültig", Toast.LENGTH_LONG).show()
     }
 

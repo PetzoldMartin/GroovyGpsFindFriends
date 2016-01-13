@@ -1,7 +1,6 @@
 package de.fh.zwickau.scriptsprachen.findme.client.friend
 
 import de.fh.zwickau.scriptsprachen.findme.client.location.Vector
-import de.fh.zwickau.scriptsprachen.findme.client.util.Core;
 
 class Friend implements Serializable {
 

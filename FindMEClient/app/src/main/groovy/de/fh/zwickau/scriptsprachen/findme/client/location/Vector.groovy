@@ -1,6 +1,6 @@
 package de.fh.zwickau.scriptsprachen.findme.client.location;
 
-class Vector implements Serializable{
+class Vector implements Serializable {
 
     def x, y
 

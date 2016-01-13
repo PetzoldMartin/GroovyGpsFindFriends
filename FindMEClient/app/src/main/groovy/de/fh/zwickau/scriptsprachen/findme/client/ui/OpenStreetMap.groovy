@@ -1,13 +1,12 @@
 package de.fh.zwickau.scriptsprachen.findme.client.ui
 
 import android.app.Activity
-import android.content.Context
 import android.support.v4.content.ContextCompat
 import com.arasthel.swissknife.annotations.OnBackground
 import com.arasthel.swissknife.annotations.OnUIThread
 import de.fh.zwickau.scriptsprachen.findme.client.R
-import de.fh.zwickau.scriptsprachen.findme.client.location.ClientLocator
 import de.fh.zwickau.scriptsprachen.findme.client.friend.Friend
+import de.fh.zwickau.scriptsprachen.findme.client.location.ClientLocator
 import de.fh.zwickau.scriptsprachen.findme.client.rest.RESTRequests
 import de.fh.zwickau.scriptsprachen.findme.client.util.Core
 import de.fh.zwickau.scriptsprachen.findme.client.util.StorageManager
@@ -62,7 +61,7 @@ class OpenStreetMap {
     Marker createNode(GeoPoint geoPoint, boolean self = false) {
         Marker nodeMarker = new Marker(mMapView)
         nodeMarker.setPosition(geoPoint)
-        if (!self){
+        if (!self) {
             def nodeIcon = ContextCompat.getDrawable(mContext, R.drawable.ic_marker_friend)
             nodeMarker.setIcon(nodeIcon)
         }
@@ -118,7 +117,7 @@ class OpenStreetMap {
         selfNode.setTitle(ownName)
         selfNode.setSnippet(ownEmail)
         def restRequests = new RESTRequests()
-        restRequests.getIpForEmail(ownEmail,ownEmail, Core.getConnector())
+        restRequests.getIpForEmail(ownEmail, ownEmail, Core.getConnector())
 
         // selfNode.setSubDescription(ownIP)
         selfNode

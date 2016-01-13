@@ -1,14 +1,13 @@
 package de.fh.zwickau.scriptsprachen.findme.client.rest
 
-import android.app.Application
 import android.util.Log
 import com.arasthel.swissknife.annotations.OnBackground
 import de.fh.zwickau.scriptsprachen.findme.client.activity.MainActivity
+import de.fh.zwickau.scriptsprachen.findme.client.activity.RegisterActivity
 import de.fh.zwickau.scriptsprachen.findme.client.friend.Friend
 import de.fh.zwickau.scriptsprachen.findme.client.friend.FriendState
 import de.fh.zwickau.scriptsprachen.findme.client.util.Connector
 import de.fh.zwickau.scriptsprachen.findme.client.util.Core
-import de.fh.zwickau.scriptsprachen.findme.client.activity.RegisterActivity
 import de.fh.zwickau.scriptsprachen.findme.client.util.StorageManager
 import org.springframework.http.client.SimpleClientHttpRequestFactory
 import org.springframework.http.converter.StringHttpMessageConverter
@@ -101,14 +100,14 @@ public class RESTRequests {
         try {
             String response = restTemplate.getForObject(url, String.class, StorageManager.getInstance().getEmail(activity))
             if (response.contains("Logout successful"))
-                activity.logoutSucceeded(true,response)
+                activity.logoutSucceeded(true, response)
             else
-                activity.logoutSucceeded(false,response)
+                activity.logoutSucceeded(false, response)
         } catch (Exception ex) {
             Log.i("RESTClient", "Exception while REST request: " + ex.toString())
-            activity.logoutSucceeded(false,"Server ist nicht erreichbar")
+            activity.logoutSucceeded(false, "Server ist nicht erreichbar")
         }
-}
+    }
 
     @OnBackground
     public void getLocation(String targetIp, String ownEmail, Connector connector) {
