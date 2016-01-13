@@ -1,5 +1,6 @@
 package de.fh.zwickau.scriptsprachen.findme.client.ui
 
+import com.arasthel.swissknife.annotations.OnBackground
 import de.fh.zwickau.scriptsprachen.findme.client.friend.Friend
 import de.fh.zwickau.scriptsprachen.findme.client.friend.FriendState;
 
@@ -20,6 +21,7 @@ class EFriendList extends ArrayList<Friend> {
         }
         return f;
     }
+
 
     Friend getFriendByEmail(String email){
         def f = null;

@@ -235,14 +235,40 @@ public class MainActivity extends AppCompatActivity {
                     long packedPos = ((ExpandableListView) parent).getExpandableListPosition(position);
                     int groupPosition = ExpandableListView.getPackedPositionGroup(packedPos);
                     int childPosition = ExpandableListView.getPackedPositionChild(packedPos);
-                    Core.getConnector().removeFriend(friendsList.getFriendByListId(groupPosition, childPosition), true)
-                    setupFriendsList();
+                    showDeleteFriendRealy(groupPosition,childPosition);
+
                 }
                 return false
             }
         })
 
     }
+
+
+    void showDeleteFriendRealy(int groupPosition,int childPosition){
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+        alertDialogBuilder // set dialog message
+                .setCancelable(false)
+                .setTitle("$response!")
+                .setMessage("Wollen Sie den Freund wirklich "+friendsList.getFriendByListId(groupPosition, childPosition).getEmail()+" löschen?")
+                .setPositiveButton("Ja",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog,int id2) {
+                        Core.getConnector().removeFriend(friendsList.getFriendByListId(groupPosition, childPosition), true)
+                        setupFriendsList();
+                    }
+                })
+                .setNegativeButton("Nein",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog,int id2) {
+                        dialog.cancel();
+                    }
+                });
+        AlertDialog alertDialog = alertDialogBuilder.create();
+        alertDialog.show();
+    }
+
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -315,6 +341,7 @@ public class MainActivity extends AppCompatActivity {
             showHardLogoutDialog(response)
         }
     }
+
 
     @OnUIThread
     void showHardLogoutDialog(String response) {
