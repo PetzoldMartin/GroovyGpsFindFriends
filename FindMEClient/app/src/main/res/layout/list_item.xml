@@ -34,8 +34,8 @@
         android:focusable="false"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toLeftOf="@id/delete"
+        android:layout_alignParentRight="true"
+        android:contentDescription="@string/app_name"/>
 
-        />
 
 </RelativeLayout >
