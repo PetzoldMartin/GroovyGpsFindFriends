@@ -249,7 +249,7 @@ public class MainActivity extends AppCompatActivity {
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
         alertDialogBuilder // set dialog message
                 .setCancelable(false)
-                .setTitle("$response!")
+                .setTitle("Freund löschen?")
                 .setMessage("Wollen Sie den Freund wirklich "+friendsList.getFriendByListId(groupPosition, childPosition).getEmail()+" löschen?")
                 .setPositiveButton("Ja",
                 new DialogInterface.OnClickListener() {
