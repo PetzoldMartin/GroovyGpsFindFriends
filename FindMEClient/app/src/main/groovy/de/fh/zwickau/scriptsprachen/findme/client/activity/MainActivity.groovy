@@ -79,7 +79,6 @@ public class MainActivity extends AppCompatActivity {
         refresh()
     }
 
-
     void initToolbar() {
         toolbar = (Toolbar) findViewById(R.id.tool_bar)
         setSupportActionBar(toolbar)
@@ -118,23 +117,22 @@ public class MainActivity extends AppCompatActivity {
         setupFriendsList()
     }
 
-
     @OnItemClick(R.id.navList)
     public void changeInlay(int position, AdapterView<?> parent, View view) {
         String item = ((TextView) view).getText().toString();
         switch (item) {
-            case "Map":
+            case "Karte":
                 friend.setVisibility(LinearLayout.GONE)
                 main.setVisibility(LinearLayout.VERTICAL)
                 mDrawerLayout.closeDrawers()
                 refresh()
                 break
-            case "Friendslist":
+            case "Freundesliste":
                 friend.setVisibility(LinearLayout.VERTICAL)
                 main.setVisibility(LinearLayout.GONE)
                 mDrawerLayout.closeDrawers()
                 break
-            case "Logout":
+            case "Ausloggen":
                 mDrawerLayout.closeDrawers()
                 showLogoutDialog()
                 break
@@ -145,9 +143,8 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-
     private void addDrawerItems() {
-        String[] InlayArray = ["Map", "Friendslist","Logout"];
+        String[] InlayArray = ["Karte", "Freundesliste","Ausloggen"];
         mAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, InlayArray);
         mDrawerList.setAdapter(mAdapter);
     }
@@ -159,7 +156,7 @@ public class MainActivity extends AppCompatActivity {
             /** Called when a drawer has settled in a completely open state. */
             public void onDrawerOpened(View drawerView) {
                 super.onDrawerOpened(drawerView);
-                getSupportActionBar().setTitle("Navigation!");
+                getSupportActionBar().setTitle("FindMe");
                 invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
             }
 
@@ -244,7 +241,6 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-
     void showDeleteFriendRealy(int groupPosition,int childPosition){
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
         alertDialogBuilder // set dialog message
@@ -268,8 +264,6 @@ public class MainActivity extends AppCompatActivity {
         alertDialog.show();
     }
 
-
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -290,13 +284,14 @@ public class MainActivity extends AppCompatActivity {
         // set dialog message
         alertDialogBuilder
                 .setCancelable(false)
-                .setPositiveButton("OK",
+                .setTitle("Freundschaftsanfrage")
+                .setPositiveButton("Sende",
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog,int id) {
                         Core.getConnector().requestFriend(userInput.getText().toString())
                     }
                 })
-                .setNegativeButton("Cancel",
+                .setNegativeButton("Abbrechen",
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog,int id) {
                         dialog.cancel();
@@ -313,7 +308,7 @@ public class MainActivity extends AppCompatActivity {
         alertDialogBuilder // set dialog message
                 .setCancelable(false)
                 .setTitle("Logout?")
-                .setMessage("Wollen Sie sich wirklich Ausloggen?")
+                .setMessage("Wollen Sie sich wirklich ausloggen?")
                 .setPositiveButton("Ja",
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog,int id) {
@@ -321,7 +316,7 @@ public class MainActivity extends AppCompatActivity {
                         new RESTRequests().logout(MainActivity.this)
                     }
                 })
-                .setNegativeButton("Abrechen",
+                .setNegativeButton("Abbrechen",
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog,int id) {
                         dialog.cancel();

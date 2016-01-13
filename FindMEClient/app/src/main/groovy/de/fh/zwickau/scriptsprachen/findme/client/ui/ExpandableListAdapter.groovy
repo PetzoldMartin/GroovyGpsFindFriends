@@ -72,8 +72,8 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         }
 
         //order off the groups have to synct with group ids
-        listDataHeader.add("Requesting Friends");
-        listDataHeader.add("Friendslist");
+        listDataHeader.add("Freundesanfrage");
+        listDataHeader.add("Freundesliste");
 
         listChildData.put(listDataHeader.get(requestedGroupID), (List<String>) reqFriendArray);
         listChildData.put(listDataHeader.get(friendGroupID), (List<String>) friendArray);

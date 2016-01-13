@@ -37,13 +37,12 @@ public class RegisterActivity extends AppCompatActivity {
         nameTextfield = findViewById(R.id.textfield_name)
         emailTextfield = findViewById(R.id.textfield_email)
 
-        // For debug purposes
-        nameTextfield.setText("debug")
+        nameTextfield.setText("Nutzername")
 
         String email = StorageManager.getInstance().getEmail(this)
         usedName = StorageManager.getInstance().getName(this)
         if (email != null) {
-            Progress.showProgress("Login", this)
+            Progress.showProgress("Einloggen", this)
             restRequests.login(email, this)
         }
     }
@@ -80,7 +79,7 @@ public class RegisterActivity extends AppCompatActivity {
         StorageManager.getInstance().storeLoginData(email, usedName, this)
 
         if (checkValidInput(usedName, email)) {
-            Progress.showProgress("Login", this)
+            Progress.showProgress("Einloggen", this)
             restRequests.login(email, this)
         }
     }
@@ -116,7 +115,7 @@ public class RegisterActivity extends AppCompatActivity {
     @OnUIThread
     public void showRegisterSuccessful(String email) {
         Toast.makeText(this, "Registrierung erfolgreich", Toast.LENGTH_LONG).show()
-        Progress.showProgress("Login", this)
+        Progress.showProgress("Einloggen", this)
         restRequests.login(email, this)
     }
 
