@@ -18,7 +18,7 @@ public class FriendResource {
     public String requestFriend(@QueryParam('ownEmail') String email, @QueryParam('ownName') String name) {
         List<Friend> friends = Core.getConnector().getFriends(false)
         Friend f = friends.find{email.equals(it.email)}
-        if (f != null)
+        if (f != null && (f.state == FriendState.FRIEND || f.state == FriendState.REQUESTED || f.state == FriendState.REQUESTSENT) )
             // Friend already known (if the request was denied or something, we will send the request again on refresh, not here)
             return "Already requested"
         else {
